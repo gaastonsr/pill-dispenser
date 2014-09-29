@@ -1,0 +1,29 @@
+{
+  "name": "pill-dispenser",
+  "version": "1.0.0",
+  "description": "Web service for an automatic pill dispenser aimed to help Alzheimer patients.",
+  "main": "boot.js",
+  "scripts": {
+    "start": "node boot.js",
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gaastonsr/pill-dispenser.git"
+  },
+  "keywords": [
+    "node.js",
+    "docker",
+    "webservice"
+  ],
+  "author": "Gastón Sánchez",
+  "license": "Apache License 2.0",
+  "bugs": {
+    "url": "https://github.com/gaastonsr/pill-dispenser/issues"
+  },
+  "homepage": "https://github.com/gaastonsr/pill-dispenser",
+  "dependencies": {
+    "recluster": "~0.3.7",
+    "express": "~4.9.5"
+  }
+}
