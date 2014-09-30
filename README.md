@@ -1,5 +1,7 @@
 # Pill Dispenser API
 
+[![Coverage Status](https://img.shields.io/coveralls/gaastonsr/pill-dispenser.svg)](https://coveralls.io/r/gaastonsr/pill-dispenser)
+
 Web service for an automatic pill dispenser aimed to help Alzheimer patients.
 
 ## Responses
