@@ -15,6 +15,7 @@ CREATE TABLE "users" (
 "email" varchar(254) NOT NULL,
 "newEmail" varchar(254),
 "password" char(128) NOT NULL,
+"status" char(1) NOT NULL,
 "updatedAt" timestamp,
 "createdAt" timestamp NOT NULL,
 PRIMARY KEY ("id")
@@ -41,6 +42,7 @@ PRIMARY KEY ("id")
 CREATE TABLE "usersDevices" (
 "id" serial4,
 "userId" serial4 NOT NULL,
+"name" varchar(20) NOT NULL,
 "deviceId" serial4 NOT NULL,
 "createdAt" timestamp NOT NULL,
 PRIMARY KEY ("id")

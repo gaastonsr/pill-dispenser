@@ -24,8 +24,8 @@ Errors are returned with a no 2xx http code. They have a `error` field and `code
 ```
 {
     "error": {
-        "code": 400,
-        "name": "ValidationError",
+        "code"   : 400,
+        "name"   : "ValidationError",
         "message": "Validation error"
     }
 }
@@ -49,7 +49,11 @@ In those you will only be interested in the http code.
 
 All input fields are validated with one of the following rules:
 
--
+- **email**.
+- **password**.
+- **userName**.
+- **deviceName**.
+- **deviceIdentifier**.
 
 Each input will define which rule it is. When a field is optional it can undefined or set to null.
 
@@ -77,5 +81,6 @@ Visit the documentation of all our resources.
 - [Users](docs/Users.md)
 - [Profile](docs/Profile.md)
 - [Devices](docs/Devices.md)
-- [User Devices](docs/User-Devices.md)
-- [Devices Settings](docs/Devices-Settings.md)
+- [My Devices](docs/My-Devices.md)
+
+All routes marked as protected means that you need a bearer token to access to it and all date fields returned by the server are in UTC.
