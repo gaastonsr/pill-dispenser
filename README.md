@@ -1,6 +1,8 @@
 # Pill Dispenser API
 
+[![Build Status](https://travis-ci.org/gaastonsr/pill-dispenser.svg?branch=master)](https://travis-ci.org/gaastonsr/pill-dispenser)
 [![Coverage Status](https://img.shields.io/coveralls/gaastonsr/pill-dispenser.svg)](https://coveralls.io/r/gaastonsr/pill-dispenser)
+[![Dependency Status](https://gemnasium.com/gaastonsr/pill-dispenser.svg)](https://gemnasium.com/gaastonsr/pill-dispenser)
 
 Web service for an automatic pill dispenser aimed to help Alzheimer patients.
 
