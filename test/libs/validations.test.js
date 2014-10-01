@@ -21,10 +21,10 @@ describe('validations', function() {
 
                 expect(formattedError.name).to.equal('ValidationError');
                 expect(formattedError.message).to.equal('Validation error');
-                expect(formattedError.errors).to.equal([
+                expect(formattedError.errors).to.eql([
                     {
                         location: 'email',
-                        message : 'value is required'
+                        message : 'email is required'
                     }
                 ]);
             });
