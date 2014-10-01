@@ -3,6 +3,7 @@
 Register and delete devices.
 
 
+
 ## Register Device
 
 `POST /devices`
@@ -22,7 +23,7 @@ Registers a device.
 }
 ```
 
-- `identifier` obligatory. Validated with deviceIdentifier rule.
+- `identifier` obligatory. Validated with device.identifier rule.
 - `password` obligatory. Validated with password rule.
 
 ### On Success
@@ -59,7 +60,7 @@ Delete a device.
 
 ### Expected
 
-- `:id` device id.
+- `:id` obligatory. Validated with id rule. Device id.
 
 ### On Success
 

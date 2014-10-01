@@ -24,8 +24,8 @@ Links user to device.
 }
 ```
 
-- `name` obligatory. Validated with deviceName rule.
-- `identifier` obligatory. Validated with deviceIdentifier rule.
+- `name` obligatory. Validated with device.name rule.
+- `identifier` obligatory. Validated with device.identifier rule.
 - `password` obligatory. Validated with password rule.
 
 ### On Success
@@ -136,7 +136,7 @@ Updates a device name.
 ```
 
 - `:id` obligatory. Validated with id rule. Linkage id.
-- `name` obligatory. Validated with deviceName rule.
+- `name` obligatory. Validated with device.name rule.
 
 ### On Success
 

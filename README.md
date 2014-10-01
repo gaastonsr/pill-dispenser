@@ -53,13 +53,17 @@ In those you will only be interested in the http code.
 
 All input fields are validated with one of the following rules:
 
-- **email**.
-- **password**.
-- **userName**.
-- **deviceName**.
-- **deviceIdentifier**.
+- **email**. String. Email address according to RFCs 5321, 5322, and others.
+- **password**. String. Between 6 and 50 characters long, inclusive.
+- **user.name**. String. No empty and no longer than 20 characters long.
+- **device.name**. String. No empty and no longer than 20 characters long.
+- **device.identifier**. String. Exactly 32 characters long.
+- **token**. String. No empty.
+- **id**. Integer. Bigger than 0.
 
 Each input will define which rule it is. When a field is optional it can undefined or set to null.
+
+Validations are strict. No value is casted. Example: if an input expects an string and a number is passed it will return a validation error. The number will not be casted to a string.
 
 ### ValidationError
 
@@ -81,8 +85,8 @@ Each element in the array is an object with the structure:
 
 Visit the documentation of all our resources.
 
-- [OAuth 2.0](docs/OAuth-2.0.md)
 - [Users](docs/Users.md)
+- [OAuth 2.0](docs/OAuth-2.0.md)
 - [Profile](docs/Profile.md)
 - [Devices](docs/Devices.md)
 - [My Devices](docs/My-Devices.md)

@@ -3,6 +3,7 @@
 Retrieves and update users profiles.
 
 
+
 ## Get Profile
 
 `GET /profile`
@@ -37,6 +38,7 @@ Nothing.
 None.
 
 
+
 ## Update Profile
 
 `PUT /profile`
@@ -55,7 +57,7 @@ Updates user profile.
 }
 ```
 
-- `name` obligatory. Validated with name rule.
+- `name` obligatory. Validated with user.name rule.
 
 ### On Success
 
@@ -66,6 +68,7 @@ Updates user profile.
 ### Possible Errors
 
 - `ValidationError`
+
 
 
 ## Update Password
@@ -104,6 +107,7 @@ Updates user password.
 - `IncorrectPassword`
 
 
+
 ## Request Email Update
 
 `POST /profile/email-update-request`
@@ -138,6 +142,7 @@ Puts a request to update the user email. When a user wants to update his email i
 
 - `ValidationError`
 - `IncorrectPassword`
+
 
 
 ## Update Email

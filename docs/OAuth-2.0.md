@@ -3,6 +3,7 @@
 Deliver and expire access tokens. A token is a key utilized to verify your identity with the servers.
 
 
+
 ## Get a token
 
 `POST /oauth2/authorization?grant_type=:grant-type`

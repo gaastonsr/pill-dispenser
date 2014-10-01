@@ -3,6 +3,7 @@
 Sign up and activate users.
 
 
+
 ## Create a User
 
 `POST /users`
@@ -24,7 +25,7 @@ Signs up users.
 }
 ```
 
-- `name` obligatory. Validated with name rule.
+- `name` obligatory. Validated with user.name rule.
 - `email` obligatory. Validated with email rule.
 - `emailVerification` obligatory. Validated with email rule.
 - `password` obligatory. Validated with password rule.
@@ -48,6 +49,7 @@ Signs up users.
 
 - `ValidationError`
 - `DuplicateEmail`
+
 
 
 ## Activate a User

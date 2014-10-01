@@ -1,0 +1,8 @@
+machine:
+  timezone: America/New_York
+  node:
+    version: 0.10.28
+
+test:
+  override:
+    - npm run-script test-cov

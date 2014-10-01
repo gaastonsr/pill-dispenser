@@ -1,14 +1,16 @@
 var Joi = require('joi');
 
 var validations = {
-    email   : Joi.string().email(),
-    password: Joi.string().min(6).max(50),
+    email   : Joi.string().email().strict(),
+    password: Joi.string().min(6).max(50).strict(),
+    token   : Joi.string().strict(),
+    id      : Joi.number().integer().min(1).strict(),
     user: {
-        name: Joi.string().max(20)
+        name: Joi.string().max(20).strict()
     },
     device: {
-        name      : Joi.string().max(20),
-        identifier: Joi.string().length(32)
+        name      : Joi.string().max(20).strict(),
+        identifier: Joi.string().length(32).strict()
     }
 };
 
