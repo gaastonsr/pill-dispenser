@@ -6,3 +6,5 @@ machine:
 test:
   override:
     - npm run-script test-cov
+  post:
+    - npm run-script coveralls
