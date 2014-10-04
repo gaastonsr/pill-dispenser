@@ -20,14 +20,14 @@ Signs up users.
 {
     "name"             : "John Doe",
     "email"            : "john@doe.com",
-    "emailVerification": "john@doe.com",
+    "emailConfirmation": "john@doe.com",
     "password"         : "password"
 }
 ```
 
 - `name` obligatory. Validated with user.name rule.
 - `email` obligatory. Validated with email rule.
-- `emailVerification` obligatory. Validated with email rule.
+- `emailConfirmation` obligatory. Validated with email rule.
 - `password` obligatory. Validated with password rule.
 
 ### On Success

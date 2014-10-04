@@ -35,6 +35,8 @@
     "joi": "~4.7.0",
     "istanbul": "~0.3.2",
     "coveralls": "~2.11.2",
-    "bluebird": "~2.3.4"
+    "bluebird": "~2.3.4",
+    "bcrypt": "~0.8.0",
+    "chai-things": "~0.2.0"
   }
 }

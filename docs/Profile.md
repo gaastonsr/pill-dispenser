@@ -87,13 +87,13 @@ Updates user password.
 {
     "currentPassword": "password",
     "newPassword"    : "qwerty",
-    "newPasswordVerification": "qwerty"
+    "newPasswordConfirmation": "qwerty"
 }
 ```
 
 - `currentPassword` obligatory. Validated with password rule.
 - `newPassword` obligatory. Validated with password rule.
-- `newPasswordVerification` obligatory. Validated with password rule.
+- `newPasswordConfirmation` obligatory. Validated with password rule.
 
 ### On Success
 
@@ -124,13 +124,13 @@ Puts a request to update the user email. When a user wants to update his email i
 {
     "password": "password",
     "newEmail": "me@jdoe.com",
-    "newEmailVerification": "me@jdoe.com"
+    "newEmailConfirmation": "me@jdoe.com"
 }
 ```
 
 - `password` obligatory. Validated with password rule.
 - `newEmail` obligatory. Validated with email rule.
-- `newEmailVerification` obligatory. Validated with email rule.
+- `newEmailConfirmation` obligatory. Validated with email rule.
 
 ### On Success
 

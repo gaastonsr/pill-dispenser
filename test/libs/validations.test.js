@@ -6,6 +6,7 @@ var _           = require('underscore');
 var validations = require(path.join(__dirname, '..', '..', 'libs', 'validations'));
 
 var expect = chai.expect;
+chai.use(require('chai-things'));
 
 describe('validations', function() {
 
@@ -101,6 +102,40 @@ describe('validations', function() {
 
 
     // validation
+    describe('email confirmation', function() {
+        var schema = {
+            email            : validations.email.required(),
+            emailConfirmation: validations.emailConfirmation.required()
+        };
+
+        describe('when different', function() {
+            var errorMessage = 'emailConfirmation must match email';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate({
+                    email            : 'john@doe.com',
+                    emailConfirmation: 'notthesame'
+                }, schema);
+
+                expect(result.error.details).contain.a.thing.with
+                .property('message', errorMessage);
+            });
+        });
+
+        describe('when the same', function() {
+            it('should return no error', function() {
+                var result = Joi.validate({
+                    email            : 'john@doe.com',
+                    emailConfirmation: 'john@doe.com'
+                }, schema);
+
+                expect(result.error).to.be.null;
+            });
+        })
+    });
+
+
+    // validation
     describe('password', function() {
         var schema    = validations.password.required();
         var minLength = 6;
@@ -166,6 +201,40 @@ describe('validations', function() {
                 expect(result.error).to.be.null;
             });
         });
+    });
+
+
+    // validation
+    describe('password confirmation', function() {
+        var schema = {
+            password            : validations.password.required(),
+            passwordConfirmation: validations.passwordConfirmation.required()
+        };
+
+        describe('when different', function() {
+            var errorMessage = 'passwordConfirmation must match password';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate({
+                    password            : 'hashreallylong',
+                    passwordConfirmation: 'notthesame'
+                }, schema);
+
+                expect(result.error.details).contain.a.thing.with
+                .property('message', errorMessage);
+            });
+        });
+
+        describe('when the same', function() {
+            it('should return no error', function() {
+                var result = Joi.validate({
+                    password            : 'hashreallylong',
+                    passwordConfirmation: 'hashreallylong'
+                }, schema);
+
+                expect(result.error).to.be.null;
+            });
+        })
     });
 
 

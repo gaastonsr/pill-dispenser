@@ -94,14 +94,14 @@ Updates a device password.
 {
     "currentPassword"        : "password",
     "newPassword"            : "qwerty",
-    "newPasswordVerification": "qwerty"
+    "newPasswordConfirmation": "qwerty"
 }
 ```
 
 - `:id` obligatory. Validated with id rule. Linkage id.
 - `currentPassword` obligatory. Validated with password rule.
 - `newPassword` obligatory. Validate with password rule.
-- `newPasswordVerification` obligatory. Validate with password rule.
+- `newPasswordConfirmation` obligatory. Validate with password rule.
 
 ### On Success
 
