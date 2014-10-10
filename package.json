@@ -28,7 +28,6 @@
     "recluster": "~0.3.7",
     "express": "~4.9.5",
     "underscore": "~1.7.0",
-    "underscore.string": "~2.3.3",
     "mocha": "~1.21.4",
     "chai": "~1.9.2",
     "body-parser": "~1.9.0",
@@ -37,6 +36,11 @@
     "coveralls": "~2.11.2",
     "bluebird": "~2.3.4",
     "bcrypt": "~0.8.0",
-    "chai-things": "~0.2.0"
+    "chai-things": "~0.2.0",
+    "knex": "~0.7.3",
+    "bookshelf": "~0.7.7",
+    "pg.js": "~3.5.0",
+    "underscore.string": "~2.3.3",
+    "jwt-simple": "~0.2.0"
   }
 }

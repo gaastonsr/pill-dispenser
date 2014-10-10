@@ -1,3 +1,5 @@
+var nodeEnv = !process.env.NODE_ENV ? 'development' : process.env.NODE_ENV;
+
 var config = {
     nodeEnv         : nodeEnv,
     url             : process.env.APP_URL,
