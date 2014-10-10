@@ -8,5 +8,7 @@ database:
     - psql -U ubuntu circle_test < docs/database/schema.sql
 
 test:
-  override: npm run-script test-cov
-  post: npm run-script coveralls
+  override:
+    - npm run-script test-cov
+  post:
+    - npm run-script coveralls
