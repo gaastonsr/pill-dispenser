@@ -1,13 +1,13 @@
-var path    = require('path');
 var Promise = require('bluebird');
 var bcrypt  = require('bcrypt');
 var jwt     = require('jwt-simple');
-var config  = require(path.join(__dirname, '..', 'config'));
-var UserORM = require(path.join(__dirname, '..', 'ORMs', 'UserORM'));
+var config  = require('./../config');
+var UserORM = require('./../ORMs/UserORM');
 
 bcrypt = Promise.promisifyAll(bcrypt);
 
 function UsersModel() {
+
 }
 
 UsersModel.prototype = {

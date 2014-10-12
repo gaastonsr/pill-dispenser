@@ -3,9 +3,13 @@ machine:
   node:
     version: 0.10.28
 
+dependencies:
+  pre:
+    - npm install knex -g
+
 database:
   override:
-    - psql -U ubuntu circle_test < docs/database/schema.sql
+    - knex migrate:latest
 
 test:
   override:

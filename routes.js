@@ -1,12 +1,11 @@
-var path    = require('path');
 var _       = require('underscore');
 var express = require('express');
 
-var UsersController     = require(path.join(__dirname, 'controllers', 'UsersController'));
-var Oauth2Controller    = require(path.join(__dirname, 'controllers', 'Oauth2Controller'));
-var ProfileController   = require(path.join(__dirname, 'controllers', 'ProfileController'));
-var DevicesController   = require(path.join(__dirname, 'controllers', 'DevicesController'));
-var MyDevicesController = require(path.join(__dirname, 'controllers', 'MyDevicesController'));
+var UsersController     = require('./controllers/UsersController');
+var Oauth2Controller    = require('./controllers/Oauth2Controller');
+var ProfileController   = require('./controllers/ProfileController');
+var DevicesController   = require('./controllers/DevicesController');
+var MyDevicesController = require('./controllers/MyDevicesController');
 
 var usersController     = new UsersController();
 var oauth2Controller    = new Oauth2Controller();

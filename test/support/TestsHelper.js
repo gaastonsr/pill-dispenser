@@ -1,12 +1,10 @@
-var path      = require('path');
 var Promise   = require('bluebird');
 var _         = require('underscore');
-var bookshelf = require(path.join(__dirname, '..', '..', 'bookshelf'));
+var bookshelf = require('./../../bookshelf');
 
 var knex = bookshelf.knex;
 
 function TestsHelper() {
-
 }
 
 TestsHelper.prototype = {
@@ -14,7 +12,7 @@ TestsHelper.prototype = {
 
     // order is important to avoid foreign key constraints
     tables: [
-        'usersDevices',
+        'users_devices',
         'users',
         'devices'
     ],

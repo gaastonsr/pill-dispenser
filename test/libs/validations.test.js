@@ -1,9 +1,8 @@
-var path        = require('path');
 var Joi         = require('joi');
 var chai        = require('chai');
 var _           = require('underscore');
     _.str       = require('underscore.string');
-var validations = require(path.join(__dirname, '..', '..', 'libs', 'validations'));
+var validations = require('./../../libs/validations');
 
 var expect = chai.expect;
 chai.use(require('chai-things'));

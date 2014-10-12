@@ -1,9 +1,6 @@
 var path      = require('path');
 var knex      = require('knex');
 var Bookshelf = require('bookshelf');
-var config    = require(path.join(__dirname, 'config'));
+var knexfile  = require('./knexfile');
 
-module.exports = Bookshelf(knex({
-    client    : 'pg',
-    connection: config.database
-}));
+module.exports = Bookshelf(knex(knexfile.anyEnv));

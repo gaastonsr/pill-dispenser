@@ -7,6 +7,9 @@ yum install -y epel-release
 # Install needed packages
 yum install -y git make nodejs npm postgresql93-server
 
+# Install knex globally
+npm install knex -g
+
 # Set up postgres
 /usr/pgsql-9.3/bin/postgresql93-setup initdb || true
 
@@ -26,8 +29,9 @@ systemctl start postgresql-9.3
 su postgres -c 'createdb pill-dispenser' || true
 su postgres -c 'createdb pill-dispenser-testing' || true
 
-# Insert structure
-su postgres -c 'psql pill-dispenser < /vagrant/docs/database/schema.sql'
-su postgres -c 'psql pill-dispenser-testing < /vagrant/docs/database/schema.sql'
+# Run migrations
+cd /vagrant
+NODE_ENV=development knex migrate:latest
+NODE_ENV=testing knex migrate:latest
 
 cp /vagrant/provision/env-vars.sh /etc/profile.d/env-vars.sh

@@ -1,5 +1,5 @@
 var Joi         = require('joi');
-var validations = require(path.join(__dirname, '..', 'libs', 'validations'));
+var validations = require('./../libs/validations');
 
 function UsersController() {
 }

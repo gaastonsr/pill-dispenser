@@ -3,11 +3,11 @@ var Promise     = require('bluebird');
 var chai        = require('chai');
 var _           = require('underscore');
 var jwt         = require('jwt-simple');
-var config      = require(path.join(__dirname, '..', '..', 'config'));
-var testData    = require(path.join(__dirname, 'data', 'UsersModel.test'));
-var TestsHelper = require(path.join(__dirname, '..', 'support', 'TestsHelper'));
-var UsersModel  = require(path.join(__dirname, '..', '..', 'models', 'UsersModel'));
-var UserORM     = require(path.join(__dirname, '..', '..', 'ORMs', 'UserORM'));
+var testData    = require('./data/UsersModel.test');
+var TestsHelper = require('./../support/TestsHelper');
+var config      = require('./../../config');
+var UsersModel  = require('./../../models/UsersModel');
+var UserORM     = require('./../../ORMs/UserORM');
 
 var expect = chai.expect;
 chai.use(require('chai-things'));
