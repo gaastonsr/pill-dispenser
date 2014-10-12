@@ -17,7 +17,7 @@ var config = {
     }
 };
 
-if (config.nodeEnv === 'testing') {
+if (config.nodeEnv === 'test') {
     config.database.host     = process.env.TEST_DB_HOST;
     config.database.user     = process.env.TEST_DB_USER;
     config.database.password = process.env.TEST_DB_PASSWORD;

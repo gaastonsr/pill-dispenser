@@ -6,10 +6,10 @@ MOCHA = ./node_modules/.bin/_mocha
 COVERALLS = ./node_modules/coveralls/bin/coveralls.js
 
 test:
-	@NODE_ENV=testing $(MOCHA) $(MOCHA_ARGS)
+	@NODE_ENV=test $(MOCHA) $(MOCHA_ARGS)
 
 test-cov:
-	@NODE_ENV=testing $(ISTANBUL) cover $(MOCHA) -- $(MOCHA_ARGS)
+	@NODE_ENV=test $(ISTANBUL) cover $(MOCHA) -- $(MOCHA_ARGS)
 
 coveralls:
 	cat $(COVERAGE_REPORT) | $(COVERALLS)

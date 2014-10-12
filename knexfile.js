@@ -1,6 +1,6 @@
 var config = require('./config');
 
-exports.anyEnv = exports.testing = exports.development = exports.staging = exports.production = {
+exports.anyEnv = exports.test = exports.development = exports.staging = exports.production = {
     client    : 'pg',
     connection: config.database,
     pool: {
