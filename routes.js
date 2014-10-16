@@ -29,8 +29,8 @@ var router = express.Router({
 router.post('/users',                 usersController.create);
 router.put( '/users/activate/:token', usersController.activate);
 
-// // OAuth2
-// router.post('/oauth2/authorization', oauth2Controller.authorization);
+// OAuth2
+router.post('/oauth2/authorization', oauth2Controller.authorization);
 
 // // Profile
 // router.get( '/profile');

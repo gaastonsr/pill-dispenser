@@ -1,7 +1,5 @@
-var path        = require('path');
 var Promise     = require('bluebird');
 var chai        = require('chai');
-var _           = require('underscore');
 var jwt         = require('jwt-simple');
 var testData    = require('./data/UsersModel.test');
 var TestsHelper = require('./../support/TestsHelper');
@@ -63,7 +61,7 @@ describe('UsersModel', function() {
                 });
             });
 
-            it('should return a token to activate the user', function() {
+            it('should return an activation token', function() {
                 return usersModel.create(data)
                 .then(function(user) {
                     expect(user.activationToken).to.be.a('string');
@@ -91,10 +89,30 @@ describe('UsersModel', function() {
             });
         });
 
+        describe('and the token contains an invalid type', function() {
+            it('should return InvalidToken error', function() {
+                var activationToken = jwt.encode({
+                    userId: 2,
+                    type  : 'auth'
+                }, config.secret);
+
+                return usersModel.activate({
+                    token: activationToken
+                })
+                .then(function(user) {
+                    return Promise.reject(new Error('Activation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('InvalidToken');
+                });
+            });
+        });
+
         describe('and the token contains an invalid user id', function() {
             it('should return InvalidToken error', function() {
                 var activationToken = jwt.encode({
-                    userId: 10000000
+                    userId: 10000000,
+                    type  : 'activation'
                 }, config.secret);
 
                 return usersModel.activate({
@@ -112,7 +130,8 @@ describe('UsersModel', function() {
         describe('and the user is already active', function() {
             it('should return UserAlreadyActive error', function() {
                 var activationToken = jwt.encode({
-                    userId: 1
+                    userId: 1,
+                    type  : 'activation'
                 }, config.secret);
 
                 return usersModel.activate({
@@ -130,7 +149,8 @@ describe('UsersModel', function() {
         describe('and the data is fine', function() {
             it('should return the user data', function() {
                 var activationToken = jwt.encode({
-                    userId: 2
+                    userId: 2,
+                    type  : 'activation'
                 }, config.secret);
 
                 return usersModel.activate({

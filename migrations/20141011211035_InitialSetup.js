@@ -22,8 +22,6 @@ module.exports = {
             .createTable('sessions', function(table) {
                 table.integer('id').primary().defaultTo(knex.raw("nextval('sessions_id_seq')"));
                 table.integer('user_id').notNullable().references('users.id').onUpdate('CASCADE').onDelete('CASCADE');
-                table.string('uuid', 36).notNullable();
-                table.string('type', 1).notNullable();
                 table.timestamp('created_at', true).notNullable();
             })
             .createTable('devices', function(table) {

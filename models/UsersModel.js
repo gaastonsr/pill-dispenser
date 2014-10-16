@@ -40,7 +40,8 @@ UsersModel.prototype = {
             var user = model.toJSON();
 
             user.activationToken = jwt.encode({
-                userId: user.id
+                userId: user.id,
+                type  : 'activation'
             }, config.secret);
 
             return user;
@@ -53,6 +54,12 @@ UsersModel.prototype = {
         try {
             decoded = jwt.decode(data.token, config.secret);
         } catch (error) {
+            var error  = new Error('Invalid token');
+            error.name = 'InvalidToken';
+            return Promise.reject(error);
+        }
+
+        if (decoded.type !== 'activation') {
             var error  = new Error('Invalid token');
             error.name = 'InvalidToken';
             return Promise.reject(error);
