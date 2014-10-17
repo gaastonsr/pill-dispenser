@@ -78,7 +78,7 @@ describe('UsersModel', function() {
         describe('and the token is invalid', function() {
             it('should return InvalidToken error', function() {
                 return usersModel.activate({
-                    token: 'sdklnfkl2k3kln43k342klnkn342'
+                    activationToken: 'sdklnfkl2k3kln43k342klnkn342'
                 })
                 .then(function(user) {
                     return Promise.reject(new Error('Activation should fail'));
@@ -97,7 +97,7 @@ describe('UsersModel', function() {
                 }, config.secret);
 
                 return usersModel.activate({
-                    token: activationToken
+                    activationToken: activationToken
                 })
                 .then(function(user) {
                     return Promise.reject(new Error('Activation should fail'));
@@ -116,7 +116,7 @@ describe('UsersModel', function() {
                 }, config.secret);
 
                 return usersModel.activate({
-                    token: activationToken
+                    activationToken: activationToken
                 })
                 .then(function(user) {
                     return Promise.reject(new Error('Activation should fail'));
@@ -135,7 +135,7 @@ describe('UsersModel', function() {
                 }, config.secret);
 
                 return usersModel.activate({
-                    token: activationToken
+                    activationToken: activationToken
                 })
                 .then(function(user) {
                     return Promise.reject(new Error('Activation should fail'));
@@ -154,7 +154,7 @@ describe('UsersModel', function() {
                 }, config.secret);
 
                 return usersModel.activate({
-                    token: activationToken
+                    activationToken: activationToken
                 })
                 .then(function(user) {
                     expect(user.id).to.equal(2);

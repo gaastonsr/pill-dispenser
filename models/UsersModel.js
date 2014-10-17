@@ -52,7 +52,7 @@ UsersModel.prototype = {
         var decoded = null;
 
         try {
-            decoded = jwt.decode(data.token, config.secret);
+            decoded = jwt.decode(data.activationToken, config.secret);
         } catch (error) {
             var error  = new Error('Invalid token');
             error.name = 'InvalidToken';
