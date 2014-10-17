@@ -1,12 +1,13 @@
 var Promise       = require('bluebird');
 var chai          = require('chai');
+var jwt           = require('jwt-simple');
 var testData      = require('./data/SessionsModel.test');
 var TestsHelper   = require('./../support/TestsHelper');
+var config        = require('./../../config');
 var SessionsModel = require('./../../models/SessionsModel');
 var SessionORM    = require('./../../ORMs/SessionORM');
 
-var expect = chai.expect;
-
+var expect        = chai.expect;
 var testsHelper   = new TestsHelper();
 var sessionsModel = new SessionsModel();
 
@@ -89,6 +90,81 @@ describe('SessionsModel', function() {
                     expect(session.authToken).to.be.a('string');
                 });
             });
+        });
+    });
+
+    describe('#getByAuthToken - when a session is retrieved by authentication token', function() {
+        beforeEach(function() {
+            return testsHelper.setUp(testData.getByAuthToken);
+        });
+
+        describe('and the token is invalid', function() {
+            it('should return InvalidToken error', function() {
+                return sessionsModel.getByAuthToken({
+                    authToken: 'sfnklsdnlkfsdnklf'
+                })
+                .then(function() {
+                    return Promise.reject('Retrieving should fail');
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('InvalidToken');
+                });
+            });
+        });
+
+        describe('and the token contains an invalid type', function() {
+            it('should return InvalidToken error', function() {
+                var authToken = jwt.encode({
+                    sessionId: 1,
+                    type     : 'invalid',
+                }, config.secret);
+
+                return sessionsModel.getByAuthToken({
+                    authToken: authToken
+                })
+                .then(function() {
+                    return Promise.reject('Retrieving should fail');
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('InvalidToken');
+                });
+            });
+        });
+
+        describe('and the token contains an expired session id', function() {
+            it('should return ExpiredSession error', function() {
+                var authToken = jwt.encode({
+                    sessionId: 1000000,
+                    type     : 'auth',
+                }, config.secret);
+
+                return sessionsModel.getByAuthToken({
+                    authToken: authToken
+                })
+                .then(function() {
+                    return Promise.reject('Retrieving should fail');
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('ExpiredSession');
+                });
+            });
+        });
+
+        describe('and the token contains a valid session id', function() {
+            it('should return a user', function() {
+                var authToken = jwt.encode({
+                    sessionId: 1,
+                    type     : 'auth',
+                }, config.secret);
+
+                return sessionsModel.getByAuthToken({
+                    authToken: authToken
+                })
+                .then(function(user) {
+                    expect(user.id).to.equal(1);
+                    expect(user.name).to.equal('John Doe');
+                });
+            })
         });
     });
 

@@ -1,5 +1,4 @@
 var Promise   = require('bluebird');
-var _         = require('underscore');
 var bookshelf = require('./../../bookshelf');
 
 var knex = bookshelf.knex;
@@ -10,37 +9,40 @@ function TestsHelper() {
 TestsHelper.prototype = {
     constructor: TestsHelper,
 
-    // order is important to avoid foreign key constraints
-    tables: [
+    deletionOrder: [
         'users_devices',
+        'sessions',
         'users',
         'devices'
     ],
 
+    insertionOrder: [
+        'users',
+        'sessions'
+    ],
+
     tearDown: function() {
-        var truncates = [];
-
-        for (var i = 0; i < this.tables.length; i++) {
-            var table = this.tables[i];
-            truncates.push(knex(table).delete());
-        }
-
-        return Promise.all(truncates);
+        return Promise.resolve(this.deletionOrder)
+        .each(function(item, index, value) {
+            return knex(item).delete();
+        });
     },
 
     setUp: function(data) {
-        var tables  = _.keys(data);
-        var inserts = [];
+        var self = this;
 
         return this.tearDown()
         .then(function() {
-            for (var i = 0; i < tables.length; i++) {
-                var table = tables[i];
-                var rows  = data[table];
-                inserts.push(knex(table).insert(rows));
-            }
+            return Promise.resolve(self.insertionOrder)
+            .each(function(item, index, value) {
+                var rows = data[item];
 
-            return Promise.all(inserts);
+                if (!rows) {
+                    return;
+                }
+
+                return knex(item).insert(rows);
+            });
         });
     }
 };

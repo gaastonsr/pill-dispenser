@@ -41,6 +41,7 @@
     "bookshelf": "~0.7.7",
     "pg.js": "~3.5.0",
     "underscore.string": "~2.3.3",
-    "jwt-simple": "~0.2.0"
+    "jwt-simple": "~0.2.0",
+    "supertest": "~0.13.0"
   }
 }
