@@ -1,3 +1,5 @@
+'use strict';
+
 var Promise       = require('bluebird');
 var chai          = require('chai');
 var jwt           = require('jwt-simple');
@@ -161,10 +163,9 @@ describe('SessionsModel', function() {
                     authToken: authToken
                 })
                 .then(function(user) {
-                    expect(user.id).to.equal(1);
-                    expect(user.name).to.equal('John Doe');
+                    expect(user.userId).to.equal(1);
                 });
-            })
+            });
         });
     });
 

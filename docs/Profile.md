@@ -142,6 +142,8 @@ Puts a request to update the user email. When a user wants to update his email i
 
 - `ValidationError`
 - `IncorrectPassword`
+- `DuplicateEmail`
+- `DuplicateRequest`
 
 
 
@@ -169,4 +171,4 @@ Updates a user email.
 
 - `ValidationError`
 - `InvalidToken`
-- `NoEmailUpdateRequest`
+- `ExpiredEmailUpdateRequest`

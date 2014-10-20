@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(sessionsModel) {
     return function(request, response, next) {
         var jsonResponse = {};
@@ -16,8 +18,11 @@ module.exports = function(sessionsModel) {
         sessionsModel.getByAuthToken({
             authToken: authToken
         })
-        .then(function(user) {
-            request.user = user;
+        .then(function(session) {
+            request.user = {
+                id: session.userId
+            };
+
             next();
         })
         .error(function(error) {
@@ -33,7 +38,7 @@ module.exports = function(sessionsModel) {
 
             return next(error);
         });
-    }
+    };
 };
 
 function getToken(headers) {

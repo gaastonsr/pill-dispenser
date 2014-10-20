@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
     up: function(knex, Promise) {
         return knex.raw('\
@@ -12,9 +14,9 @@ module.exports = {
             .createTable('users', function(table) {
                 table.integer('id').primary().defaultTo(knex.raw("nextval('users_id_seq')"));
                 table.string('name', 20).notNullable();
-                table.string('email', 254).notNullable();
-                table.string('new_email', 254);
+                table.string('email', 254).notNullable().unique();
                 table.string('password', 128).notNullable();
+                table.string('new_email', 254);
                 table.string('status', 1).notNullable();
                 table.timestamp('updated_at', true);
                 table.timestamp('created_at', true).notNullable();

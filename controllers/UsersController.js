@@ -1,3 +1,5 @@
+'use strict';
+
 var Joi         = require('joi');
 var validations = require('./../libs/validations');
 

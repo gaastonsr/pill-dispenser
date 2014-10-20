@@ -1,3 +1,5 @@
+'use strict';
+
 var Promise    = require('bluebird');
 var bcrypt     = require('bcrypt');
 var jwt        = require('jwt-simple');
@@ -17,6 +19,7 @@ SessionsModel.prototype = {
 
     createFromClientCredentials: function(data) {
         var userModel = null;
+        var error     = null;
 
         return new UserORM({
             email: data.email
@@ -24,7 +27,7 @@ SessionsModel.prototype = {
         .fetch()
         .then(function(model) {
             if (!model) {
-                var error  = new Error('Invalid credentials');
+                error      = new Error('Invalid credentials');
                 error.name = 'InvalidCredentials';
                 return Promise.reject(error);
             }
@@ -35,13 +38,13 @@ SessionsModel.prototype = {
         })
         .then(function(areEqual) {
             if (!areEqual) {
-                var error  = new Error('Invalid credentials');
+                error      = new Error('Invalid credentials');
                 error.name = 'InvalidCredentials';
                 return Promise.reject(error);
             }
 
             if (userModel.get('status') === '0') {
-                var error  = new Error('InactiveUser');
+                error      = new Error('InactiveUser');
                 error.name = 'InactiveUser';
                 return Promise.reject(error);
             }
@@ -64,17 +67,18 @@ SessionsModel.prototype = {
 
     getByAuthToken: function(data) {
         var decoded = null;
+        var error   = null;
 
         try {
             decoded = jwt.decode(data.authToken, config.secret);
-        } catch (error) {
-            var error  = new Error('Invalid token');
+        } catch (caughtError) {
+            error      = new Error('Invalid token');
             error.name = 'InvalidToken';
             return Promise.reject(error);
         }
 
         if (decoded.type !== 'auth') {
-            var error  = new Error('Invalid token');
+            error      = new Error('Invalid token');
             error.name = 'InvalidToken';
             return Promise.reject(error);
         }
@@ -93,11 +97,6 @@ SessionsModel.prototype = {
             // TODO: if more than x time delete session?
             // or let the cronjob do it?
 
-            return new UserORM({
-                id: model.get('userId')
-            }).fetch();
-        })
-        .then(function(model) {
             return model.toJSON();
         });
     }

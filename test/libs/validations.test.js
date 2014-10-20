@@ -1,3 +1,5 @@
+'use strict';
+
 var Joi         = require('joi');
 var chai        = require('chai');
 var _           = require('underscore');
@@ -94,7 +96,7 @@ describe('validations', function() {
 
             it('should return no error', function() {
                 var result = Joi.validate(value, schema);
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
         });
     });
@@ -128,9 +130,9 @@ describe('validations', function() {
                     emailConfirmation: 'john@doe.com'
                 }, schema);
 
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
-        })
+        });
     });
 
 
@@ -197,7 +199,7 @@ describe('validations', function() {
 
             it('should return no error', function() {
                 var result = Joi.validate(value, schema);
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
         });
     });
@@ -231,9 +233,9 @@ describe('validations', function() {
                     passwordConfirmation: 'hashreallylong'
                 }, schema);
 
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
-        })
+        });
     });
 
 
@@ -289,7 +291,7 @@ describe('validations', function() {
 
             it('It should return no error', function() {
                 var result = Joi.validate(value, schema);
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
         });
     });
@@ -347,7 +349,7 @@ describe('validations', function() {
 
             it('It should return no error', function() {
                 var result = Joi.validate(value, schema);
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
         });
     });
@@ -408,7 +410,7 @@ describe('validations', function() {
 
             it('It should return no error', function() {
                 var result = Joi.validate(value, schema);
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
         });
     });
@@ -455,7 +457,7 @@ describe('validations', function() {
 
             it('should return no error', function() {
                 var result = Joi.validate(value, schema);
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
         });
     });
@@ -532,7 +534,7 @@ describe('validations', function() {
 
             it('should return no error', function() {
                 var result = Joi.validate(value, schema);
-                expect(result.error).to.be.null;
+                expect(result.error).to.equal(null);
             });
         });
     });

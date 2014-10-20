@@ -1,3 +1,5 @@
+'use strict';
+
 var _       = require('underscore');
 var express = require('express');
 
@@ -46,7 +48,7 @@ router.get( '/profile',                      checkSession, profileController.get
 router.put( '/profile',                      checkSession, profileController.update);
 router.put( '/profile/password',             checkSession, profileController.updatePassword);
 router.post('/profile/email-update-request', checkSession, profileController.requestEmailUpdate);
-router.put( '/profile/email/:token'        , checkSession, profileController.updateEmail);
+router.put( '/profile/email/:token'        , profileController.updateEmail);
 
 // // Devices
 // router.post('/devices');

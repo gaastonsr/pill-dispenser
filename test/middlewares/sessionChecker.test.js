@@ -1,3 +1,5 @@
+'use strict';
+
 var express           = require('express');
 var request           = require('supertest');
 var chai              = require('chai');
@@ -64,7 +66,7 @@ describe('sessionChecker', function() {
                 done();
             });
         });
-    })
+    });
 
     describe('when bearer token is expired', function() {
         it('should return 401 ExpiredSession', function(done) {

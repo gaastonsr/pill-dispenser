@@ -1,3 +1,5 @@
+'use strict';
+
 var config = require('./config');
 
 exports.anyEnv = exports.test = exports.development = exports.staging = exports.production = {

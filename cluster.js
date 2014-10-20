@@ -1,3 +1,5 @@
+'use strict';
+
 var recluster = require('recluster');
 var path      = require('path');
 

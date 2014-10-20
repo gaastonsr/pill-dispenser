@@ -42,6 +42,19 @@
     "pg.js": "~3.5.0",
     "underscore.string": "~2.3.3",
     "jwt-simple": "~0.2.0",
-    "supertest": "~0.13.0"
+    "supertest": "~0.14.0"
+  },
+  "jshintConfig": {
+    "node": true,
+    "multistr": true,
+    "globals": {
+      "Promise": true,
+      "describe": false,
+      "it": false,
+      "before": false,
+      "beforeEach": false,
+      "after": false,
+      "afterEach": false
+    }
   }
 }

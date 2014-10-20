@@ -1,3 +1,5 @@
+'use strict';
+
 var nodeEnv = !process.env.NODE_ENV ? 'development' : process.env.NODE_ENV;
 
 var config = {

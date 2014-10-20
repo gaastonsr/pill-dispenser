@@ -1,3 +1,5 @@
+'use strict';
+
 var Promise = require('bluebird');
 
 function SessionsModelStub() {
@@ -9,27 +11,29 @@ SessionsModelStub.prototype = {
 
     getByAuthToken: function(data) {
         var token = data.authToken;
+        var error = null;
 
         if (token === 'invalidtoken') {
-            var error  = new Error('Invalid token');
+            error      = new Error('Invalid token');
             error.name = 'InvalidToken';
             return Promise.reject(error);
         }
 
         if (token === 'expiredsession') {
-            var error  = new Error('Expired session');
+            error      = new Error('Expired session');
             error.name = 'ExpiredSession';
             return Promise.reject(error);
         }
 
         if (token === 'servererror') {
-            var error  = new Error('Server error');
+            error      = new Error('Server error');
             error.name = 'ServerError';
             return Promise.reject(error);
         }
 
         return Promise.resolve({
-            id: 1
+            id    : 1,
+            userId: 1
         });
     }
 };
