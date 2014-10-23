@@ -91,7 +91,9 @@ describe('UsersModel', function() {
 
                 return usersModel.create(data)
                 .then(function(user) {
-                    expect(user.activationToken).to.be.a('string');
+                    var decoded = jwt.decode(user.activationToken, config.secret);
+                    expect(decoded.type).to.equal('activation');
+                    expect(decoded.userId).to.equal(user.id);
                 });
             });
         });
@@ -385,7 +387,10 @@ describe('UsersModel', function() {
             it('should return an email update token', function() {
                 return usersModel.requestEmailUpdate(data)
                 .then(function(user) {
-                    expect(user.emailUpdateToken).to.be.a('string');
+                    var decoded = jwt.decode(user.emailUpdateToken, config.secret);
+                    expect(decoded.type).to.equal('emailUpdate');
+                    expect(decoded.userId).to.equal(1);
+                    expect(decoded.newEmail).to.equal('jdoe@gmail.com');
                 });
             });
         });
