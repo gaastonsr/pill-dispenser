@@ -6,6 +6,7 @@ machine:
 dependencies:
   pre:
     - npm install knex -g
+    - npm install coveralls
 
 database:
   override:
@@ -15,4 +16,4 @@ test:
   override:
     - npm run-script test-cov
   post:
-    - npm run-script coveralls
+    - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
