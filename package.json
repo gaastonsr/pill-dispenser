@@ -28,7 +28,7 @@
     "recluster": "~0.3.7",
     "express": "~4.9.5",
     "underscore": "~1.7.0",
-    "mocha": "~1.21.4",
+    "mocha": "~2.0.1",
     "chai": "~1.9.2",
     "body-parser": "~1.9.0",
     "joi": "~4.7.0",
