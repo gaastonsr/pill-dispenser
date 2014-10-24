@@ -47,6 +47,7 @@ TestsHelper.prototype = {
             });
         });
     }
+
 };
 
 module.exports = TestsHelper;

@@ -10,6 +10,7 @@ UsersController.prototype = {
     constructor: UsersController,
 
     create: function(request, response, next) {
+        var data = {};
         var result = Joi.validate(data, {
             name             : validations.user.name.required(),
             email            : validations.email.required(),

@@ -7,8 +7,9 @@ yum install -y epel-release
 # Install needed packages
 yum install -y git make nodejs npm postgresql93-server
 
-# Install knex globally
+# Install knex and gulp globally
 npm install knex -g
+npm install gulp -g
 
 # Set up postgres
 /usr/pgsql-9.3/bin/postgresql93-setup initdb || true

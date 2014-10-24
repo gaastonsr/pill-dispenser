@@ -6,6 +6,7 @@ machine:
 dependencies:
   pre:
     - npm install knex -g
+    - npm install gulp -g
     - npm install coveralls
 
 database:
