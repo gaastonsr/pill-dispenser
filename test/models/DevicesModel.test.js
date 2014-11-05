@@ -1,6 +1,7 @@
 'use strict';
 
 var Promise      = require('bluebird');
+var bcrypt       = require('bcrypt');
 var chai         = require('chai');
 var testData     = require('./data/DevicesModel.test');
 var TestsHelper  = require('./../support/TestsHelper');
@@ -12,6 +13,8 @@ chai.use(require('chai-things'));
 
 var testsHelper  = new TestsHelper();
 var devicesModel = new DevicesModel();
+
+bcrypt = Promise.promisifyAll(bcrypt);
 
 describe('DevicesModel', function() {
 
@@ -49,9 +52,13 @@ describe('DevicesModel', function() {
                     .then(function(model) {
                         expect(model.get('id')).to.be.a('number');
                         expect(model.get('identifier'));
-                        expect(model.get('password')).to.be.a('string').and.to.have.length(60);
                         expect(model.get('updatedAt')).to.be.instanceof(Date);
                         expect(model.get('createdAt')).to.be.instanceof(Date);
+
+                        return bcrypt.compareAsync('password', model.get('password'));
+                    })
+                    .then(function(areSame) {
+                        expect(areSame).to.equal(true);
                     });
                 });
             });

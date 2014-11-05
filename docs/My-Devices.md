@@ -47,8 +47,8 @@ Links user to device.
 ### Possible Errors
 
 - `ValidationError`
+- `InvalidCredentials`
 - `AlreadyLinked`
-- `DeviceNotFound`
 - `IncorrectPassword`
 
 

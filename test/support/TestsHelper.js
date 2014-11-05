@@ -21,7 +21,8 @@ TestsHelper.prototype = {
     insertionOrder: [
         'users',
         'sessions',
-        'devices'
+        'devices',
+        'users_devices'
     ],
 
     tearDown: function() {

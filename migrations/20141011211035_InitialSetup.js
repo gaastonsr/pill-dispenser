@@ -38,6 +38,7 @@ module.exports = {
                 table.integer('user_id').notNullable().references('users.id').onUpdate('CASCADE').onDelete('CASCADE');
                 table.string('name', 20).notNullable();
                 table.integer('device_id').notNullable().references('devices.id').onUpdate('CASCADE').onDelete('CASCADE');
+                table.timestamp('updated_at', true);
                 table.timestamp('created_at', true).notNullable();
             })
             .createTable('devices_settings', function(table) {

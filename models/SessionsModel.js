@@ -27,7 +27,7 @@ SessionsModel.prototype = {
         .fetch()
         .then(function(model) {
             if (!model) {
-                error      = new Error('Invalid credentials');
+                error      = new Error('Email and/or password are incorrect');
                 error.name = 'InvalidCredentials';
                 return Promise.reject(error);
             }
@@ -38,7 +38,7 @@ SessionsModel.prototype = {
         })
         .then(function(areEqual) {
             if (!areEqual) {
-                error      = new Error('Invalid credentials');
+                error      = new Error('Email and/or password are incorrect');
                 error.name = 'InvalidCredentials';
                 return Promise.reject(error);
             }
