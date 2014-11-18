@@ -35,13 +35,13 @@
     "chai-things": "~0.2.0",
     "knex": "~0.7.3",
     "bookshelf": "~0.7.7",
-    "pg.js": "~3.6.2",
+    "pg.js": "~3.5.0",
     "underscore.string": "~2.3.3",
     "jwt-simple": "~0.2.0",
     "supertest": "~0.15.0",
     "gulp": "~3.8.9",
     "gulp-jshint": "~1.9.0",
-    "gulp-mocha": "~1.1.1",
+    "gulp-mocha": "~2.0.0",
     "gulp-istanbul": "~0.3.1"
   },
   "jshintConfig": {
