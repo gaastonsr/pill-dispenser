@@ -38,7 +38,7 @@ describe('DevicesModel', function() {
             });
         });
 
-        describe('and the is fine', function() {
+        describe('and the data is fine', function() {
             it('should save a row in the database', function() {
                 return devicesModel.create({
                     identifier: '120ecaaa-a0f2-4ac4-8393-c866d8bbb123',

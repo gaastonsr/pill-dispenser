@@ -1,10 +1,11 @@
 'use strict';
 
-var packageJSON = require('./package');
 var gulp        = require('gulp');
 var jshint      = require('gulp-jshint');
 var mocha       = require('gulp-mocha');
 var istanbul    = require('gulp-istanbul');
+var packageJSON = require('./package');
+var bookshelf   = require('./bookshelf');
 
 var jshintConfig    = packageJSON.jshintConfig;
 jshintConfig.lookup = false;
@@ -38,7 +39,7 @@ gulp.task('test', function() {
     })
     .pipe(mocha(mochaOptions))
     .once('end', function() {
-        process.exit();
+        bookshelf.knex.destroy();
     });
 });
 
@@ -69,7 +70,7 @@ gulp.task('test-cov', ['lint'], function(done) {
         .pipe(mocha(mochaOptions))
         .pipe(istanbul.writeReports(reportsOptions))
         .once('end', function() {
-            process.exit();
+            bookshelf.knex.destroy();
         });
     });
 });

@@ -1,13 +1,14 @@
 'use strict';
 
-var Promise        = require('bluebird');
-var bcrypt         = require('bcrypt');
-var chai           = require('chai');
-var testData       = require('./data/MyDevicesModel.test');
-var TestsHelper    = require('./../support/TestsHelper');
-var MyDevicesModel = require('./../../models/MyDevicesModel');
-var UserDeviceORM  = require('./../../ORMs/UserDeviceORM');
-var DeviceORM      = require('./../../ORMs/DeviceORM');
+var Promise          = require('bluebird');
+var bcrypt           = require('bcrypt');
+var chai             = require('chai');
+var testData         = require('./data/MyDevicesModel.test');
+var TestsHelper      = require('./../support/TestsHelper');
+var MyDevicesModel   = require('./../../models/MyDevicesModel');
+var UserDeviceORM    = require('./../../ORMs/UserDeviceORM');
+var DeviceORM        = require('./../../ORMs/DeviceORM');
+var DeviceSettingORM = require('./../../ORMs/DeviceSettingORM');
 
 var testsHelper    = new TestsHelper();
 var myDevicesModel = new MyDevicesModel();
@@ -94,6 +95,25 @@ describe('MyDevicesModel', function() {
                         expect(model.get('updatedAt')).to.instanceof(Date);
                         expect(model.get('createdAt')).to.instanceof(Date);
                     });
+                });
+            });
+        });
+    });
+
+    describe('#listLinkages - when a user linkages are listed', function() {
+        beforeEach(function() {
+            return testsHelper.setUp(testData.listLinkages);
+        });
+
+        describe('and the data is fine', function() {
+            it('should return two linkages ordered by creation date', function() {
+                return myDevicesModel.listLinkages({
+                    userId: 1
+                })
+                .then(function(linkages) {
+                    expect(linkages.length).to.equal(2);
+                    expect(linkages[0].id).to.equal(1);
+                    expect(linkages[1].id).to.equal(2);
                 });
             });
         });
@@ -289,6 +309,518 @@ describe('MyDevicesModel', function() {
                         expect(model.get('id')).to.equal(1);
                         expect(model.get('name')).to.equal('Friends Grandpa');
                         // TODO: validate device updated_at timestamp got updated
+                    });
+                });
+            });
+        });
+    });
+
+    describe('#addSetting - when a setting is added', function() {
+        beforeEach(function() {
+            return testsHelper.setUp(testData.addSetting);
+        });
+
+        describe('and the linkage id doesn\'t exist', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.addSetting({
+                    linkageId   : 1000000,
+                    userId      : 1,
+                    medicineName: 'Naproxeno',
+                    schedule    : [
+                        '08:00:00',
+                        '16:00:00',
+                        '24:00:00'
+                    ]
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Add setting should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the linkage belongs to another user', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.addSetting({
+                    linkageId   : 1,
+                    userId      : 2,
+                    medicineName: 'Naproxeno',
+                    schedule    : [
+                        '08:00:00',
+                        '16:00:00',
+                        '24:00:00'
+                    ]
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Add setting should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            it('should should save the setting in the database', function() {
+                return myDevicesModel.addSetting({
+                    linkageId   : 1,
+                    userId      : 1,
+                    medicineName: 'Naproxeno',
+                    schedule    : [
+                        '08:00:00',
+                        '16:00:00',
+                        '24:00:00'
+                    ]
+                })
+                .then(function(setting) {
+                    return new DeviceSettingORM({
+                        id: setting.id
+                    })
+                    .fetch()
+                    .then(function(model) {
+                        var schedule = model.get('schedule');
+
+                        expect(model.get('id')).to.equal(setting.id);
+                        expect(model.get('medicineName')).to.equal('Naproxeno');
+                        expect(schedule[0]).to.equal('08:00:00');
+                        expect(schedule[1]).to.equal('16:00:00');
+                        expect(schedule[2]).to.equal('24:00:00');
+                        expect(model.get('status')).to.equal('0');
+                        expect(model.get('updatedAt')).to.instanceof(Date);
+                        expect(model.get('createdAt')).to.instanceof(Date);
+                    });
+                });
+            });
+
+            it('should return the setting with the schedule', function() {
+                return myDevicesModel.addSetting({
+                    linkageId   : 1,
+                    userId      : 1,
+                    medicineName: 'Naproxeno',
+                    schedule    : [
+                        '08:00:00',
+                        '16:00:00',
+                        '24:00:00'
+                    ]
+                })
+                .then(function(setting) {
+                    expect(setting.id).to.equal(setting.id);
+                    expect(setting.medicineName).to.equal('Naproxeno');
+                    expect(setting.status).to.equal('0');
+                    expect(setting.updatedAt).to.instanceof(Date);
+                    expect(setting.createdAt).to.instanceof(Date);
+                    expect(setting.schedule[0]).to.equal('08:00:00');
+                    expect(setting.schedule[1]).to.equal('16:00:00');
+                    expect(setting.schedule[2]).to.equal('24:00:00');
+                });
+            });
+        });
+    });
+
+    describe('#listSettings - when a device settings are listed', function() {
+        beforeEach(function() {
+            return testsHelper.setUp(testData.listSettings);
+        });
+
+        describe('and the linkage id doesn\'t exist', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.listSettings({
+                    linkageId: 1000000,
+                    userId   : 1
+                })
+                .then(function() {
+                    return Promise.reject(new Error('List settings should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the linkage belongs to another user', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.listSettings({
+                    linkageId: 1,
+                    userId   : 2
+                })
+                .then(function() {
+                    return Promise.reject(new Error('List settings should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            it('should return a list of settings ordered by creation date', function() {
+                return myDevicesModel.listSettings({
+                    linkageId: 1,
+                    userId   : 1
+                })
+                .then(function(settings) {
+                    expect(settings.length).to.equal(2);
+
+                    expect(settings[0].id).to.equal(1);
+                    expect(settings[0].deviceId).to.equal(1);
+                    expect(settings[0].medicineName).to.equal('Naproxeno');
+                    expect(settings[0].schedule[0]).to.equal('08:00:00');
+                    expect(settings[0].schedule[1]).to.equal('16:00:00');
+                    expect(settings[0].schedule[2]).to.equal('24:00:00');
+                    expect(settings[0].status).to.equal('0');
+                    expect(settings[0].updatedAt).to.instanceof(Date);
+                    expect(settings[0].createdAt).to.instanceof(Date);
+
+                    expect(settings[1].id).to.equal(2);
+                    expect(settings[1].deviceId).to.equal(1);
+                    expect(settings[1].medicineName).to.equal('Pepto');
+                    expect(settings[1].schedule[0]).to.equal('08:00:00');
+                    expect(settings[1].schedule[1]).to.equal('16:00:00');
+                    expect(settings[1].schedule[2]).to.equal('24:00:00');
+                    expect(settings[1].status).to.equal('0');
+                    expect(settings[1].updatedAt).to.instanceof(Date);
+                    expect(settings[1].createdAt).to.instanceof(Date);
+                });
+            });
+        });
+    });
+
+    describe('#activateSetting - when a device setting is activated', function() {
+        beforeEach(function() {
+            return testsHelper.setUp(testData.activateSetting);
+        });
+
+        describe('and the linkage id doesn\'t exist', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.activateSetting({
+                    linkageId: 1000000,
+                    userId   : 1,
+                    settingId: 2
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting activation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the linkage belongs to another user', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.activateSetting({
+                    linkageId: 1,
+                    userId   : 2,
+                    settingId: 2
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting activation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the setting doesn\'t exist', function() {
+            it('should return SettingNotFound error', function() {
+                return myDevicesModel.activateSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 1000000
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting activation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('SettingNotFound');
+                });
+            });
+        });
+
+        describe('and the setting belongs to another device', function() {
+            it('should return SettingNotFound error', function() {
+                return myDevicesModel.activateSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 3
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting activation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('SettingNotFound');
+                });
+            });
+        });
+
+        describe('and the setting is already active', function() {
+            it('should return SettingAlreadyActive error', function() {
+                return myDevicesModel.activateSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 1
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting activation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('SettingAlreadyActive');
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            it('should set the setting as active and all others as inactive', function() {
+                return myDevicesModel.activateSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 2
+                })
+                .then(function() {
+                    return new DeviceSettingORM()
+                    .query(function(queryBuider) {
+                        queryBuider
+                        .where('device_id', 1)
+                        .orderBy('id', 'asc');
+                    })
+                    .fetchAll()
+                    .then(function(collection) {
+                        var rows = collection.toJSON();
+
+                        expect(rows.length).to.equal(2);
+                        expect(rows[0].id).to.equal(1);
+                        expect(rows[0].status).to.equal('0');
+                        expect(rows[1].id).to.equal(2);
+                        expect(rows[1].status).to.equal('1');
+                    });
+                });
+            });
+        });
+    });
+
+    describe('#deactivateSetting - when a device setting is deactivated', function() {
+        beforeEach(function() {
+            return testsHelper.setUp(testData.deactivateSetting);
+        });
+
+        describe('and the linkage id doesn\'t exist', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.deactivateSetting({
+                    linkageId: 1000000,
+                    userId   : 1,
+                    settingId: 1
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting deactivation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the linkage belongs to another user', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.deactivateSetting({
+                    linkageId: 1,
+                    userId   : 2,
+                    settingId: 1
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting deactivation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the setting doesn\'t exist', function() {
+            it('should return SettingNotFound error', function() {
+                return myDevicesModel.deactivateSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 1000000
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting deactivation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('SettingNotFound');
+                });
+            });
+        });
+
+        describe('and the setting belongs to another device', function() {
+            it('should return SettingNotFound error', function() {
+                return myDevicesModel.deactivateSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 3
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting deactivation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('SettingNotFound');
+                });
+            });
+        });
+
+        describe('and the setting is already inactive', function() {
+            it('should return SettingAlreadyInactive error', function() {
+                return myDevicesModel.deactivateSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 2
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Setting deactivation should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('SettingAlreadyInactive');
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            it('should set the setting as inactive', function() {
+                return myDevicesModel.deactivateSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 1
+                })
+                .then(function() {
+                    return new DeviceSettingORM()
+                    .query(function(queryBuider) {
+                        queryBuider
+                        .where('device_id', 1)
+                        .orderBy('id', 'asc');
+                    })
+                    .fetchAll()
+                    .then(function(collection) {
+                        var rows = collection.toJSON();
+
+                        expect(rows.length).to.equal(2);
+                        expect(rows[0].id).to.equal(1);
+                        expect(rows[0].status).to.equal('0');
+                        expect(rows[1].id).to.equal(2);
+                        expect(rows[1].status).to.equal('0');
+                    });
+                });
+            });
+        });
+    });
+
+    describe('#deleteSetting - when a device setting is deleted', function() {
+        beforeEach(function() {
+            return testsHelper.setUp(testData.deleteSetting);
+        });
+
+        describe('and the linkage id doesn\'t exist', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.deleteSetting({
+                    linkageId: 1000000,
+                    userId   : 1,
+                    settingId: 1
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Deletion should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the linkage belongs to another user', function() {
+            it('should return LinkageNotFound error', function() {
+                return myDevicesModel.deleteSetting({
+                    linkageId: 1,
+                    userId   : 2,
+                    settingId: 1
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Deletion should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('LinkageNotFound');
+                });
+            });
+        });
+
+        describe('and the setting doesn\'t exist', function() {
+            it('should return SettingNotFound error', function() {
+                return myDevicesModel.deleteSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 1000000
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Deletion should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('SettingNotFound');
+                });
+            });
+        });
+
+        describe('and the setting belongs to another device', function() {
+            it('should return SettingNotFound error', function() {
+                return myDevicesModel.deleteSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 3
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Deletion should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('SettingNotFound');
+                });
+            });
+        });
+
+        describe('and the setting is already inactive', function() {
+            it('should return DeleteActiveSetting error', function() {
+                return myDevicesModel.deleteSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 1
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Deletion should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('DeleteActiveSetting');
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            it('should delete the row of the database', function() {
+                return myDevicesModel.deleteSetting({
+                    linkageId: 1,
+                    userId   : 1,
+                    settingId: 2
+                })
+                .then(function() {
+                    return new DeviceSettingORM()
+                    .query(function(queryBuider) {
+                        queryBuider
+                        .where('device_id', 1)
+                        .orderBy('id', 'asc');
+                    })
+                    .fetchAll()
+                    .then(function(collection) {
+                        var rows = collection.toJSON();
+
+                        expect(rows.length).to.equal(1);
+                        expect(rows[0].id).to.equal(1);
+                        expect(rows[0].status).to.equal('1');
                     });
                 });
             });

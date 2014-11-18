@@ -12,6 +12,7 @@ TestsHelper.prototype = {
     constructor: TestsHelper,
 
     deletionOrder: [
+        'devices_settings',
         'users_devices',
         'sessions',
         'users',
@@ -22,7 +23,8 @@ TestsHelper.prototype = {
         'users',
         'sessions',
         'devices',
-        'users_devices'
+        'users_devices',
+        'devices_settings'
     ],
 
     tearDown: function() {

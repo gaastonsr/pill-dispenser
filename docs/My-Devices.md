@@ -36,7 +36,7 @@ Links user to device.
         "kind"     : "DeviceLinkage",
         "id"       : 1,
         "name"     : "Grandpa's",
-        "updatedAt": null,
+        "updatedAt": "2014-09-29T19:10:15Z",
         "createdAt": "2014-09-29T19:10:15Z"
     }
 }
@@ -50,6 +50,47 @@ Links user to device.
 - `InvalidCredentials`
 - `AlreadyLinked`
 - `IncorrectPassword`
+
+
+
+## List My Devices
+
+`GET /my-devices`
+
+**Protected**: true
+
+### Description
+
+Lists all devices a user is linked to.
+
+### Expected
+
+Nothing.
+
+### On Success
+
+````
+{
+    "data": {
+        "kind"    : "LinkagesList",
+        "linkages": [
+            {
+                "id"       : 1,
+                "name"     : "Grandpas",
+                "updatedAt": "2014-09-29T19:10:15Z",
+                "createdAt": "2014-09-29T19:10:15Z"
+            },
+            {
+                ...
+            }
+        ]
+    }
+}
+````
+
+### Possible Errors
+
+None.
 
 
 
@@ -151,45 +192,191 @@ Updates a device name.
 
 
 
-## Add Device Settings
-
-### Description
-### Expected
-### On Success
 ### Possible Errors
 
-
-
-## Delete Device Settings
-
-### Description
-### Expected
-### On Success
-### Possible Errors
+- `LinkageNotFound`
 
 
 
-## Update Active Settings
+## Add Device Setting
+
+`POST /my-devices/:id/settings`
+
+**Protected**: true
 
 ### Description
+
+Add a a setting to the device.
+
 ### Expected
+
+````
+{
+    "medicineName": "Naproxeno",
+    "schedule": [
+        "08:00",
+        "16:00",
+        "24:00"
+    ]
+}
+```
+
+- `:id` obligatory. Validated with id rule. Linkage id.
+
 ### On Success
+
+````
+{
+    "data": {
+        "kind": "DeviceSetting",
+        "id"  : 1,
+        "medicineName": "Naproxeno",
+        "schedule": [
+            "08:00",
+            "16:00",
+            "24:00"
+        ]
+    }
+}
+````
+
 ### Possible Errors
 
+- `ValidationError`
+- `LinkageNotFound`
 
 
-## Deactivate Device
+
+## Get Device Settings
+
+`GET /my-devices/:id/settings`
+
+**Protected**: true
 
 ### Description
+
+Returns a list of the device settings.
+
 ### Expected
+
+Nothing.
+
 ### On Success
+
+````
+{
+    "data": {
+        "kind": "DeviceSettingsList",
+        "settings:" [
+            {
+			      "id": 1,
+			      "medicineName": "Naproxeno",
+			      "schedule": [
+			          "08:00",
+			          "16:00",
+			          "24:00"
+			      ]
+            },
+            {
+                ...
+            },
+            {
+                ...
+            }
+        ]
+    }
+}
+````
+
 ### Possible Errors
 
+- `ValidationError`
+- `LinkageNotFound`
 
 
-## Activate Device
+
+## Activate Device Setting
+
+`PUT /my-devices/:linkage-id/settings/:setting-id/activate`
+
+**Protected**: true
 
 ### Description
+
+Activates a device operation.
+
 ### Expected
+
+- `:linkage-id` obligatory. Validated with id rule. Likage id.
+- `:setting-id` obligatory. Validated with id rule. Setting id.
+
 ### On Success
+
+````
+{}
+````
+
 ### Possible Errors
+
+- `ValidationError`
+- `LinkageNotFound`
+- `SettingAlreadyActive`
+
+
+
+## Deactivate Device Setting
+
+`PUT /my-devices/:linkage-id/settings/:setting-id/deactivate`
+
+**Protected**: true
+
+### Description
+
+Deactivates a device operation.
+
+### Expected
+
+- `:linkage-id` obligatory. Validated with id rule. Likage id.
+- `:setting-id` obligatory. Validated with id rule. Setting id.
+
+### On Success
+
+````
+{}
+````
+
+### Possible Errors
+
+- `ValidationError`
+- `LinkageNotFound`
+- `SettingAlreadyInactive`
+
+
+
+## Delete Device Setting
+
+`DELETE /my-devices/:linkage-id/settings/:setting-id`
+
+**Protected**: true
+
+### Description
+
+Deletes a set of settings of a device.
+
+### Expected
+
+- `:linkage-id` obligatory. Validated with id rule. Likage id.
+- `:setting-id` obligatory. Validated with id rule. Setting id.
+
+### On Success
+
+````
+{}
+````
+
+### Possible Errors
+
+- `ValidationError`
+- `LinkageNotFound`
+- `SettingNotFound`
+- `DeleteActiveSetting`

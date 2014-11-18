@@ -23,7 +23,6 @@ module.exports = {
             })
             .createTable('sessions', function(table) {
                 table.integer('id').primary().defaultTo(knex.raw("nextval('sessions_id_seq')"));
-                table.integer('user_id').notNullable().references('users.id').onUpdate('CASCADE').onDelete('CASCADE');
                 table.timestamp('created_at', true).notNullable();
             })
             .createTable('devices', function(table) {
@@ -35,14 +34,26 @@ module.exports = {
             })
             .createTable('users_devices', function(table) {
                 table.integer('id').primary().defaultTo(knex.raw("nextval('users_devices_id_seq')"));
-                table.integer('user_id').notNullable().references('users.id').onUpdate('CASCADE').onDelete('CASCADE');
                 table.string('name', 20).notNullable();
-                table.integer('device_id').notNullable().references('devices.id').onUpdate('CASCADE').onDelete('CASCADE');
                 table.timestamp('updated_at', true);
                 table.timestamp('created_at', true).notNullable();
             })
             .createTable('devices_settings', function(table) {
                 table.integer('id').primary().defaultTo(knex.raw("nextval('devices_settings_id_seq')"));
+                table.string('medicine_name', 20).notNullable();
+                table.json('schedule').notNullable();
+                table.string('status', 1).notNullable();
+                table.timestamp('updated_at', true);
+                table.timestamp('created_at', true).notNullable();
+            })
+            .table('sessions', function(table) {
+                table.integer('user_id').notNullable().references('users.id').onUpdate('CASCADE').onDelete('CASCADE');
+            })
+            .table('users_devices', function(table) {
+                table.integer('user_id').notNullable().references('users.id').onUpdate('CASCADE').onDelete('CASCADE');
+                table.integer('device_id').notNullable().references('devices.id').onUpdate('CASCADE').onDelete('CASCADE');
+            })
+            .table('devices_settings', function(table) {
                 table.integer('device_id').notNullable().references('devices.id').onUpdate('CASCADE').onDelete('CASCADE');
             });
         })
@@ -59,6 +70,15 @@ module.exports = {
 
     down: function(knex, Promise) {
         return knex.schema
+        .table('sessions', function(table) {
+            table.dropColumns('user_id');
+        })
+        .table('users_devices', function(table) {
+            table.dropColumns('user_id', 'device_id');
+        })
+        .table('devices_settings', function(table) {
+            table.dropColumns('device_id');
+        })
         .dropTable('devices_settings')
         .dropTable('users_devices')
         .dropTable('devices')
