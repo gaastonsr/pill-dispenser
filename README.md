@@ -67,7 +67,7 @@ Validations are strict. No value is casted. Example: if an input expects an stri
 
 ### ValidationError
 
-Most error responses contain only `code`, `name` and `message` fields. Validation errors contain an `errors` field with an array containing all validation errors.
+Most error responses contain only `code`, `name` and `message` fields. Validation errors contain an `errors` field with an array containing all validation errors. Validation errors have a 400 http code.
 
 Each element in the array is an object with the structure:
 

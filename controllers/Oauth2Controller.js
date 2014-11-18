@@ -1,5 +1,8 @@
 'use strict';
 
+var Joi         = require('joi');
+var validations = require('./../libs/validations');
+
 function Oauth2Controller() {
 
 }
@@ -7,7 +10,7 @@ function Oauth2Controller() {
 Oauth2Controller.prototype = {
     constructor: Oauth2Controller,
 
-    authorization: function(request, response, next) {
+    getToken: function(request, response, next) {
 
     }
 };

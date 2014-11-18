@@ -45,6 +45,13 @@ UsersModel.prototype = {
         .then(function(model) {
             var user = model.toJSON();
 
+            user.updatedAt = user.updated_at;
+            user.createdAt = user.created_at;
+
+            delete user.password;
+            delete user.updated_at;
+            delete user.created_at;
+
             user.activationToken = jwt.encode({
                 userId: user.id,
                 type  : 'activation'
@@ -96,6 +103,11 @@ UsersModel.prototype = {
             });
         })
         .then(function(model) {
+            var user = model.toJSON();
+
+            user.updatedAt = user.updated_at;
+            delete user.updated_at;
+
             return model.toJSON();
         });
     },

@@ -8,13 +8,10 @@ var TestsHelper  = require('./../support/TestsHelper');
 var DevicesModel = require('./../../models/DevicesModel');
 var DeviceORM    = require('./../../ORMs/DeviceORM');
 
-var expect = chai.expect;
-chai.use(require('chai-things'));
-
+var expect       = chai.expect;
+bcrypt           = Promise.promisifyAll(bcrypt);
 var testsHelper  = new TestsHelper();
 var devicesModel = new DevicesModel();
-
-bcrypt = Promise.promisifyAll(bcrypt);
 
 describe('DevicesModel', function() {
 

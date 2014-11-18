@@ -10,11 +10,10 @@ var UserDeviceORM    = require('./../../ORMs/UserDeviceORM');
 var DeviceORM        = require('./../../ORMs/DeviceORM');
 var DeviceSettingORM = require('./../../ORMs/DeviceSettingORM');
 
+var expect         = chai.expect;
+bcrypt             = Promise.promisifyAll(bcrypt);
 var testsHelper    = new TestsHelper();
 var myDevicesModel = new MyDevicesModel();
-
-var expect = chai.expect;
-bcrypt     = Promise.promisifyAll(bcrypt);
 
 describe('MyDevicesModel', function() {
 

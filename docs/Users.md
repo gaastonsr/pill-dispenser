@@ -1,8 +1,6 @@
 # Users Resource
 
-Sign up and activate users.
-
-
+---
 
 ## Create a User
 
@@ -32,6 +30,8 @@ Signs up users.
 
 ### On Success
 
+HTTP code: 201
+
 ```
 {
     "data": {
@@ -47,14 +47,14 @@ Signs up users.
 
 ### Possible Errors
 
-- `ValidationError`
-- `DuplicateEmail`
+- 400 `ValidationError`
+- 409 `DuplicateEmail`
 
-
+---
 
 ## Activate a User
 
-`PUT /users/:token`
+`PUT /users/activate/:token`
 
 **Protected**: false
 
@@ -68,12 +68,14 @@ Whenever a user is created it is created in an inactive state until his email is
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
-- `InvalidToken`
-- `UserAlreadyActive`
+- 400 `ValidationError`
+- 400 `InvalidToken`
+- 400 `UserAlreadyActive`

@@ -10,11 +10,13 @@ var expect            = chai.expect;
 var sessionsModelStub = new SessionsModelStub();
 var checkSession      = sessionChecker(sessionsModelStub);
 
+/* FAKE SERVER STUFF */
 var app = express();
 
 app.get('/', checkSession, function(request, response, next) {
     return response.status(200).json(request.user);
 });
+/* FAKE SERVER STUFF */
 
 describe('sessionChecker', function() {
 

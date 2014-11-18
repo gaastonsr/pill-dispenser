@@ -10,13 +10,12 @@ var config      = require('./../../config');
 var UsersModel  = require('./../../models/UsersModel');
 var UserORM     = require('./../../ORMs/UserORM');
 
-var expect = chai.expect;
-chai.use(require('chai-things'));
-
-bcrypt = Promise.promisifyAll(bcrypt);
-
+var expect      = chai.expect;
+bcrypt          = Promise.promisifyAll(bcrypt);
 var testsHelper = new TestsHelper();
 var usersModel  = new UsersModel();
+
+chai.use(require('chai-things'));
 
 describe('UsersModel', function() {
 
@@ -79,6 +78,24 @@ describe('UsersModel', function() {
                         expect(model.get('updatedAt')).to.be.instanceof(Date);
                         expect(model.get('createdAt')).to.be.instanceof(Date);
                     });
+                });
+            });
+
+            it('should return the resource created', function() {
+                var data = {
+                    name    : 'Jane Doe',
+                    email   : 'jane@doe.com',
+                    password: 'password'
+                };
+
+                return usersModel.create(data)
+                .then(function(user) {
+                    expect(user.id).to.be.a('number');
+                    expect(user.name).to.equal('Jane Doe');
+                    expect(user.email).to.equal('jane@doe.com');
+                    expect(user.status).to.equal('0');
+                    expect(user.updatedAt).to.be.instanceof(Date);
+                    expect(user.createdAt).to.be.instanceof(Date);
                 });
             });
 
@@ -190,6 +207,8 @@ describe('UsersModel', function() {
                     expect(user.name).to.equal('Jane Doe');
                     expect(user.email).to.equal('jane@doe.com');
                     expect(user.status).to.equal('1');
+                    expect(user.updatedAt).to.be.instanceof(Date);
+                    expect(user.createdAt).to.be.instanceof(Date);
                 });
             });
         });
