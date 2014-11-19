@@ -11,7 +11,6 @@ var UserORM    = require('./../ORMs/UserORM');
 bcrypt = Promise.promisifyAll(bcrypt);
 
 function SessionsModel() {
-
 }
 
 SessionsModel.prototype = {
@@ -44,7 +43,7 @@ SessionsModel.prototype = {
             }
 
             if (userModel.get('status') === '0') {
-                error      = new Error('InactiveUser');
+                error      = new Error('User account is inactive');
                 error.name = 'InactiveUser';
                 return Promise.reject(error);
             }
@@ -55,6 +54,9 @@ SessionsModel.prototype = {
         })
         .then(function(model) {
             var session = model.toJSON();
+
+            session.createdAt = session.created_at;
+            delete session.created_at;
 
             session.authToken = jwt.encode({
                 sessionId: model.get('id'),

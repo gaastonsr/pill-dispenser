@@ -86,6 +86,15 @@ describe('SessionsModel', function() {
                 });
             });
 
+            it('should return the session created', function() {
+                return sessionsModel.createFromClientCredentials(data)
+                .then(function(session) {
+                    expect(session.id).to.be.a('number');
+                    expect(session.userId).to.equal(1);
+                    expect(session.createdAt).to.be.instanceof(Date);
+                });
+            });
+
             it('should return an auth token', function() {
                 return sessionsModel.createFromClientCredentials(data)
                 .then(function(session) {

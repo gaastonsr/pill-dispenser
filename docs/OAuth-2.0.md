@@ -2,7 +2,7 @@
 
 Deliver and expire access tokens. A token is a key utilized to verify your identity with the servers.
 
-
+---
 
 ## Get a token
 
@@ -40,6 +40,8 @@ When `:grant-type` is `client_credentials`, the server expects:
 
 Independently of the grant type used it returns:
 
+HTTP code: 201
+
 ```
 {
     "access_token": "90u325v45nt895ngn3904ntg95nnugn34wn3gn9ugnut4",
@@ -54,7 +56,7 @@ Independently of the grant type used it returns:
 
 ### Posssible Errors
 
-- `GrantTypeNotAllowed`
-- `ValidationError`
-- `InvalidCredentials`
-- `InactiveUser`
+- 400 `GrantTypeNotAllowed`
+- 400 `ValidationError`
+- 401 `InvalidCredentials`
+- 403 `InactiveUser`

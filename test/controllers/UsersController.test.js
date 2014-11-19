@@ -9,7 +9,7 @@ var request         = require('supertest');
 var chai            = require('chai');
 var UsersController = require('./../../controllers/UsersController');
 
-var expect          = chai.expect;
+var expect = chai.expect;
 var usersModelStub  = {
     create  : function() {},
     activate: function() {}
@@ -125,7 +125,7 @@ describe('UsersController', function() {
                 usersModelStub.create.restore();
             });
 
-            it('should return ServerError', function(done) {
+            it('should return http status code 500', function(done) {
                 request(app)
                 .post('/users')
                 .send({
@@ -146,12 +146,13 @@ describe('UsersController', function() {
 
             before(function() {
                 var promise = Promise.resolve({
-                    id       : 1000,
-                    name     : 'John Doe',
-                    email    : 'john@doe.com',
-                    status   : '0',
-                    updatedAt: creationDate,
-                    createdAt: creationDate
+                    id             : 1000,
+                    name           : 'John Doe',
+                    email          : 'john@doe.com',
+                    status         : '0',
+                    updatedAt      : creationDate,
+                    createdAt      : creationDate,
+                    activationToken: 'somerandomtoken'
                 });
 
                 sinon.stub(usersModelStub, 'create').returns(promise);
@@ -280,7 +281,7 @@ describe('UsersController', function() {
                 usersModelStub.activate.restore();
             });
 
-            it('should return UserAlreadyActive error', function(done) {
+            it('should return http status code 500', function(done) {
                 request(app)
                 .put('/users/activate/somerandomtoken')
                 .end(function(error, response) {
