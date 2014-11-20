@@ -20,6 +20,8 @@ Nothing.
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {
     "data": {
@@ -61,13 +63,15 @@ Updates user profile.
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
+- 200 `ValidationError`
 
 
 
@@ -97,14 +101,16 @@ Updates user password.
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
-- `IncorrectPassword`
+- 400 `ValidationError`
+- 401 `IncorrectPassword`
 
 
 
@@ -134,16 +140,18 @@ Puts a request to update the user email. When a user wants to update his email i
 
 ### On Success
 
+HTTP code: 201
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
-- `IncorrectPassword`
-- `DuplicateEmail`
-- `DuplicateRequest`
+- 400 `ValidationError`
+- 401 `IncorrectPassword`
+- 409 `DuplicateEmail`
+- 409 `DuplicateRequest`
 
 
 
@@ -163,12 +171,14 @@ Updates a user email.
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
-- `InvalidToken`
-- `ExpiredEmailUpdateRequest`
+- 400 `ValidationError`
+- 400 `InvalidToken`
+- 410 `ExpiredEmailUpdateRequest`
