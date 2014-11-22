@@ -1,14 +1,13 @@
 'use strict';
 
 var Joi         = require('joi');
+var toolkit     = require('./../libs/api-toolkit');
 var validations = require('./../libs/validations');
 
-function MyDevicesController() {
+module.exports = toolkit.Controller.extend({
 
-}
-
-MyDevicesController.prototype = {
-    constructor: MyDevicesController,
+    initialize: function() {
+    },
 
     link: function(request, response, next) {
 
@@ -49,6 +48,5 @@ MyDevicesController.prototype = {
     deleteSetting: function(request, response, next) {
 
     }
-};
 
-module.exports = MyDevicesController;
+});

@@ -1,14 +1,14 @@
 'use strict';
 
 var Joi         = require('joi');
+var toolkit     = require('./../libs/api-toolkit');
 var validations = require('./../libs/validations');
 
-function DevicesController() {
+module.exports = toolkit.Controller.extend({
 
-}
-
-DevicesController.prototype = {
-    constructor: DevicesController,
+    initialize: function(usersModel) {
+        this.usersModel = usersModel;
+    },
 
     register: function(request, response, next) {
 
@@ -17,6 +17,5 @@ DevicesController.prototype = {
     delete: function(request, response, next) {
 
     }
-};
 
-module.exports = DevicesController;
+});

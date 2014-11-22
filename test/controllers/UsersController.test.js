@@ -1,27 +1,21 @@
 'use strict';
 
-var Promise         = require('bluebird');
 var sinon           = require('sinon');
-var _               = require('underscore');
+var sinonAsPromised = require('sinon-as-promised');
 var express         = require('express');
 var bodyParser      = require('body-parser');
 var request         = require('supertest');
 var chai            = require('chai');
+var UsersModel      = require('./../../models/UsersModel');
 var UsersController = require('./../../controllers/UsersController');
 
-var expect = chai.expect;
-var usersModelStub  = {
-    create  : function() {},
-    activate: function() {}
-};
-var usersController = new UsersController(usersModelStub);
+var expect          = chai.expect;
+var usersModel      = sinon.createStubInstance(UsersModel);
+var usersController = new UsersController(usersModel);
 
 /* FAKE SERVER STUFF */
 var app    = express();
 var router = express.Router();
-
-// make sure controller functions have as context themselves
-_.bindAll.apply(_, [usersController].concat(_.functions(usersController)));
 
 router.post('/users'                , usersController.create);
 router.put( '/users/activate/:token', usersController.activate);
@@ -32,15 +26,13 @@ app.use(router);
 
 chai.use(require('chai-things'));
 
-Promise.onPossiblyUnhandledRejection(function(reason, promise) {
-    // avoid printing false positive errors
-    // necessary because our stubs create rejected promises before they
-    // have an error handler firing a "possibly unhandled rejection" error
-});
-
 describe('UsersController', function() {
 
     describe('#create - when a user is created', function() {
+        beforeEach(function() {
+            usersModel.create.reset();
+        });
+
         describe('and the required fields are not sent', function() {
             it('should return ValidationError', function(done) {
                 request(app)
@@ -65,22 +57,9 @@ describe('UsersController', function() {
 
         describe('and the email is duplicated', function() {
             before(function() {
-                var error   = new Error('We already have a user registered with that email');
-                error.name  = 'DuplicateEmail';
-                var promise = Promise.reject(error);
-
-                sinon.stub(usersModelStub, 'create').returns(promise);
-            });
-
-            after(function() {
-                expect(usersModelStub.create.calledOnce).to.equal(true);
-                expect(usersModelStub.create.calledWith({
-                    name    : 'John Doe',
-                    email   : 'john@doe.com',
-                    password: 'password'
-                })).to.equal(true);
-
-                usersModelStub.create.restore();
+                var error  = new Error('We already have a user registered with that email');
+                error.name = 'DuplicateEmail';
+                usersModel.create.rejects(error);
             });
 
             it('should return DuplicateEmail error', function(done) {
@@ -107,22 +86,9 @@ describe('UsersController', function() {
 
         describe('and a unknown error happens', function() {
             before(function() {
-                var error   = new Error('Unknown error');
-                error.name  = 'UnknownError';
-                var promise = Promise.reject(error);
-
-                sinon.stub(usersModelStub, 'create').returns(promise);
-            });
-
-            after(function() {
-                expect(usersModelStub.create.calledOnce).to.equal(true);
-                expect(usersModelStub.create.calledWith({
-                    name    : 'John Doe',
-                    email   : 'john@doe.com',
-                    password: 'password'
-                })).to.equal(true);
-
-                usersModelStub.create.restore();
+                var error  = new Error('Unknown error');
+                error.name = 'UnknownError';
+                usersModel.create.rejects(error);
             });
 
             it('should return http status code 500', function(done) {
@@ -145,7 +111,7 @@ describe('UsersController', function() {
             var creationDate = new Date();
 
             before(function() {
-                var promise = Promise.resolve({
+                usersModel.create.resolves({
                     id             : 1000,
                     name           : 'John Doe',
                     email          : 'john@doe.com',
@@ -154,19 +120,27 @@ describe('UsersController', function() {
                     createdAt      : creationDate,
                     activationToken: 'somerandomtoken'
                 });
-
-                sinon.stub(usersModelStub, 'create').returns(promise);
             });
 
-            after(function() {
-                expect(usersModelStub.create.calledOnce).to.equal(true);
-                expect(usersModelStub.create.calledWith({
-                    name    : 'John Doe',
-                    email   : 'john@doe.com',
-                    password: 'password'
-                })).to.equal(true);
+            it('should call usersModel.created method with the right arguments', function(done) {
+                request(app)
+                .post('/users')
+                .send({
+                    name             : 'John Doe',
+                    email            : 'john@doe.com',
+                    emailConfirmation: 'john@doe.com',
+                    password         : 'password'
+                })
+                .end(function(error, response) {
+                    expect(usersModel.create.calledOnce).to.equal(true);
+                    expect(usersModel.create.calledWith({
+                        name    : 'John Doe',
+                        email   : 'john@doe.com',
+                        password: 'password'
+                    })).to.equal(true);
 
-                usersModelStub.create.restore();
+                    done();
+                });
             });
 
             it('should return the created resource', function(done) {
@@ -195,22 +169,15 @@ describe('UsersController', function() {
     });
 
     describe('#activate - when a user is activated', function() {
+        beforeEach(function() {
+            usersModel.activate.reset();
+        });
+
         describe('and the token is invalid', function() {
             before(function() {
-                var error   = new Error('Invalid token');
-                error.name  = 'InvalidToken';
-                var promise = Promise.reject(error);
-
-                sinon.stub(usersModelStub, 'activate').returns(promise);
-            });
-
-            after(function() {
-                expect(usersModelStub.activate.calledOnce).to.equal(true);
-                expect(usersModelStub.activate.calledWith({
-                    activationToken: 'somerandomtoken'
-                })).to.equal(true);
-
-                usersModelStub.activate.restore();
+                var error  = new Error('Invalid token');
+                error.name = 'InvalidToken';
+                usersModel.activate.rejects(error);
             });
 
             it('should return InvalidToken error', function(done) {
@@ -231,20 +198,9 @@ describe('UsersController', function() {
 
         describe('and the user is already active', function() {
             before(function() {
-                var error   = new Error('User already active');
-                error.name  = 'UserAlreadyActive';
-                var promise = Promise.reject(error);
-
-                sinon.stub(usersModelStub, 'activate').returns(promise);
-            });
-
-            after(function() {
-                expect(usersModelStub.activate.calledOnce).to.equal(true);
-                expect(usersModelStub.activate.calledWith({
-                    activationToken: 'somerandomtoken'
-                })).to.equal(true);
-
-                usersModelStub.activate.restore();
+                var error  = new Error('User already active');
+                error.name = 'UserAlreadyActive';
+                usersModel.activate.rejects(error);
             });
 
             it('should return UserAlreadyActive error', function(done) {
@@ -265,20 +221,9 @@ describe('UsersController', function() {
 
         describe('and an unknown error happens', function() {
             before(function() {
-                var error   = new Error('Unknown error');
-                error.name  = 'UnknownError';
-                var promise = Promise.reject(error);
-
-                sinon.stub(usersModelStub, 'activate').returns(promise);
-            });
-
-            after(function() {
-                expect(usersModelStub.activate.calledOnce).to.equal(true);
-                expect(usersModelStub.activate.calledWith({
-                    activationToken: 'somerandomtoken'
-                })).to.equal(true);
-
-                usersModelStub.activate.restore();
+                var error  = new Error('Unknown error');
+                error.name = 'UnknownError';
+                usersModel.activate.rejects(error);
             });
 
             it('should return http status code 500', function(done) {
@@ -296,7 +241,7 @@ describe('UsersController', function() {
             var creationDate = new Date().setHours(updateDate.getHours() - 1);
 
             before(function() {
-                var promise = Promise.resolve({
+                usersModel.activate.resolves({
                     id       : 1000,
                     name     : 'John Doe',
                     email    : 'john@doe.com',
@@ -304,20 +249,22 @@ describe('UsersController', function() {
                     updatedAt: updateDate,
                     createdAt: creationDate
                 });
-
-                sinon.stub(usersModelStub, 'activate').returns(promise);
             });
 
-            after(function() {
-                expect(usersModelStub.activate.calledOnce).to.equal(true);
-                expect(usersModelStub.activate.calledWith({
-                    activationToken: 'somerandomtoken'
-                })).to.equal(true);
+            it('should call usersModel.activate method with the right arguments', function(done) {
+                request(app)
+                .put('/users/activate/somerandomtoken')
+                .end(function(error, response) {
+                    expect(usersModel.activate.calledOnce).to.equal(true);
+                    expect(usersModel.activate.calledWith({
+                        activationToken: 'somerandomtoken'
+                    })).to.equal(true);
 
-                usersModelStub.activate.restore();
+                    done();
+                });
             });
 
-            it('should return UserAlreadyActive error', function(done) {
+            it('should return 200 http status code', function(done) {
                 request(app)
                 .put('/users/activate/somerandomtoken')
                 .end(function(error, response) {

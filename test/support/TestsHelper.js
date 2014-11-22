@@ -1,7 +1,9 @@
 'use strict';
 
-var Promise   = require('bluebird');
-var bookshelf = require('./../../bookshelf');
+var Promise    = require('bluebird');
+var bookshelf  = require('./../../bookshelf');
+var _          = require('underscore');
+var sinon      = require('sinon');
 
 var knex = bookshelf.knex;
 
@@ -51,7 +53,6 @@ TestsHelper.prototype = {
             });
         });
     }
-
 };
 
 module.exports = TestsHelper;

@@ -1,12 +1,11 @@
 'use strict';
 
-var _       = require('underscore');
 var express = require('express');
 
-var UsersModel     = require(__dirname + '/models/UsersModel');
-var SessionsModel  = require(__dirname + '/models/SessionsModel');
-var DevicesModel   = require(__dirname + '/models/DevicesModel');
-var MyDevicesModel = require(__dirname + '/models/MyDevicesModel');
+var UsersModel     = require('./models/UsersModel');
+var SessionsModel  = require('./models/SessionsModel');
+var DevicesModel   = require('./models/DevicesModel');
+var MyDevicesModel = require('./models/MyDevicesModel');
 
 var usersModel     = new UsersModel();
 var sessionsModel  = new SessionsModel();
@@ -24,13 +23,6 @@ var oauth2Controller    = new Oauth2Controller(sessionsModel);
 var profileController   = new ProfileController(usersModel);
 var devicesController   = new DevicesController(devicesModel);
 var myDevicesController = new MyDevicesController(myDevicesModel);
-
-// bind controllers functions context to themselves
-_.bindAll.apply(_, [usersController].concat(_.functions(usersController)));
-_.bindAll.apply(_, [oauth2Controller].concat(_.functions(oauth2Controller)));
-_.bindAll.apply(_, [profileController].concat(_.functions(profileController)));
-_.bindAll.apply(_, [devicesController].concat(_.functions(devicesController)));
-_.bindAll.apply(_, [myDevicesController].concat(_.functions(myDevicesController)));
 
 var sessionChecker = require('./middlewares/sessionChecker');
 var checkSession   = sessionChecker(sessionsModel);

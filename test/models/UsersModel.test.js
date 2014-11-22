@@ -214,6 +214,42 @@ describe('UsersModel', function() {
         });
     });
 
+    describe('#getById - when a user is fetched by id', function() {
+        beforeEach(function() {
+            return testsHelper.setUp(testData.getById);
+        });
+
+        describe('and a user with that id doesn\'t exist', function() {
+            it('should return UserNotFound error', function() {
+                return usersModel.getById({
+                    id: 10000
+                })
+                .then(function() {
+                    return Promise.reject(new Error('Method should fail'));
+                })
+                .error(function(error) {
+                    expect(error.name).to.equal('UserNotFound');
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            it('should return a user', function() {
+                return usersModel.getById({
+                    id: 1
+                })
+                .then(function(user) {
+                    expect(user.id).to.equal(1);
+                    expect(user.name).to.equal('John Doe');
+                    expect(user.email).to.equal('john@doe.com');
+                    expect(user.status).to.equal('1');
+                    expect(user.updatedAt).to.be.instanceof(Date);
+                    expect(user.createdAt).to.be.instanceof(Date);
+                });
+            });
+        });
+    });
+
     describe('#update - when a user is updated', function() {
         beforeEach(function() {
             return testsHelper.setUp(testData.update);

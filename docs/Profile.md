@@ -1,8 +1,6 @@
 # Profile Resource
 
-Retrieves and update users profiles.
-
-
+---
 
 ## Get Profile
 
@@ -39,7 +37,7 @@ HTTP code: 200
 
 None.
 
-
+---
 
 ## Update Profile
 
@@ -71,9 +69,9 @@ HTTP code: 200
 
 ### Possible Errors
 
-- 200 `ValidationError`
+- 400 `ValidationError`
 
-
+---
 
 ## Update Password
 
@@ -112,7 +110,7 @@ HTTP code: 200
 - 400 `ValidationError`
 - 401 `IncorrectPassword`
 
-
+---
 
 ## Request Email Update
 
@@ -153,7 +151,7 @@ HTTP code: 201
 - 409 `DuplicateEmail`
 - 409 `DuplicateRequest`
 
-
+---
 
 ## Update Email
 

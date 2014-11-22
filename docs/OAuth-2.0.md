@@ -1,7 +1,5 @@
 # OAuth 2.0
 
-Deliver and expire access tokens. A token is a key utilized to verify your identity with the servers.
-
 ---
 
 ## Get a token

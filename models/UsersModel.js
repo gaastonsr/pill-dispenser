@@ -112,6 +112,24 @@ UsersModel.prototype = {
         });
     },
 
+    getById: function(data) {
+        var error = null;
+
+        return new UserORM({
+            id: data.id
+        })
+        .fetch()
+        .then(function(model) {
+            if (!model) {
+                error      = new Error('User not found');
+                error.name = 'UserNotFound';
+                return Promise.reject(error);
+            }
+
+            return model.toJSON();
+        });
+    },
+
     update: function(data) {
         var error = null;
 

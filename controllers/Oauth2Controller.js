@@ -1,14 +1,14 @@
 'use strict';
 
 var Joi         = require('joi');
+var toolkit     = require('./../libs/api-toolkit');
 var validations = require('./../libs/validations');
 
-function Oauth2Controller(sessionsModel) {
-    this.sessionsModel = sessionsModel;
-}
+module.exports = toolkit.Controller.extend({
 
-Oauth2Controller.prototype = {
-    constructor: Oauth2Controller,
+    initialize: function(sessionsModel) {
+        this.sessionsModel = sessionsModel;
+    },
 
     getToken: function(request, response, next) {
         var jsonResponse = {};
@@ -87,6 +87,5 @@ Oauth2Controller.prototype = {
             return next(error);
         });
     }
-};
+});
 
-module.exports = Oauth2Controller;

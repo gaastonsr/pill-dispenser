@@ -1,14 +1,14 @@
 'use strict';
 
 var Joi         = require('joi');
+var toolkit     = require('./../libs/api-toolkit');
 var validations = require('./../libs/validations');
 
-function UsersController(usersModel) {
-    this.usersModel = usersModel;
-}
+module.exports = toolkit.Controller.extend({
 
-UsersController.prototype = {
-    constructor: UsersController,
+    initialize: function(usersModel) {
+        this.usersModel = usersModel;
+    },
 
     create: function(request, response, next) {
         var jsonResponse = {};
@@ -94,6 +94,5 @@ UsersController.prototype = {
             return next(error);
         });
     }
-};
 
-module.exports = UsersController;
+});
