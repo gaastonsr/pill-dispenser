@@ -1,7 +1,7 @@
 'use strict';
 
+var Promise         = require('bluebird');
 var sinon           = require('sinon');
-var sinonAsPromised = require('sinon-as-promised');
 var express         = require('express');
 var bodyParser      = require('body-parser');
 var request         = require('supertest');
@@ -10,7 +10,7 @@ var UsersModel      = require('./../../models/UsersModel');
 var UsersController = require('./../../controllers/UsersController');
 
 var expect          = chai.expect;
-var usersModel      = sinon.createStubInstance(UsersModel);
+var usersModel      = new UsersModel();
 var usersController = new UsersController(usersModel);
 
 /* FAKE SERVER STUFF */
@@ -29,8 +29,12 @@ chai.use(require('chai-things'));
 describe('UsersController', function() {
 
     describe('#create - when a user is created', function() {
-        beforeEach(function() {
-            usersModel.create.reset();
+        afterEach(function() {
+            var method = usersModel.create;
+
+            if (method.restore) {
+                method.restore();
+            }
         });
 
         describe('and the required fields are not sent', function() {
@@ -56,10 +60,12 @@ describe('UsersController', function() {
         });
 
         describe('and the email is duplicated', function() {
-            before(function() {
-                var error  = new Error('We already have a user registered with that email');
-                error.name = 'DuplicateEmail';
-                usersModel.create.rejects(error);
+            beforeEach(function() {
+                sinon.stub(usersModel, 'create', function() {
+                    var error  = new Error('We already have a user registered with that email');
+                    error.name = 'DuplicateEmail';
+                    return Promise.reject(error);
+                });
             });
 
             it('should return DuplicateEmail error', function(done) {
@@ -85,10 +91,12 @@ describe('UsersController', function() {
         });
 
         describe('and a unknown error happens', function() {
-            before(function() {
-                var error  = new Error('Unknown error');
-                error.name = 'UnknownError';
-                usersModel.create.rejects(error);
+            beforeEach(function() {
+                sinon.stub(usersModel, 'create', function() {
+                    var error  = new Error('Unknown error');
+                    error.name = 'UnknownError';
+                    return Promise.reject(error);
+                });
             });
 
             it('should return http status code 500', function(done) {
@@ -110,15 +118,17 @@ describe('UsersController', function() {
         describe('and the data is fine', function() {
             var creationDate = new Date();
 
-            before(function() {
-                usersModel.create.resolves({
-                    id             : 1000,
-                    name           : 'John Doe',
-                    email          : 'john@doe.com',
-                    status         : '0',
-                    updatedAt      : creationDate,
-                    createdAt      : creationDate,
-                    activationToken: 'somerandomtoken'
+            beforeEach(function() {
+                sinon.stub(usersModel, 'create', function() {
+                    return Promise.resolve({
+                        id             : 1000,
+                        name           : 'John Doe',
+                        email          : 'john@doe.com',
+                        status         : '0',
+                        updatedAt      : creationDate,
+                        createdAt      : creationDate,
+                        activationToken: 'somerandomtoken'
+                    });
                 });
             });
 
@@ -169,15 +179,21 @@ describe('UsersController', function() {
     });
 
     describe('#activate - when a user is activated', function() {
-        beforeEach(function() {
-            usersModel.activate.reset();
+        afterEach(function() {
+            var method = usersModel.activate;
+
+            if (method.restore) {
+                method.restore();
+            }
         });
 
         describe('and the token is invalid', function() {
-            before(function() {
-                var error  = new Error('Invalid token');
-                error.name = 'InvalidToken';
-                usersModel.activate.rejects(error);
+            beforeEach(function() {
+                sinon.stub(usersModel, 'activate', function() {
+                    var error  = new Error('Invalid token');
+                    error.name = 'InvalidToken';
+                    return Promise.reject(error);
+                });
             });
 
             it('should return InvalidToken error', function(done) {
@@ -197,10 +213,12 @@ describe('UsersController', function() {
         });
 
         describe('and the user is already active', function() {
-            before(function() {
-                var error  = new Error('User already active');
-                error.name = 'UserAlreadyActive';
-                usersModel.activate.rejects(error);
+            beforeEach(function() {
+                sinon.stub(usersModel, 'activate', function() {
+                    var error  = new Error('User already active');
+                    error.name = 'UserAlreadyActive';
+                    return Promise.reject(error);
+                });
             });
 
             it('should return UserAlreadyActive error', function(done) {
@@ -220,10 +238,12 @@ describe('UsersController', function() {
         });
 
         describe('and an unknown error happens', function() {
-            before(function() {
-                var error  = new Error('Unknown error');
-                error.name = 'UnknownError';
-                usersModel.activate.rejects(error);
+            beforeEach(function() {
+                sinon.stub(usersModel, 'activate', function() {
+                    var error  = new Error('Unknown error');
+                    error.name = 'UnknownError';
+                    return Promise.reject(error);
+                });
             });
 
             it('should return http status code 500', function(done) {
@@ -240,14 +260,16 @@ describe('UsersController', function() {
             var updateDate   = new Date();
             var creationDate = new Date().setHours(updateDate.getHours() - 1);
 
-            before(function() {
-                usersModel.activate.resolves({
-                    id       : 1000,
-                    name     : 'John Doe',
-                    email    : 'john@doe.com',
-                    status   : '0',
-                    updatedAt: updateDate,
-                    createdAt: creationDate
+            beforeEach(function() {
+                sinon.stub(usersModel, 'activate', function() {
+                    return Promise.resolve({
+                        id       : 1000,
+                        name     : 'John Doe',
+                        email    : 'john@doe.com',
+                        status   : '0',
+                        updatedAt: updateDate,
+                        createdAt: creationDate
+                    });
                 });
             });
 

@@ -1,6 +1,6 @@
 {
   "name": "pill-dispenser",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Web service for an automatic pill dispenser aimed to help Alzheimer patients.",
   "main": "cluster.js",
   "scripts": {
@@ -14,7 +14,6 @@
   },
   "keywords": [
     "node.js",
-    "docker",
     "webservice"
   ],
   "author": "Gastón Sánchez",
@@ -43,8 +42,7 @@
     "gulp-jshint": "~1.9.0",
     "gulp-mocha": "~2.0.0",
     "gulp-istanbul": "~0.3.1",
-    "sinon": "~1.12.1",
-    "sinon-as-promised": "~1.4.1"
+    "sinon": "~1.12.1"
   },
   "jshintConfig": {
     "node": true,

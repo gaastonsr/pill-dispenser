@@ -1,7 +1,7 @@
 'use strict';
 
+var Promise          = require('bluebird');
 var sinon            = require('sinon');
-var sinonAsPromised  = require('sinon-as-promised');
 var express          = require('express');
 var bodyParser       = require('body-parser');
 var request          = require('supertest');
@@ -10,7 +10,7 @@ var SessionsModel    = require('./../../models/SessionsModel');
 var Oauth2Controller = require('./../../controllers/Oauth2Controller');
 
 var expect           = chai.expect;
-var sessionsModel    = sinon.createStubInstance(SessionsModel);
+var sessionsModel    = new SessionsModel();
 var oauth2Controller = new Oauth2Controller(sessionsModel);
 
 /* FAKE SERVER STUFF */
@@ -28,8 +28,12 @@ chai.use(require('chai-things'));
 describe('Oauth2Controller', function() {
 
     describe('#getToken - when a token is requested', function() {
-        beforeEach(function() {
-            sessionsModel.createFromClientCredentials.reset();
+        afterEach(function() {
+            var method = sessionsModel.createFromClientCredentials;
+
+            if (method.restore) {
+                method.restore();
+            }
         });
 
         describe('and the grant type is not allowed', function() {
@@ -72,10 +76,12 @@ describe('Oauth2Controller', function() {
             });
 
             describe('and the credentials are invalid', function() {
-                before(function() {
-                    var error  = new Error('Email and/or password are incorrect');
-                    error.name = 'InvalidCredentials';
-                    sessionsModel.createFromClientCredentials.rejects(error);
+                beforeEach(function() {
+                    sinon.stub(sessionsModel, 'createFromClientCredentials', function() {
+                        var error  = new Error('Email and/or password are incorrect');
+                        error.name = 'InvalidCredentials';
+                        return Promise.reject(error);
+                    });
                 });
 
                 it('should return InvalidCredentials error', function(done) {
@@ -99,10 +105,12 @@ describe('Oauth2Controller', function() {
             });
 
             describe('and the user is inactive', function() {
-                before(function() {
-                    var error  = new Error('User account is inactive');
-                    error.name = 'InactiveUser';
-                    sessionsModel.createFromClientCredentials.rejects(error);
+                beforeEach(function() {
+                    sinon.stub(sessionsModel, 'createFromClientCredentials', function() {
+                        var error  = new Error('User account is inactive');
+                        error.name = 'InactiveUser';
+                        return Promise.reject(error);
+                    });
                 });
 
                 it('should return InactiveUser error', function(done) {
@@ -126,10 +134,12 @@ describe('Oauth2Controller', function() {
             });
 
             describe('and an unknown error happens', function() {
-                before(function() {
-                    var error  = new Error('unknown error');
-                    error.name = 'UnknownError';
-                    sessionsModel.createFromClientCredentials.rejects(error);
+                beforeEach(function() {
+                    sinon.stub(sessionsModel, 'createFromClientCredentials', function() {
+                        var error  = new Error('unknown error');
+                        error.name = 'UnknownError';
+                        return Promise.reject(error);
+                    });
                 });
 
                 it('should return http status code 500', function(done) {
@@ -147,12 +157,14 @@ describe('Oauth2Controller', function() {
             });
 
             describe('and the data is fine', function() {
-                before(function() {
-                    sessionsModel.createFromClientCredentials.resolves({
-                        id       : 1000,
-                        userId   : 1,
-                        createdAt: new Date(),
-                        authToken: 'somerandomtoken'
+                beforeEach(function() {
+                    sinon.stub(sessionsModel, 'createFromClientCredentials', function() {
+                        return Promise.resolve({
+                            id       : 1000,
+                            userId   : 1,
+                            createdAt: new Date(),
+                            authToken: 'somerandomtoken'
+                        });
                     });
                 });
 

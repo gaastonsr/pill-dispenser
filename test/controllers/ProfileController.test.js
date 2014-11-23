@@ -1,7 +1,7 @@
 'use strict';
 
+var Promise           = require('bluebird');
 var sinon             = require('sinon');
-var sinonAsPromised   = require('sinon-as-promised');
 var express           = require('express');
 var bodyParser        = require('body-parser');
 var request           = require('supertest');
@@ -10,7 +10,7 @@ var UsersModel        = require('./../../models/UsersModel');
 var ProfileController = require('./../../controllers/ProfileController');
 
 var expect            = chai.expect;
-var usersModel        = sinon.createStubInstance(UsersModel);
+var usersModel        = new UsersModel();
 var profileController = new ProfileController(usersModel);
 
 /* FAKE SERVER STUFF */
@@ -38,17 +38,23 @@ app.use(router);
 describe('ProfileController', function() {
 
     describe('#get - when a user profile is fetched', function() {
-        beforeEach(function() {
-            usersModel.getById.reset();
+        afterEach(function() {
+            var method = usersModel.getById;
+
+            if (method.restore) {
+                method.restore();
+            }
         });
 
         describe('and an unknown error happens', function() {
             var creationDate = new Date();
 
-            before(function() {
-                var error   = new Error('Unknown error');
-                error.name  = 'UnknownError';
-                usersModel.getById.rejects(error);
+            beforeEach(function() {
+                sinon.stub(usersModel, 'getById', function() {
+                    var error  = new Error('Unknown error');
+                    error.name = 'UnknownError';
+                    return Promise.reject(error);
+                });
             });
 
             it('should return 500 http code', function(done) {
@@ -64,13 +70,15 @@ describe('ProfileController', function() {
         describe('and everything is fine', function() {
             var creationDate = new Date();
 
-            before(function() {
-                usersModel.getById.resolves({
-                    id       : 1,
-                    name     : 'John Doe',
-                    email    : 'john@doe.com',
-                    updatedAt: creationDate,
-                    createdAt: creationDate
+            beforeEach(function() {
+                sinon.stub(usersModel, 'getById', function() {
+                    return Promise.resolve({
+                        id       : 1,
+                        name     : 'John Doe',
+                        email    : 'john@doe.com',
+                        updatedAt: creationDate,
+                        createdAt: creationDate
+                    });
                 });
             });
 
@@ -107,8 +115,12 @@ describe('ProfileController', function() {
     });
 
     describe('#update - when a profile is updated', function() {
-        beforeEach(function() {
-            usersModel.update.reset();
+        afterEach(function() {
+            var method = usersModel.update;
+
+            if (method.restore) {
+                method.restore();
+            }
         });
 
         describe('and the required fields are not sent', function() {
@@ -131,6 +143,14 @@ describe('ProfileController', function() {
         });
 
         describe('and an unknown error happens', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'update', function() {
+                    var error  = new Error('Unknown error');
+                    error.name = 'UnknownError';
+                    return Promise.reject(error);
+                });
+            });
+
             it('should return 500 http code', function(done) {
                 request(app)
                 .put('/profile')
@@ -148,13 +168,15 @@ describe('ProfileController', function() {
             var updateDate   = new Date();
             var creationDate = new Date().setHours(updateDate.getHours() - 1);
 
-            before(function() {
-                usersModel.update.resolves({
-                    id       : 1,
-                    name     : 'J. Doe',
-                    email    : 'john@doe.com',
-                    updatedAt: updateDate,
-                    createdAt: creationDate
+            beforeEach(function() {
+                sinon.stub(usersModel, 'update', function() {
+                    return Promise.resolve({
+                        id       : 1,
+                        name     : 'J. Doe',
+                        email    : 'john@doe.com',
+                        updatedAt: updateDate,
+                        createdAt: creationDate
+                    });
                 });
             });
 
