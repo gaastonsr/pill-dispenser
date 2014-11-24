@@ -46,6 +46,10 @@ describe('ProfileController', function() {
     describe('#get - when a user profile is fetched', function() {
         var model  = usersModel;
         var method = 'getById';
+        var route  = {
+            verb: 'get',
+            path: '/profile'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -66,7 +70,7 @@ describe('ProfileController', function() {
 
             it('should return 500 http code', function(done) {
                 request(app)
-                .get('/profile')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(500);
                     done();
@@ -91,7 +95,7 @@ describe('ProfileController', function() {
 
             it('should call model.method with the right arguments', function(done) {
                 request(app)
-                .get('/profile')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     expect(model[method].calledOnce).to.equal(true);
                     expect(model[method].calledWith({
@@ -104,7 +108,7 @@ describe('ProfileController', function() {
 
             it('should return the user profile', function(done) {
                 request(app)
-                .get('/profile')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -124,6 +128,10 @@ describe('ProfileController', function() {
     describe('#update - when a profile is updated', function() {
         var model  = usersModel;
         var method = 'update';
+        var route  = {
+            verb: 'put',
+            path: '/profile'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -134,7 +142,7 @@ describe('ProfileController', function() {
         describe('and the required fields are not sent', function() {
             it('should return ValidationError', function(done) {
                 request(app)
-                .put('/profile')
+                [route.verb](route.path)
                 .send({})
                 .end(function(error, response) {
                     var body = response.body;
@@ -161,7 +169,7 @@ describe('ProfileController', function() {
 
             it('should return 500 http code', function(done) {
                 request(app)
-                .put('/profile')
+                [route.verb](route.path)
                 .send({
                     name: 'J. Doe'
                 })
@@ -190,7 +198,7 @@ describe('ProfileController', function() {
 
             it('should call model.method with the right arguments', function(done) {
                 request(app)
-                .put('/profile')
+                [route.verb](route.path)
                 .send({
                     name: 'J. Doe'
                 })
@@ -207,7 +215,7 @@ describe('ProfileController', function() {
 
             it('should return 200 http code', function(done) {
                 request(app)
-                .put('/profile')
+                [route.verb](route.path)
                 .send({
                     name: 'J. Doe'
                 })
@@ -222,6 +230,10 @@ describe('ProfileController', function() {
     describe('#updatePassword - when a password is updated', function() {
         var model  = usersModel;
         var method = 'updatePassword';
+        var route  = {
+            verb: 'put',
+            path: '/profile/password'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -232,7 +244,7 @@ describe('ProfileController', function() {
         describe('and the required fields are not sent', function() {
             it('should return ValidationError', function(done) {
                 request(app)
-                .put('/profile/password')
+                [route.verb](route.path)
                 .send({})
                 .end(function(error, response) {
                     var body = response.body;
@@ -261,7 +273,7 @@ describe('ProfileController', function() {
 
             it('should return 500 http code', function(done) {
                 request(app)
-                .put('/profile/password')
+                [route.verb](route.path)
                 .send({
                     currentPassword        : 'password',
                     newPassword            : 'notaneasyone',
@@ -285,7 +297,7 @@ describe('ProfileController', function() {
 
             it('should return IncorrectPassword error', function(done) {
                 request(app)
-                .put('/profile/password')
+                [route.verb](route.path)
                 .send({
                     currentPassword        : 'password',
                     newPassword            : 'notaneasyone',
@@ -312,7 +324,7 @@ describe('ProfileController', function() {
 
             it('should call model.method with the right arguments', function(done) {
                 request(app)
-                .put('/profile/password')
+                [route.verb](route.path)
                 .send({
                     currentPassword        : 'password',
                     newPassword            : 'notaneasyone',
@@ -332,7 +344,7 @@ describe('ProfileController', function() {
 
             it('should return http code 200', function(done) {
                 request(app)
-                .put('/profile/password')
+                [route.verb](route.path)
                 .send({
                     currentPassword        : 'password',
                     newPassword            : 'notaneasyone',
@@ -349,6 +361,10 @@ describe('ProfileController', function() {
     describe('#requestEmailUpdate - when an email update is requested', function() {
         var model  = usersModel;
         var method = 'requestEmailUpdate';
+        var route  = {
+            verb: 'post',
+            path: '/profile/email-update-request'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -359,7 +375,7 @@ describe('ProfileController', function() {
         describe('and the required fields are not sent', function() {
             it('should return ValidationError', function(done) {
                 request(app)
-                .post('/profile/email-update-request')
+                [route.verb](route.path)
                 .send({})
                 .end(function(error, response) {
                     var body = response.body;
@@ -388,7 +404,7 @@ describe('ProfileController', function() {
 
             it('should return 500 http code', function(done) {
                 request(app)
-                .post('/profile/email-update-request')
+                [route.verb](route.path)
                 .send({
                     password            : 'password',
                     newEmail            : 'jdoe@gmail.com',
@@ -412,7 +428,7 @@ describe('ProfileController', function() {
 
             it('should return IncorrectPassword error', function(done) {
                 request(app)
-                .post('/profile/email-update-request')
+                [route.verb](route.path)
                 .send({
                     password            : 'password',
                     newEmail            : 'jdoe@gmail.com',
@@ -441,7 +457,7 @@ describe('ProfileController', function() {
 
             it('should return DuplicateEmail error', function(done) {
                 request(app)
-                .post('/profile/email-update-request')
+                [route.verb](route.path)
                 .send({
                     password            : 'password',
                     newEmail            : 'jdoe@gmail.com',
@@ -470,7 +486,7 @@ describe('ProfileController', function() {
 
             it('should return DuplicateRequest error', function(done) {
                 request(app)
-                .post('/profile/email-update-request')
+                [route.verb](route.path)
                 .send({
                     password            : 'password',
                     newEmail            : 'jdoe@gmail.com',
@@ -497,7 +513,7 @@ describe('ProfileController', function() {
 
             it('should call usersModel.requestEmailUpdate with the right arguments', function(done) {
                 request(app)
-                .post('/profile/email-update-request')
+                [route.verb](route.path)
                 .send({
                     password            : 'password',
                     newEmail            : 'jdoe@gmail.com',
@@ -517,7 +533,7 @@ describe('ProfileController', function() {
 
             it('should return 200 http code', function(done) {
                 request(app)
-                .post('/profile/email-update-request')
+                [route.verb](route.path)
                 .send({
                     password            : 'password',
                     newEmail            : 'jdoe@gmail.com',
@@ -534,6 +550,10 @@ describe('ProfileController', function() {
     describe('#updateEmail - when an email is updated', function() {
         var model  = usersModel;
         var method = 'updateEmail';
+        var route  = {
+            verb: 'put',
+            path: '/profile/email/randomtoken'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -552,7 +572,7 @@ describe('ProfileController', function() {
 
             it('should return 500 http code', function(done) {
                 request(app)
-                .put('/profile/email/randomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(500);
                     done();
@@ -571,7 +591,7 @@ describe('ProfileController', function() {
 
             it('should return InvalidToken error', function(done) {
                 request(app)
-                .put('/profile/email/randomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -595,7 +615,7 @@ describe('ProfileController', function() {
 
             it('should return ExpiredEmailUpdateRequest error', function(done) {
                 request(app)
-                .put('/profile/email/randomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -617,7 +637,7 @@ describe('ProfileController', function() {
 
             it('should call model.method with the right arguments', function(done) {
                 request(app)
-                .put('/profile/email/randomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     expect(model[method].calledOnce).to.equal(true);
                     expect(model[method].calledWith({
@@ -630,7 +650,7 @@ describe('ProfileController', function() {
 
             it('should return 200 http code', function(done) {
                 request(app)
-                .put('/profile/email/randomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(200);
                     done();

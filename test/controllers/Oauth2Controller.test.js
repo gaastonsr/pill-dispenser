@@ -36,6 +36,10 @@ describe('Oauth2Controller', function() {
     describe('#getToken - when a token is requested', function() {
         var model  = sessionsModel;
         var method = 'createFromClientCredentials';
+        var route  = {
+            verb: 'post',
+            path: '/oauth2/authorization'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -46,7 +50,7 @@ describe('Oauth2Controller', function() {
         describe('and the grant type is not allowed', function() {
             it('should return GrantTypeNotAllowed error', function(done) {
                 request(app)
-                .post('/oauth2/authorization?grant_type=')
+                [route.verb](route.path + '?grant_type=')
                 .send({})
                 .end(function(error, response) {
                     var body = response.body;
@@ -65,7 +69,7 @@ describe('Oauth2Controller', function() {
             describe('and the required fields are not sent', function() {
                 it('should return ValidationError error', function(done) {
                     request(app)
-                    .post('/oauth2/authorization?grant_type=client_credentials')
+                    [route.verb](route.path + '?grant_type=client_credentials')
                     .send({})
                     .end(function(error, response) {
                         var body = response.body;
@@ -93,7 +97,7 @@ describe('Oauth2Controller', function() {
 
                 it('should return InvalidCredentials error', function(done) {
                     request(app)
-                    .post('/oauth2/authorization?grant_type=client_credentials')
+                    [route.verb](route.path + '?grant_type=client_credentials')
                     .send({
                         email   : 'john@doe.com',
                         password: 'password'
@@ -122,7 +126,7 @@ describe('Oauth2Controller', function() {
 
                 it('should return InactiveUser error', function(done) {
                     request(app)
-                    .post('/oauth2/authorization?grant_type=client_credentials')
+                    [route.verb](route.path + '?grant_type=client_credentials')
                     .send({
                         email   : 'john@doe.com',
                         password: 'password'
@@ -151,7 +155,7 @@ describe('Oauth2Controller', function() {
 
                 it('should return http status code 500', function(done) {
                     request(app)
-                    .post('/oauth2/authorization?grant_type=client_credentials')
+                    [route.verb](route.path + '?grant_type=client_credentials')
                     .send({
                         email   : 'john@doe.com',
                         password: 'password'
@@ -177,7 +181,7 @@ describe('Oauth2Controller', function() {
 
                 it('should call model.method with the right arguments', function(done) {
                     request(app)
-                    .post('/oauth2/authorization?grant_type=client_credentials')
+                    [route.verb](route.path + '?grant_type=client_credentials')
                     .send({
                         email   : 'john@doe.com',
                         password: 'password'
@@ -196,7 +200,7 @@ describe('Oauth2Controller', function() {
 
                 it('should return a token', function(done) {
                     request(app)
-                    .post('/oauth2/authorization?grant_type=client_credentials')
+                    [route.verb](route.path + '?grant_type=client_credentials')
                     .send({
                         email   : 'john@doe.com',
                         password: 'password'

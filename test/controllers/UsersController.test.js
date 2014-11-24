@@ -37,6 +37,10 @@ describe('UsersController', function() {
     describe('#create - when a user is created', function() {
         var model  = usersModel;
         var method = 'create';
+        var route = {
+            verb: 'post',
+            path: '/users'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -47,7 +51,7 @@ describe('UsersController', function() {
         describe('and the required fields are not sent', function() {
             it('should return ValidationError', function(done) {
                 request(app)
-                .post('/users')
+                [route.verb](route.path)
                 .send({})
                 .end(function(error, response) {
                     var body = response.body;
@@ -77,7 +81,7 @@ describe('UsersController', function() {
 
             it('should return DuplicateEmail error', function(done) {
                 request(app)
-                .post('/users')
+                [route.verb](route.path)
                 .send({
                     name             : 'John Doe',
                     email            : 'john@doe.com',
@@ -108,7 +112,7 @@ describe('UsersController', function() {
 
             it('should return http status code 500', function(done) {
                 request(app)
-                .post('/users')
+                [route.verb](route.path)
                 .send({
                     name             : 'John Doe',
                     email            : 'john@doe.com',
@@ -141,7 +145,7 @@ describe('UsersController', function() {
 
             it('should call model.method method with the right arguments', function(done) {
                 request(app)
-                .post('/users')
+                [route.verb](route.path)
                 .send({
                     name             : 'John Doe',
                     email            : 'john@doe.com',
@@ -162,7 +166,7 @@ describe('UsersController', function() {
 
             it('should return the created resource', function(done) {
                 request(app)
-                .post('/users')
+                [route.verb](route.path)
                 .send({
                     name             : 'John Doe',
                     email            : 'john@doe.com',
@@ -188,6 +192,10 @@ describe('UsersController', function() {
     describe('#activate - when a user is activated', function() {
         var model  = usersModel;
         var method = 'activate';
+        var route = {
+            verb: 'put',
+            path: '/users/activate/randomtoken'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -206,7 +214,7 @@ describe('UsersController', function() {
 
             it('should return InvalidToken error', function(done) {
                 request(app)
-                .put('/users/activate/somerandomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -231,7 +239,7 @@ describe('UsersController', function() {
 
             it('should return UserAlreadyActive error', function(done) {
                 request(app)
-                .put('/users/activate/somerandomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -256,7 +264,7 @@ describe('UsersController', function() {
 
             it('should return http status code 500', function(done) {
                 request(app)
-                .put('/users/activate/somerandomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(500);
                     done();
@@ -283,11 +291,11 @@ describe('UsersController', function() {
 
             it('should call model.method method with the right arguments', function(done) {
                 request(app)
-                .put('/users/activate/somerandomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     expect(model[method].calledOnce).to.equal(true);
                     expect(model[method].calledWith({
-                        activationToken: 'somerandomtoken'
+                        activationToken: 'randomtoken'
                     })).to.equal(true);
 
                     done();
@@ -296,7 +304,7 @@ describe('UsersController', function() {
 
             it('should return 200 http status code', function(done) {
                 request(app)
-                .put('/users/activate/somerandomtoken')
+                [route.verb](route.path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(200);
                     done();

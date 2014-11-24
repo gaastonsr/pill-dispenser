@@ -1,8 +1,6 @@
 # Devices Resource
 
-Register and delete devices.
-
-
+---
 
 ## Register Device
 
@@ -28,6 +26,8 @@ Registers a device.
 
 ### On Success
 
+HTTP code: 201
+
 ```
 {
     "data": {
@@ -42,7 +42,7 @@ Registers a device.
 
 ### Possible Errors
 
-- `ValidationError`
+- 400 `ValidationError`
 - `PermissionsError`
 - `DuplicateIdentifier`
 

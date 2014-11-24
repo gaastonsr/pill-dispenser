@@ -47,8 +47,8 @@ router.post('/profile/email-update-request', checkSession, profileController.req
 router.put( '/profile/email/:token'        , profileController.updateEmail);
 
 // Devices
-router.post(  '/devices'             , checkSession, devicesController.register);
-router.delete('/devices/:id'         , checkSession, devicesController.delete);
+router.post(  '/devices'    , checkSession, devicesController.register);
+router.delete('/devices/:id', checkSession, devicesController.delete);
 
 // User Devices
 router.post(  '/my-devices'                                            , checkSession, myDevicesController.link);
