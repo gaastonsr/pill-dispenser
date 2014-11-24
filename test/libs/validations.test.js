@@ -335,7 +335,7 @@ describe('validations', function() {
     // validation
     describe('device.identifier', function() {
         var schema = validations.device.identifier.required();
-        var length = 32;
+        var length = 36;
 
         describe('when undefined', function() {
             var errorMessage = 'value is required';

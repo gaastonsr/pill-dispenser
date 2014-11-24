@@ -31,7 +31,7 @@ var validations = {
     },
     device: {
         name      : Joi.string().max(20).strict(),
-        identifier: Joi.string().length(32).strict()
+        identifier: Joi.string().length(36).strict()
     }
 };
 

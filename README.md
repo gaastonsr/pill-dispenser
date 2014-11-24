@@ -57,7 +57,7 @@ All input fields are validated with one of the following rules:
 - **password**. String. Between 6 and 50 characters long, inclusive.
 - **user.name**. String. No empty and no longer than 20 characters long.
 - **device.name**. String. No empty and no longer than 20 characters long.
-- **device.identifier**. String. Exactly 32 characters long.
+- **device.identifier**. String. Exactly 36 characters long.
 - **token**. String. No empty.
 - **id**. Integer. Bigger than 0.
 
