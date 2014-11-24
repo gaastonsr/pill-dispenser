@@ -57,7 +57,7 @@ describe('ProfileController', function() {
             var creationDate = new Date();
 
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -78,7 +78,7 @@ describe('ProfileController', function() {
             var creationDate = new Date();
 
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     return Promise.resolve({
                         id       : 1,
                         name     : 'John Doe',
@@ -152,7 +152,7 @@ describe('ProfileController', function() {
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -177,7 +177,7 @@ describe('ProfileController', function() {
             var creationDate = new Date().setHours(updateDate.getHours() - 1);
 
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     return Promise.resolve({
                         id       : 1,
                         name     : 'J. Doe',
@@ -252,7 +252,7 @@ describe('ProfileController', function() {
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -276,7 +276,7 @@ describe('ProfileController', function() {
 
         describe('and the current password is incorrect', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('Incorrect password');
                     error.name = 'IncorrectPassword';
                     return Promise.reject(error);
@@ -305,7 +305,7 @@ describe('ProfileController', function() {
 
         describe('and everything is fine', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     return Promise.resolve();
                 });
             });
@@ -543,7 +543,7 @@ describe('ProfileController', function() {
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -562,7 +562,7 @@ describe('ProfileController', function() {
 
         describe('and the supplied token is invalid', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error();
                     error.name = 'InvalidToken';
                     return Promise.reject(error);
@@ -586,7 +586,7 @@ describe('ProfileController', function() {
 
         describe('and the email update request is expired', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error();
                     error.name = 'ExpiredEmailUpdateRequest';
                     return Promise.reject(error);
@@ -610,7 +610,7 @@ describe('ProfileController', function() {
 
         describe('and everything is fine', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     return Promise.resolve();
                 });
             });

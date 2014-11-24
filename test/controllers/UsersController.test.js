@@ -68,7 +68,7 @@ describe('UsersController', function() {
 
         describe('and the email is duplicated', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('We already have a user registered with that email');
                     error.name = 'DuplicateEmail';
                     return Promise.reject(error);
@@ -99,7 +99,7 @@ describe('UsersController', function() {
 
         describe('and a unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -126,7 +126,7 @@ describe('UsersController', function() {
             var creationDate = new Date();
 
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     return Promise.resolve({
                         id             : 1000,
                         name           : 'John Doe',
@@ -197,7 +197,7 @@ describe('UsersController', function() {
 
         describe('and the token is invalid', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('Invalid token');
                     error.name = 'InvalidToken';
                     return Promise.reject(error);
@@ -222,7 +222,7 @@ describe('UsersController', function() {
 
         describe('and the user is already active', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('User already active');
                     error.name = 'UserAlreadyActive';
                     return Promise.reject(error);
@@ -247,7 +247,7 @@ describe('UsersController', function() {
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -269,7 +269,7 @@ describe('UsersController', function() {
             var creationDate = new Date().setHours(updateDate.getHours() - 1);
 
             beforeEach(function() {
-                sinon.stub(model, method, function() {
+                model[method] = sinon.spy(function() {
                     return Promise.resolve({
                         id       : 1000,
                         name     : 'John Doe',

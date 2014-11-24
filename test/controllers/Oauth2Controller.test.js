@@ -84,7 +84,7 @@ describe('Oauth2Controller', function() {
 
             describe('and the credentials are invalid', function() {
                 beforeEach(function() {
-                    sinon.stub(model, method, function() {
+                    model[method] = sinon.spy(function() {
                         var error  = new Error('Email and/or password are incorrect');
                         error.name = 'InvalidCredentials';
                         return Promise.reject(error);
@@ -113,7 +113,7 @@ describe('Oauth2Controller', function() {
 
             describe('and the user is inactive', function() {
                 beforeEach(function() {
-                    sinon.stub(model, method, function() {
+                    model[method] = sinon.spy(function() {
                         var error  = new Error('User account is inactive');
                         error.name = 'InactiveUser';
                         return Promise.reject(error);
@@ -142,7 +142,7 @@ describe('Oauth2Controller', function() {
 
             describe('and an unknown error happens', function() {
                 beforeEach(function() {
-                    sinon.stub(model, method, function() {
+                    model[method] = sinon.spy(function() {
                         var error  = new Error('unknown error');
                         error.name = 'UnknownError';
                         return Promise.reject(error);
@@ -165,7 +165,7 @@ describe('Oauth2Controller', function() {
 
             describe('and the data is fine', function() {
                 beforeEach(function() {
-                    sinon.stub(model, method, function() {
+                    model[method] = sinon.spy(function() {
                         return Promise.resolve({
                             id       : 1000,
                             userId   : 1,
