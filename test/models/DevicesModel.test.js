@@ -36,6 +36,19 @@ describe('DevicesModel', function() {
         });
 
         describe('and the data is fine', function() {
+            it('should return the device created', function() {
+                return devicesModel.create({
+                    identifier: '120ecaaa-a0f2-4ac4-8393-c866d8bbb123',
+                    password  : 'password'
+                })
+                .then(function(device) {
+                    expect(device.id).to.be.a('number');
+                    expect(device.identifier).to.equal('120ecaaa-a0f2-4ac4-8393-c866d8bbb123');
+                    expect(device.updatedAt).to.be.instanceof(Date);
+                    expect(device.createdAt).to.be.instanceof(Date);
+                });
+            });
+
             it('should save a row in the database', function() {
                 return devicesModel.create({
                     identifier: '120ecaaa-a0f2-4ac4-8393-c866d8bbb123',
@@ -48,7 +61,7 @@ describe('DevicesModel', function() {
                     .fetch()
                     .then(function(model) {
                         expect(model.get('id')).to.be.a('number');
-                        expect(model.get('identifier'));
+                        expect(model.get('identifier')).to.equal('120ecaaa-a0f2-4ac4-8393-c866d8bbb123');
                         expect(model.get('updatedAt')).to.be.instanceof(Date);
                         expect(model.get('createdAt')).to.be.instanceof(Date);
 

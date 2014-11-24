@@ -37,7 +37,16 @@ DevicesModel.prototype = {
             .save();
         })
         .then(function(model) {
-            return model.toJSON();
+            var device = model.toJSON();
+
+            device.updatedAt = device.updated_at;
+            device.createdAt = device.created_at;
+
+            delete device.updated_at;
+            delete device.created_at;
+            delete device.password;
+
+            return device;
         });
     },
 

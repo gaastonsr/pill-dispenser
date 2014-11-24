@@ -176,6 +176,7 @@ describe('UsersController', function() {
                 .end(function(error, response) {
                     var body = response.body;
 
+                    expect(response.status).to.equal(201);
                     expect(body.data.kind).to.equal('UserProfile');
                     expect(body.data.id).to.equal(1000);
                     expect(body.data.name).to.equal('John Doe');
