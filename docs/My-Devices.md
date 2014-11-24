@@ -1,8 +1,6 @@
 # My Devices Resource
 
-Link, unlink to devices, update your devices name and password.
-
-
+---
 
 ## Link to Device
 
@@ -30,6 +28,8 @@ Links user to device.
 
 ### On Success
 
+HTTP code: 201
+
 ```
 {
     "data": {
@@ -46,12 +46,11 @@ Links user to device.
 
 ### Possible Errors
 
-- `ValidationError`
-- `InvalidCredentials`
-- `AlreadyLinked`
-- `IncorrectPassword`
+- 400 `ValidationError`
+- 401 `InvalidCredentials`
+- 409 `AlreadyLinked`
 
-
+---
 
 ## List My Devices
 
@@ -68,6 +67,8 @@ Lists all devices a user is linked to.
 Nothing.
 
 ### On Success
+
+HTTP code: 200
 
 ````
 {
@@ -92,7 +93,7 @@ Nothing.
 
 None.
 
-
+---
 
 ## Unlink to Device
 
@@ -108,16 +109,18 @@ Unlinks user to device.
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
-- `LinkageNotFound`
+- 400 `ValidationError`
+- 404 `LinkageNotFound`
 
-
+---
 
 ## Update Device Password
 
@@ -146,17 +149,19 @@ Updates a device password.
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
-- `LinkageNotFound`
-- `IncorrectPassword`
+- 400 `ValidationError`
+- 404 `LinkageNotFound`
+- 401 `IncorrectPassword`
 
-
+---
 
 ## Update Device Name
 
@@ -181,22 +186,18 @@ Updates a device name.
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
-- `LinkageNotFound`
+- 400 `ValidationError`
+- 404 `LinkageNotFound`
 
-
-
-### Possible Errors
-
-- `LinkageNotFound`
-
-
+---
 
 ## Add Device Setting
 
@@ -225,6 +226,8 @@ Add a a setting to the device.
 
 ### On Success
 
+HTTP code: 201
+
 ````
 {
     "data": {
@@ -242,10 +245,10 @@ Add a a setting to the device.
 
 ### Possible Errors
 
-- `ValidationError`
-- `LinkageNotFound`
+- 400 `ValidationError`
+- 404 `LinkageNotFound`
 
-
+---
 
 ## Get Device Settings
 
@@ -262,6 +265,8 @@ Returns a list of the device settings.
 Nothing.
 
 ### On Success
+
+HTTP code: 200
 
 ````
 {
@@ -290,10 +295,10 @@ Nothing.
 
 ### Possible Errors
 
-- `ValidationError`
-- `LinkageNotFound`
+- 400 `ValidationError`
+- 404 `LinkageNotFound`
 
-
+---
 
 ## Activate Device Setting
 
@@ -312,17 +317,19 @@ Activates a device operation.
 
 ### On Success
 
+HTTP code: 200
+
 ````
 {}
 ````
 
 ### Possible Errors
 
-- `ValidationError`
-- `LinkageNotFound`
-- `SettingAlreadyActive`
+- 400 `ValidationError`
+- 404 `LinkageNotFound`
+- 409 `SettingAlreadyActive`
 
-
+---
 
 ## Deactivate Device Setting
 
@@ -341,17 +348,19 @@ Deactivates a device operation.
 
 ### On Success
 
+HTTP code: 200
+
 ````
 {}
 ````
 
 ### Possible Errors
 
-- `ValidationError`
-- `LinkageNotFound`
-- `SettingAlreadyInactive`
+- 400 `ValidationError`
+- 404 `LinkageNotFound`
+- 409 `SettingAlreadyInactive`
 
-
+---
 
 ## Delete Device Setting
 
@@ -370,13 +379,15 @@ Deletes a set of settings of a device.
 
 ### On Success
 
+HTTP code: 200
+
 ````
 {}
 ````
 
 ### Possible Errors
 
-- `ValidationError`
-- `LinkageNotFound`
-- `SettingNotFound`
-- `DeleteActiveSetting`
+- 400 `ValidationError`
+- 404 `LinkageNotFound`
+- 404 `SettingNotFound`
+- 409 `DeleteActiveSetting`

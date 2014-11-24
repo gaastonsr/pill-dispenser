@@ -43,10 +43,10 @@ HTTP code: 201
 ### Possible Errors
 
 - 400 `ValidationError`
-- `PermissionsError`
-- `DuplicateIdentifier`
+- 403 `PermissionsError` (not implemented at the moment)
+- 409 `DuplicateIdentifier`
 
-
+---
 
 ## Delete a Device
 
@@ -64,12 +64,14 @@ Delete a device.
 
 ### On Success
 
+HTTP code: 200
+
 ```
 {}
 ```
 
 ### Possible Errors
 
-- `ValidationError`
-- `PermissionsError`
-- `DeviceNotFound`
+- 400 `ValidationError`
+- 403 `PermissionsError` (not implemented at the moment)
+- 404 `DeviceNotFound`
