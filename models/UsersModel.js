@@ -10,7 +10,6 @@ var UserORM   = require('./../ORMs/UserORM');
 bcrypt = Promise.promisifyAll(bcrypt);
 
 function UsersModel() {
-
 }
 
 UsersModel.prototype = {

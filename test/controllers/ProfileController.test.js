@@ -35,6 +35,10 @@ router.put( '/profile/email/:token'        , profileController.updateEmail);
 app.use(bodyParser.json());
 app.use(toolkit.energizer());
 app.use(router);
+// app.use(function(error, request, response, next) {
+//     console.log(error.stack);
+//     response.status(500).send();
+// });
 /* FAKE SERVER STUFF */
 
 describe('ProfileController', function() {
@@ -205,6 +209,423 @@ describe('ProfileController', function() {
                 .send({
                     name: 'J. Doe'
                 })
+                .end(function(error, response) {
+                    expect(response.status).to.equal(200);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('#updatePassword - when a password is updated', function() {
+        afterEach(function() {
+            var method = usersModel.updatePassword;
+
+            if (method.restore) {
+                method.restore();
+            }
+        });
+
+        describe('and the required fields are not sent', function() {
+            it('should return ValidationError', function(done) {
+                request(app)
+                .put('/profile/password')
+                .send({})
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(400);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal('ValidationError');
+                    expect(body.error.message).to.be.a('string');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'currentPassword');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'newPassword');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'newPasswordConfirmation');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and an unknown error happens', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'updatePassword', function() {
+                    var error  = new Error('Unknown error');
+                    error.name = 'UnknownError';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return 500 http code', function(done) {
+                request(app)
+                .put('/profile/password')
+                .send({
+                    currentPassword        : 'password',
+                    newPassword            : 'notaneasyone',
+                    newPasswordConfirmation: 'notaneasyone'
+                })
+                .end(function(error, response) {
+                    expect(response.status).to.equal(500);
+                    done();
+                });
+            });
+        });
+
+        describe('and the current password is incorrect', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'updatePassword', function() {
+                    var error  = new Error('Incorrect password');
+                    error.name = 'IncorrectPassword';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return IncorrectPassword error', function(done) {
+                request(app)
+                .put('/profile/password')
+                .send({
+                    currentPassword        : 'password',
+                    newPassword            : 'notaneasyone',
+                    newPasswordConfirmation: 'notaneasyone'
+                })
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(401);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal('IncorrectPassword');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and everything is fine', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'updatePassword', function() {
+                    return Promise.resolve();
+                });
+            });
+
+            it('should call usersModel.updatePassword with the right arguments', function(done) {
+                request(app)
+                .put('/profile/password')
+                .send({
+                    currentPassword        : 'password',
+                    newPassword            : 'notaneasyone',
+                    newPasswordConfirmation: 'notaneasyone'
+                })
+                .end(function(error, response) {
+                    expect(usersModel.updatePassword.calledOnce).to.equal(true);
+                    expect(usersModel.updatePassword.calledWith({
+                        userId         : 1,
+                        currentPassword: 'password',
+                        newPassword    : 'notaneasyone'
+                    })).to.equal(true);
+
+                    done();
+                });
+            });
+
+            it('should return http code 200', function(done) {
+                request(app)
+                .put('/profile/password')
+                .send({
+                    currentPassword        : 'password',
+                    newPassword            : 'notaneasyone',
+                    newPasswordConfirmation: 'notaneasyone'
+                })
+                .end(function(error, response) {
+                    expect(response.status).to.equal(200);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('#requestEmailUpdate - when an email update is requested', function() {
+        afterEach(function() {
+            var method = usersModel.requestEmailUpdate;
+
+            if (method.restore) {
+                method.restore();
+            }
+        });
+
+        describe('and the required fields are not sent', function() {
+            it('should return ValidationError', function(done) {
+                request(app)
+                .post('/profile/email-update-request')
+                .send({})
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(400);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal('ValidationError');
+                    expect(body.error.message).to.be.a('string');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'password');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'newEmail');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'newEmailConfirmation');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and an unknown error happens', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                    var error  = new Error('Unknown error');
+                    error.name = 'UnknownError';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return 500 http code', function(done) {
+                request(app)
+                .post('/profile/email-update-request')
+                .send({
+                    password            : 'password',
+                    newEmail            : 'jdoe@gmail.com',
+                    newEmailConfirmation: 'jdoe@gmail.com'
+                })
+                .end(function(error, response) {
+                    expect(response.status).to.equal(500);
+                    done();
+                });
+            });
+        });
+
+        describe('and the password is incorrect', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                    var error  = new Error('Incorrect password');
+                    error.name = 'IncorrectPassword';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return IncorrectPassword error', function(done) {
+                request(app)
+                .post('/profile/email-update-request')
+                .send({
+                    password            : 'password',
+                    newEmail            : 'jdoe@gmail.com',
+                    newEmailConfirmation: 'jdoe@gmail.com'
+                })
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(401);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal('IncorrectPassword');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the newEmail is already in use by another user', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                    var error  = new Error('Duplicate email');
+                    error.name = 'DuplicateEmail';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return DuplicateEmail error', function(done) {
+                request(app)
+                .post('/profile/email-update-request')
+                .send({
+                    password            : 'password',
+                    newEmail            : 'jdoe@gmail.com',
+                    newEmailConfirmation: 'jdoe@gmail.com'
+                })
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(409);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal('DuplicateEmail');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and a request to update the email by newEmail already exists', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                    var error  = new Error('Duplicate request');
+                    error.name = 'DuplicateRequest';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return DuplicateRequest error', function(done) {
+                request(app)
+                .post('/profile/email-update-request')
+                .send({
+                    password            : 'password',
+                    newEmail            : 'jdoe@gmail.com',
+                    newEmailConfirmation: 'jdoe@gmail.com'
+                })
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(409);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal('DuplicateRequest');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and everything is fine', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                    return Promise.resolve();
+                });
+            });
+
+            it('should call usersModel.requestEmailUpdate with the right arguments', function(done) {
+                request(app)
+                .post('/profile/email-update-request')
+                .send({
+                    password            : 'password',
+                    newEmail            : 'jdoe@gmail.com',
+                    newEmailConfirmation: 'jdoe@gmail.com'
+                })
+                .end(function(error, response) {
+                    expect(usersModel.requestEmailUpdate.calledOnce).to.equal(true);
+                    expect(usersModel.requestEmailUpdate.calledWith({
+                        userId  : 1,
+                        newEmail: 'jdoe@gmail.com',
+                        password: 'password'
+                    })).to.equal(true);
+
+                    done();
+                });
+            });
+
+            it('should return 200 http code', function(done) {
+                request(app)
+                .post('/profile/email-update-request')
+                .send({
+                    password            : 'password',
+                    newEmail            : 'jdoe@gmail.com',
+                    newEmailConfirmation: 'jdoe@gmail.com'
+                })
+                .end(function(error, response) {
+                    expect(response.status).to.equal(201);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('#updateEmail - when an email is updated', function() {
+        afterEach(function() {
+            var method = usersModel.updateEmail;
+
+            if (method.restore) {
+                method.restore();
+            }
+        });
+
+        describe('and an unknown error happens', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'updateEmail', function() {
+                    var error  = new Error('Unknown error');
+                    error.name = 'UnknownError';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return 500 http code', function(done) {
+                request(app)
+                .put('/profile/email/randomtoken')
+                .end(function(error, response) {
+                    expect(response.status).to.equal(500);
+                    done();
+                });
+            });
+        });
+
+        describe('and the supplied token is invalid', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'updateEmail', function() {
+                    var error  = new Error();
+                    error.name = 'InvalidToken';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return InvalidToken error', function(done) {
+                request(app)
+                .put('/profile/email/randomtoken')
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(400);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal('InvalidToken');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the email update request is expired', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'updateEmail', function() {
+                    var error  = new Error();
+                    error.name = 'ExpiredEmailUpdateRequest';
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ExpiredEmailUpdateRequest error', function(done) {
+                request(app)
+                .put('/profile/email/randomtoken')
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(410);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal('ExpiredEmailUpdateRequest');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and everything is fine', function() {
+            beforeEach(function() {
+                sinon.stub(usersModel, 'updateEmail', function() {
+                    return Promise.resolve();
+                });
+            });
+
+            it('should call usersModel.updateEmail with the right arguments', function(done) {
+                request(app)
+                .put('/profile/email/randomtoken')
+                .end(function(error, response) {
+                    expect(usersModel.updateEmail.calledOnce).to.equal(true);
+                    expect(usersModel.updateEmail.calledWith({
+                        emailUpdateToken: 'randomtoken'
+                    })).to.equal(true);
+
+                    done();
+                });
+            });
+
+            it('should return 200 http code', function(done) {
+                request(app)
+                .put('/profile/email/randomtoken')
                 .end(function(error, response) {
                     expect(response.status).to.equal(200);
                     done();

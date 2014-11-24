@@ -1,6 +1,5 @@
 'use strict';
 
-var Joi         = require('joi');
 var toolkit     = require('./../libs/api-toolkit');
 var validations = require('./../libs/validations');
 
@@ -49,143 +48,90 @@ module.exports = toolkit.Controller.extend({
     },
 
     updatePassword: function(request, response, next) {
-        var jsonResponse = {};
-        var data = {
-            id: request.body.id
-        };
-        var result = Joi.validate(data, {
-            id: validations.id.required()
+        var result = this.validate({
+            currentPassword        : request.body.currentPassword,
+            newPassword            : request.body.newPassword,
+            newPasswordConfirmation: request.body.newPasswordConfirmation
+        }, {
+            currentPassword        : validations.password.required(),
+            newPassword            : validations.password.required(),
+            newPasswordConfirmation: validations.password.required()
         });
 
         if (result.error) {
-            var formattedError = validations.formatError(result.error);
-            jsonResponse.error = {
-                code   : 400,
-                name   : formattedError.name,
-                message: formattedError.message,
-                errors : formattedError.errors
-            };
-
-            return response.status(jsonResponse.error.code).send(jsonResponse);
+            return response.sendError(result.error);
         }
 
-        this.usersModel.func({
-            id: data.id
+        this.usersModel.updatePassword({
+            userId         : request.user.id,
+            currentPassword: result.value.currentPassword,
+            newPassword    : result.value.newPassword
         })
-        .then(function(some) {
-            jsonResponse.data = {
-                kind: 'Some',
-                id: some.id
-            };
-
-            response.status(200).send(jsonResponse);
+        .then(function() {
+            response.status(200).send({});
         })
         .error(function(error) {
-            if (error.name === 'SomeError') {
-                jsonResponse.error = {
-                    code   : 400,
-                    name   : error.name,
-                    message: error.message
-                };
-
-                return response.status(jsonResponse.error.code).send(jsonResponse);
+            if (error.name === 'IncorrectPassword') {
+                return response.sendError(401, error);
             }
 
-            next();
+            next(error);
         });
     },
 
     requestEmailUpdate: function(request, response, next) {
-        var jsonResponse = {};
-        var data = {
-            id: request.body.id
-        };
-        var result = Joi.validate(data, {
-            id: validations.id.required()
+        var result = this.validate({
+            password            : request.body.password,
+            newEmail            : request.body.newEmail,
+            newEmailConfirmation: request.body.newEmailConfirmation
+        }, {
+            password            : validations.password.required(),
+            newEmail            : validations.email.required(),
+            newEmailConfirmation: validations.email.required()
         });
 
         if (result.error) {
-            var formattedError = validations.formatError(result.error);
-            jsonResponse.error = {
-                code   : 400,
-                name   : formattedError.name,
-                message: formattedError.message,
-                errors : formattedError.errors
-            };
-
-            return response.status(jsonResponse.error.code).send(jsonResponse);
+            return response.sendError(result.error);
         }
 
-        this.usersModel.func({
-            id: data.id
+        this.usersModel.requestEmailUpdate({
+            userId  : request.user.id,
+            newEmail: result.value.newEmail,
+            password: result.value.password
         })
-        .then(function(some) {
-            jsonResponse.data = {
-                kind: 'Some',
-                id: some.id
-            };
-
-            response.status(200).send(jsonResponse);
+        .then(function() {
+            response.status(201).send({});
         })
         .error(function(error) {
-            if (error.name === 'SomeError') {
-                jsonResponse.error = {
-                    code   : 400,
-                    name   : error.name,
-                    message: error.message
-                };
-
-                return response.status(jsonResponse.error.code).send(jsonResponse);
+            if (error.name === 'IncorrectPassword') {
+                return response.sendError(401, error);
             }
 
-            next();
+            if (error.name === 'DuplicateEmail' || error.name === 'DuplicateRequest') {
+                return response.sendError(409, error);
+            }
+
+            next(error);
         });
     },
 
     updateEmail: function(request, response, next) {
-        var jsonResponse = {};
-        var data = {
-            id: request.body.id
-        };
-        var result = Joi.validate(data, {
-            id: validations.id.required()
-        });
-
-        if (result.error) {
-            var formattedError = validations.formatError(result.error);
-            jsonResponse.error = {
-                code   : 400,
-                name   : formattedError.name,
-                message: formattedError.message,
-                errors : formattedError.errors
-            };
-
-            return response.status(jsonResponse.error.code).send(jsonResponse);
-        }
-
-        this.usersModel.func({
-            id: data.id
+        this.usersModel.updateEmail({
+            emailUpdateToken: request.params.token
         })
-        .then(function(some) {
-            jsonResponse.data = {
-                kind: 'Some',
-                id: some.id
-            };
-
-            response.status(200).send(jsonResponse);
+        .then(function() {
+            response.status(200).send({});
         })
         .error(function(error) {
-            if (error.name === 'SomeError') {
-                jsonResponse.error = {
-                    code   : 400,
-                    name   : error.name,
-                    message: error.message
-                };
-
-                return response.status(jsonResponse.error.code).send(jsonResponse);
+            if (error.name === 'InvalidToken') {
+                return response.sendError(error);
             }
 
-            next();
+            if (error.name === 'ExpiredEmailUpdateRequest') {
+                return response.sendError(410, error);
+            }
+
+            next(error);
         });
     }
 

@@ -177,6 +177,5 @@ HTTP code: 200
 
 ### Possible Errors
 
-- 400 `ValidationError`
 - 400 `InvalidToken`
 - 410 `ExpiredEmailUpdateRequest`

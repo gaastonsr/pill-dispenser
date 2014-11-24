@@ -11,29 +11,6 @@ chai.use(require('chai-things'));
 
 describe('validations', function() {
 
-    //validation
-    describe('formatError', function() {
-        describe('when passed a Joi error', function() {
-            it('should returned a formatted error', function() {
-                var result = Joi.validate({}, {
-                    email: Joi.string().email().required()
-                });
-
-                var formattedError = validations.formatError(result.error);
-
-                expect(formattedError.name).to.equal('ValidationError');
-                expect(formattedError.message).to.equal('Validation error');
-                expect(formattedError.errors).to.eql([
-                    {
-                        location: 'email',
-                        message : 'email is required'
-                    }
-                ]);
-            });
-        });
-    });
-
-
     // validation
     describe('email', function() {
         var schema    = validations.email.required();

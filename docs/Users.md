@@ -76,6 +76,5 @@ HTTP code: 200
 
 ### Possible Errors
 
-- 400 `ValidationError`
 - 400 `InvalidToken`
 - 400 `UserAlreadyActive`
