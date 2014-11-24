@@ -44,11 +44,12 @@ app.use(router);
 describe('ProfileController', function() {
 
     describe('#get - when a user profile is fetched', function() {
-        afterEach(function() {
-            var method = usersModel.getById;
+        var model  = usersModel;
+        var method = 'getById';
 
-            if (method.restore) {
-                method.restore();
+        afterEach(function() {
+            if (model[method].restore) {
+                model[method].restore();
             }
         });
 
@@ -56,7 +57,7 @@ describe('ProfileController', function() {
             var creationDate = new Date();
 
             beforeEach(function() {
-                sinon.stub(usersModel, 'getById', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -77,7 +78,7 @@ describe('ProfileController', function() {
             var creationDate = new Date();
 
             beforeEach(function() {
-                sinon.stub(usersModel, 'getById', function() {
+                sinon.stub(model, method, function() {
                     return Promise.resolve({
                         id       : 1,
                         name     : 'John Doe',
@@ -88,12 +89,12 @@ describe('ProfileController', function() {
                 });
             });
 
-            it('should call usersMode.getById with the right arguments', function(done) {
+            it('should call model.method with the right arguments', function(done) {
                 request(app)
                 .get('/profile')
                 .end(function(error, response) {
-                    expect(usersModel.getById.calledOnce).to.equal(true);
-                    expect(usersModel.getById.calledWith({
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
                         id: 1
                     })).to.equal(true);
 
@@ -121,11 +122,12 @@ describe('ProfileController', function() {
     });
 
     describe('#update - when a profile is updated', function() {
-        afterEach(function() {
-            var method = usersModel.update;
+        var model  = usersModel;
+        var method = 'update';
 
-            if (method.restore) {
-                method.restore();
+        afterEach(function() {
+            if (model[method].restore) {
+                model[method].restore();
             }
         });
 
@@ -150,7 +152,7 @@ describe('ProfileController', function() {
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'update', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -175,7 +177,7 @@ describe('ProfileController', function() {
             var creationDate = new Date().setHours(updateDate.getHours() - 1);
 
             beforeEach(function() {
-                sinon.stub(usersModel, 'update', function() {
+                sinon.stub(model, method, function() {
                     return Promise.resolve({
                         id       : 1,
                         name     : 'J. Doe',
@@ -186,15 +188,15 @@ describe('ProfileController', function() {
                 });
             });
 
-            it('should call usersModel.update with the right arguments', function(done) {
+            it('should call model.method with the right arguments', function(done) {
                 request(app)
                 .put('/profile')
                 .send({
                     name: 'J. Doe'
                 })
                 .end(function(error, response) {
-                    expect(usersModel.update.calledOnce).to.equal(true);
-                    expect(usersModel.update.calledWith({
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
                         userId: 1,
                         name  : 'J. Doe'
                     })).to.equal(true);
@@ -218,11 +220,12 @@ describe('ProfileController', function() {
     });
 
     describe('#updatePassword - when a password is updated', function() {
-        afterEach(function() {
-            var method = usersModel.updatePassword;
+        var model  = usersModel;
+        var method = 'updatePassword';
 
-            if (method.restore) {
-                method.restore();
+        afterEach(function() {
+            if (model[method].restore) {
+                model[method].restore();
             }
         });
 
@@ -249,7 +252,7 @@ describe('ProfileController', function() {
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'updatePassword', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -273,7 +276,7 @@ describe('ProfileController', function() {
 
         describe('and the current password is incorrect', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'updatePassword', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('Incorrect password');
                     error.name = 'IncorrectPassword';
                     return Promise.reject(error);
@@ -302,12 +305,12 @@ describe('ProfileController', function() {
 
         describe('and everything is fine', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'updatePassword', function() {
+                sinon.stub(model, method, function() {
                     return Promise.resolve();
                 });
             });
 
-            it('should call usersModel.updatePassword with the right arguments', function(done) {
+            it('should call model.method with the right arguments', function(done) {
                 request(app)
                 .put('/profile/password')
                 .send({
@@ -316,8 +319,8 @@ describe('ProfileController', function() {
                     newPasswordConfirmation: 'notaneasyone'
                 })
                 .end(function(error, response) {
-                    expect(usersModel.updatePassword.calledOnce).to.equal(true);
-                    expect(usersModel.updatePassword.calledWith({
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
                         userId         : 1,
                         currentPassword: 'password',
                         newPassword    : 'notaneasyone'
@@ -344,11 +347,12 @@ describe('ProfileController', function() {
     });
 
     describe('#requestEmailUpdate - when an email update is requested', function() {
-        afterEach(function() {
-            var method = usersModel.requestEmailUpdate;
+        var model  = usersModel;
+        var method = 'requestEmailUpdate';
 
-            if (method.restore) {
-                method.restore();
+        afterEach(function() {
+            if (model[method].restore) {
+                model[method].restore();
             }
         });
 
@@ -375,7 +379,7 @@ describe('ProfileController', function() {
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                sinon.stub(model, 'requestEmailUpdate', function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -399,7 +403,7 @@ describe('ProfileController', function() {
 
         describe('and the password is incorrect', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                sinon.stub(model, 'requestEmailUpdate', function() {
                     var error  = new Error('Incorrect password');
                     error.name = 'IncorrectPassword';
                     return Promise.reject(error);
@@ -428,7 +432,7 @@ describe('ProfileController', function() {
 
         describe('and the newEmail is already in use by another user', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                sinon.stub(model, 'requestEmailUpdate', function() {
                     var error  = new Error('Duplicate email');
                     error.name = 'DuplicateEmail';
                     return Promise.reject(error);
@@ -457,7 +461,7 @@ describe('ProfileController', function() {
 
         describe('and a request to update the email by newEmail already exists', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                sinon.stub(model, 'requestEmailUpdate', function() {
                     var error  = new Error('Duplicate request');
                     error.name = 'DuplicateRequest';
                     return Promise.reject(error);
@@ -486,7 +490,7 @@ describe('ProfileController', function() {
 
         describe('and everything is fine', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'requestEmailUpdate', function() {
+                sinon.stub(model, 'requestEmailUpdate', function() {
                     return Promise.resolve();
                 });
             });
@@ -528,17 +532,18 @@ describe('ProfileController', function() {
     });
 
     describe('#updateEmail - when an email is updated', function() {
-        afterEach(function() {
-            var method = usersModel.updateEmail;
+        var model  = usersModel;
+        var method = 'updateEmail';
 
-            if (method.restore) {
-                method.restore();
+        afterEach(function() {
+            if (model[method].restore) {
+                model[method].restore();
             }
         });
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'updateEmail', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -557,7 +562,7 @@ describe('ProfileController', function() {
 
         describe('and the supplied token is invalid', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'updateEmail', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error();
                     error.name = 'InvalidToken';
                     return Promise.reject(error);
@@ -581,7 +586,7 @@ describe('ProfileController', function() {
 
         describe('and the email update request is expired', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'updateEmail', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error();
                     error.name = 'ExpiredEmailUpdateRequest';
                     return Promise.reject(error);
@@ -605,17 +610,17 @@ describe('ProfileController', function() {
 
         describe('and everything is fine', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'updateEmail', function() {
+                sinon.stub(model, method, function() {
                     return Promise.resolve();
                 });
             });
 
-            it('should call usersModel.updateEmail with the right arguments', function(done) {
+            it('should call model.method with the right arguments', function(done) {
                 request(app)
                 .put('/profile/email/randomtoken')
                 .end(function(error, response) {
-                    expect(usersModel.updateEmail.calledOnce).to.equal(true);
-                    expect(usersModel.updateEmail.calledWith({
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
                         emailUpdateToken: 'randomtoken'
                     })).to.equal(true);
 

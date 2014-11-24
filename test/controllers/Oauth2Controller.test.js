@@ -23,6 +23,10 @@ router.post('/oauth2/authorization', oauth2Controller.getToken);
 app.use(bodyParser.json());
 app.use(toolkit.energizer());
 app.use(router);
+// app.use(function(error, request, response, next) {
+//     console.log(error.stack);
+//     response.status(500).send();
+// });
 /* FAKE SERVER STUFF */
 
 chai.use(require('chai-things'));
@@ -30,11 +34,12 @@ chai.use(require('chai-things'));
 describe('Oauth2Controller', function() {
 
     describe('#getToken - when a token is requested', function() {
-        afterEach(function() {
-            var method = sessionsModel.createFromClientCredentials;
+        var model  = sessionsModel;
+        var method = 'createFromClientCredentials';
 
-            if (method.restore) {
-                method.restore();
+        afterEach(function() {
+            if (model[method].restore) {
+                model[method].restore();
             }
         });
 
@@ -79,7 +84,7 @@ describe('Oauth2Controller', function() {
 
             describe('and the credentials are invalid', function() {
                 beforeEach(function() {
-                    sinon.stub(sessionsModel, 'createFromClientCredentials', function() {
+                    sinon.stub(model, method, function() {
                         var error  = new Error('Email and/or password are incorrect');
                         error.name = 'InvalidCredentials';
                         return Promise.reject(error);
@@ -108,7 +113,7 @@ describe('Oauth2Controller', function() {
 
             describe('and the user is inactive', function() {
                 beforeEach(function() {
-                    sinon.stub(sessionsModel, 'createFromClientCredentials', function() {
+                    sinon.stub(model, method, function() {
                         var error  = new Error('User account is inactive');
                         error.name = 'InactiveUser';
                         return Promise.reject(error);
@@ -137,7 +142,7 @@ describe('Oauth2Controller', function() {
 
             describe('and an unknown error happens', function() {
                 beforeEach(function() {
-                    sinon.stub(sessionsModel, 'createFromClientCredentials', function() {
+                    sinon.stub(model, method, function() {
                         var error  = new Error('unknown error');
                         error.name = 'UnknownError';
                         return Promise.reject(error);
@@ -160,7 +165,7 @@ describe('Oauth2Controller', function() {
 
             describe('and the data is fine', function() {
                 beforeEach(function() {
-                    sinon.stub(sessionsModel, 'createFromClientCredentials', function() {
+                    sinon.stub(model, method, function() {
                         return Promise.resolve({
                             id       : 1000,
                             userId   : 1,
@@ -170,7 +175,7 @@ describe('Oauth2Controller', function() {
                     });
                 });
 
-                it('should call sesionsModel.createFromClientCredentials with the right arguments', function(done) {
+                it('should call model.method with the right arguments', function(done) {
                     request(app)
                     .post('/oauth2/authorization?grant_type=client_credentials')
                     .send({
@@ -178,8 +183,8 @@ describe('Oauth2Controller', function() {
                         password: 'password'
                     })
                     .end(function(error, response) {
-                        expect(sessionsModel.createFromClientCredentials.calledOnce).to.equal(true);
-                        expect(sessionsModel.createFromClientCredentials.calledWith({
+                        expect(model[method].calledOnce).to.equal(true);
+                        expect(model[method].calledWith({
                             email   : 'john@doe.com',
                             password: 'password'
                         })).to.equal(true);

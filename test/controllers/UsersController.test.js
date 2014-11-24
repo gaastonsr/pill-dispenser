@@ -24,6 +24,10 @@ router.put( '/users/activate/:token', usersController.activate);
 app.use(bodyParser.json());
 app.use(toolkit.energizer());
 app.use(router);
+// app.use(function(error, request, response, next) {
+//     console.log(error.stack);
+//     response.status(500).send();
+// });
 /* FAKE SERVER STUFF */
 
 chai.use(require('chai-things'));
@@ -31,11 +35,12 @@ chai.use(require('chai-things'));
 describe('UsersController', function() {
 
     describe('#create - when a user is created', function() {
-        afterEach(function() {
-            var method = usersModel.create;
+        var model  = usersModel;
+        var method = 'create';
 
-            if (method.restore) {
-                method.restore();
+        afterEach(function() {
+            if (model[method].restore) {
+                model[method].restore();
             }
         });
 
@@ -63,7 +68,7 @@ describe('UsersController', function() {
 
         describe('and the email is duplicated', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'create', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('We already have a user registered with that email');
                     error.name = 'DuplicateEmail';
                     return Promise.reject(error);
@@ -94,7 +99,7 @@ describe('UsersController', function() {
 
         describe('and a unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'create', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -121,7 +126,7 @@ describe('UsersController', function() {
             var creationDate = new Date();
 
             beforeEach(function() {
-                sinon.stub(usersModel, 'create', function() {
+                sinon.stub(model, method, function() {
                     return Promise.resolve({
                         id             : 1000,
                         name           : 'John Doe',
@@ -134,7 +139,7 @@ describe('UsersController', function() {
                 });
             });
 
-            it('should call usersModel.created method with the right arguments', function(done) {
+            it('should call model.method method with the right arguments', function(done) {
                 request(app)
                 .post('/users')
                 .send({
@@ -144,8 +149,8 @@ describe('UsersController', function() {
                     password         : 'password'
                 })
                 .end(function(error, response) {
-                    expect(usersModel.create.calledOnce).to.equal(true);
-                    expect(usersModel.create.calledWith({
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
                         name    : 'John Doe',
                         email   : 'john@doe.com',
                         password: 'password'
@@ -181,17 +186,18 @@ describe('UsersController', function() {
     });
 
     describe('#activate - when a user is activated', function() {
-        afterEach(function() {
-            var method = usersModel.activate;
+        var model  = usersModel;
+        var method = 'activate';
 
-            if (method.restore) {
-                method.restore();
+        afterEach(function() {
+            if (model[method].restore) {
+                model[method].restore();
             }
         });
 
         describe('and the token is invalid', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'activate', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('Invalid token');
                     error.name = 'InvalidToken';
                     return Promise.reject(error);
@@ -216,7 +222,7 @@ describe('UsersController', function() {
 
         describe('and the user is already active', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'activate', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('User already active');
                     error.name = 'UserAlreadyActive';
                     return Promise.reject(error);
@@ -241,7 +247,7 @@ describe('UsersController', function() {
 
         describe('and an unknown error happens', function() {
             beforeEach(function() {
-                sinon.stub(usersModel, 'activate', function() {
+                sinon.stub(model, method, function() {
                     var error  = new Error('Unknown error');
                     error.name = 'UnknownError';
                     return Promise.reject(error);
@@ -263,7 +269,7 @@ describe('UsersController', function() {
             var creationDate = new Date().setHours(updateDate.getHours() - 1);
 
             beforeEach(function() {
-                sinon.stub(usersModel, 'activate', function() {
+                sinon.stub(model, method, function() {
                     return Promise.resolve({
                         id       : 1000,
                         name     : 'John Doe',
@@ -275,12 +281,12 @@ describe('UsersController', function() {
                 });
             });
 
-            it('should call usersModel.activate method with the right arguments', function(done) {
+            it('should call model.method method with the right arguments', function(done) {
                 request(app)
                 .put('/users/activate/somerandomtoken')
                 .end(function(error, response) {
-                    expect(usersModel.activate.calledOnce).to.equal(true);
-                    expect(usersModel.activate.calledWith({
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
                         activationToken: 'somerandomtoken'
                     })).to.equal(true);
 
