@@ -6,6 +6,7 @@ var express         = require('express');
 var bodyParser      = require('body-parser');
 var request         = require('supertest');
 var chai            = require('chai');
+var toolkit         = require('./../../libs/api-toolkit');
 var UsersModel      = require('./../../models/UsersModel');
 var UsersController = require('./../../controllers/UsersController');
 
@@ -21,6 +22,7 @@ router.post('/users'                , usersController.create);
 router.put( '/users/activate/:token', usersController.activate);
 
 app.use(bodyParser.json());
+app.use(toolkit.energizer());
 app.use(router);
 /* FAKE SERVER STUFF */
 

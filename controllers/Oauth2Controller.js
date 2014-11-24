@@ -1,6 +1,5 @@
 'use strict';
 
-var Joi         = require('joi');
 var toolkit     = require('./../libs/api-toolkit');
 var validations = require('./../libs/validations');
 
@@ -11,8 +10,7 @@ module.exports = toolkit.Controller.extend({
     },
 
     getToken: function(request, response, next) {
-        var jsonResponse = {};
-        var grantType    = request.query.grant_type;
+        var grantType = request.query.grant_type;
 
         switch(grantType) {
             case 'client_credentials':
@@ -20,71 +18,43 @@ module.exports = toolkit.Controller.extend({
                 break;
 
             default:
-                jsonResponse.error = {
-                    code   : 400,
-                    name   : 'GrantTypeNotAllowed',
-                    message: 'Grant type not allowed'
-                };
-
-                response.status(jsonResponse.error.code).send(jsonResponse);
+                var error  = new Error('Grant type not allowed');
+                error.name = 'GrantTypeNotAllowed';
+                response.sendError(error);
                 break;
         }
     },
 
     _clientCredentialsGrant: function(request, response, next) {
-        var jsonResponse = {};
-        var data = {
+        var result = this.validate({
             email   : request.body.email,
             password: request.body.password
-        };
-        var result = Joi.validate(data, {
+        }, {
             email   : validations.email.required(),
             password: validations.password.required()
-        }, {
-            abortEarly: false
         });
 
         if (result.error) {
-            var formattedError = validations.formatError(result.error);
-            jsonResponse.error = {
-                code   : 400,
-                name   : formattedError.name,
-                message: formattedError.message,
-                errors : formattedError.errors
-            };
-
-            return response.status(jsonResponse.error.code).send(jsonResponse);
+            return response.sendError(result.error);
         }
 
         this.sessionsModel.createFromClientCredentials({
-            email   : data.email,
-            password: data.password
+            email   : result.value.email,
+            password: result.value.password
         })
         .then(function() {
-            return response.status(201).send(jsonResponse);
+            return response.status(201).send({});
         })
         .catch(function(error) {
             if (error.name === 'InvalidCredentials') {
-                jsonResponse.error = {
-                    code   : 401,
-                    name   : error.name,
-                    message: error.message
-                };
-
-                return response.status(jsonResponse.error.code).send(jsonResponse);
+                return response.sendError(401, error);
             }
 
             if (error.name === 'InactiveUser') {
-                jsonResponse.error = {
-                    code   : 403,
-                    name   : error.name,
-                    message: error.message
-                };
-
-                return response.status(jsonResponse.error.code).send(jsonResponse);
+                return response.sendError(403, error);
             }
 
-            return next(error);
+            next(error);
         });
     }
 });

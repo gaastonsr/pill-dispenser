@@ -6,6 +6,7 @@ var express          = require('express');
 var bodyParser       = require('body-parser');
 var request          = require('supertest');
 var chai             = require('chai');
+var toolkit          = require('./../../libs/api-toolkit');
 var SessionsModel    = require('./../../models/SessionsModel');
 var Oauth2Controller = require('./../../controllers/Oauth2Controller');
 
@@ -20,6 +21,7 @@ var router = express.Router();
 router.post('/oauth2/authorization', oauth2Controller.getToken);
 
 app.use(bodyParser.json());
+app.use(toolkit.energizer());
 app.use(router);
 /* FAKE SERVER STUFF */
 

@@ -4,6 +4,7 @@ var express      = require('express');
 var bodyParser   = require('body-parser');
 var config       = require('./config');
 var routes       = require('./routes');
+var toolkit      = require('./libs/api-toolkit');
 var error404     = require('./middlewares/error404');
 var errorHandler = require('./middlewares/errorHandler');
 
@@ -13,6 +14,7 @@ app.set('env',  config.nodeEnv);
 app.set('port', config.port);
 
 app.use(bodyParser.json());
+app.use(toolkit.energizer());
 app.use(routes);
 app.use(error404);
 app.use(errorHandler);

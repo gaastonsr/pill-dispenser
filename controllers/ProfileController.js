@@ -11,55 +11,39 @@ module.exports = toolkit.Controller.extend({
     },
 
     get: function(request, response, next) {
-        var jsonResponse = {};
-
         this.usersModel.getById({
             id: request.user.id
         })
         .then(function(user) {
-            jsonResponse.data = {
+            response.sendData({
                 kind     : 'UserProfile',
                 id       : user.id,
                 name     : user.name,
                 email    : user.email,
                 updatedAt: user.updatedAt,
                 createdAt: user.createdAt
-            };
-
-            response.status(200).json(jsonResponse);
+            });
         })
         .catch(next);
     },
 
     update: function(request, response, next) {
-        var jsonResponse = {};
-        var data = {
+        var result = this.validate({
             name: request.body.name
-        };
-        var result = Joi.validate(data, {
-            name: validations.user.name.required()
         }, {
-            abortEarly: false
+            name: validations.user.name.required()
         });
 
         if (result.error) {
-            var formattedError = validations.formatError(result.error);
-            jsonResponse.error = {
-                code   : 400,
-                name   : formattedError.name,
-                message: formattedError.message,
-                errors : formattedError.errors
-            };
-
-            return response.status(jsonResponse.error.code).send(jsonResponse);
+            return response.sendError(result.error);
         }
 
         this.usersModel.update({
             userId: request.user.id,
-            name  : data.name
+            name  : result.value.name
         })
         .then(function() {
-            response.status(200).send(jsonResponse);
+            response.status(200).send({});
         })
         .error(next);
     },

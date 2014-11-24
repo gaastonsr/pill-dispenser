@@ -1,6 +1,47 @@
-var _ = require('underscore');
+var _   = require('underscore');
+var Joi = require('joi');
 
 var Toolkit = {};
+
+var energizer = Toolkit.energizer = function() {
+    return function(request, response, next) {
+        response.sendError = sendError;
+        response.sendData  = sendData;
+        next();
+    };
+};
+
+var sendError = function(code, error) {
+    if (typeof code !== 'number') {
+        error = code;
+        code  = 400;
+    }
+
+    var extra = {};
+
+    Object.keys(error).forEach(function(key) {
+        extra[key] = error[key];
+    });
+
+    this.status(code).send({
+        error: _.extend({
+            code   : code,
+            name   : error.name,
+            message: error.message
+        }, extra)
+    });
+};
+
+var sendData = function(code, data) {
+    if (typeof code !== 'number') {
+        data = code;
+        code = 200;
+    }
+
+    this.status(code).send({
+        data: data
+    });
+};
 
 var Controller = Toolkit.Controller = function() {
     // fix route handlers context
@@ -11,7 +52,31 @@ var Controller = Toolkit.Controller = function() {
 
 _.extend(Controller.prototype, {
 
+    validate: function(data, schema) {
+        var result = Joi.validate(data, schema, {
+            abortEarly: false
+        });
 
+        var error = null;
+
+        if (result.error) {
+            error        = new Error('Validation error');
+            error.name   = 'ValidationError';
+            error.errors = [];
+
+            result.error.details.forEach(function(detail) {
+                error.errors.push({
+                    location: detail.path,
+                    message : detail.message
+                });
+            });
+        }
+
+        return {
+            error: error,
+            value: result.value
+        };
+    }
 
 });
 

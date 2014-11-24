@@ -6,6 +6,7 @@ var express           = require('express');
 var bodyParser        = require('body-parser');
 var request           = require('supertest');
 var chai              = require('chai');
+var toolkit           = require('./../../libs/api-toolkit');
 var UsersModel        = require('./../../models/UsersModel');
 var ProfileController = require('./../../controllers/ProfileController');
 
@@ -32,6 +33,7 @@ router.post('/profile/email-update-request', checkSession, profileController.req
 router.put( '/profile/email/:token'        , profileController.updateEmail);
 
 app.use(bodyParser.json());
+app.use(toolkit.energizer());
 app.use(router);
 /* FAKE SERVER STUFF */
 
