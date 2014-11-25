@@ -97,7 +97,7 @@ None.
 
 ## Unlink to Device
 
-`DELETE /my-devices/:id`
+`DELETE /my-devices/:linkageId`
 
 ### Description
 
@@ -105,7 +105,7 @@ Unlinks user to device.
 
 ### Expected
 
-- `:id` obligatory. Validated with id rule. Linkage id.
+- `:linkageId` obligatory. Validated with id rule.
 
 ### On Success
 
@@ -124,7 +124,7 @@ HTTP code: 200
 
 ## Update Device Password
 
-`PUT /my-devices/:id/password`
+`PUT /my-devices/:linkageId/password`
 
 **Protected**: true
 
@@ -142,7 +142,7 @@ Updates a device password.
 }
 ```
 
-- `:id` obligatory. Validated with id rule. Linkage id.
+- `:linkageId` obligatory. Validated with id rule.
 - `currentPassword` obligatory. Validated with password rule.
 - `newPassword` obligatory. Validate with password rule.
 - `newPasswordConfirmation` obligatory. Validate with password rule.
@@ -165,7 +165,7 @@ HTTP code: 200
 
 ## Update Device Name
 
-`PUT /my-devices/:id/name`
+`PUT /my-devices/:linkageId/name`
 
 **Protected**: true
 
@@ -181,7 +181,7 @@ Updates a device name.
 }
 ```
 
-- `:id` obligatory. Validated with id rule. Linkage id.
+- `:linkageId` obligatory. Validated with id rule.
 - `name` obligatory. Validated with device.name rule.
 
 ### On Success
@@ -201,7 +201,7 @@ HTTP code: 200
 
 ## Add Device Setting
 
-`POST /my-devices/:id/settings`
+`POST /my-devices/:linkageId/settings`
 
 **Protected**: true
 
@@ -222,7 +222,7 @@ Add a a setting to the device.
 }
 ```
 
-- `:id` obligatory. Validated with id rule. Linkage id.
+- `:linkageId` obligatory. Validated with id rule.
 
 ### On Success
 
@@ -252,7 +252,7 @@ HTTP code: 201
 
 ## Get Device Settings
 
-`GET /my-devices/:id/settings`
+`GET /my-devices/:linkageId/settings`
 
 **Protected**: true
 
@@ -262,7 +262,7 @@ Returns a list of the device settings.
 
 ### Expected
 
-Nothing.
+- `:linkageId` obligatory. Validated with id rule. 
 
 ### On Success
 
@@ -302,7 +302,7 @@ HTTP code: 200
 
 ## Activate Device Setting
 
-`PUT /my-devices/:linkage-id/settings/:setting-id/activate`
+`PUT /my-devices/:linkageId/settings/:settingId/activate`
 
 **Protected**: true
 
@@ -312,8 +312,8 @@ Activates a device operation.
 
 ### Expected
 
-- `:linkage-id` obligatory. Validated with id rule. Likage id.
-- `:setting-id` obligatory. Validated with id rule. Setting id.
+- `:linkageId` obligatory. Validated with id rule.
+- `:settingId` obligatory. Validated with id rule.
 
 ### On Success
 
@@ -333,7 +333,7 @@ HTTP code: 200
 
 ## Deactivate Device Setting
 
-`PUT /my-devices/:linkage-id/settings/:setting-id/deactivate`
+`PUT /my-devices/:linkageId/settings/:settingId/deactivate`
 
 **Protected**: true
 
@@ -343,8 +343,8 @@ Deactivates a device operation.
 
 ### Expected
 
-- `:linkage-id` obligatory. Validated with id rule. Likage id.
-- `:setting-id` obligatory. Validated with id rule. Setting id.
+- `:linkageId` obligatory. Validated with id rule. Likage id.
+- `:settingId` obligatory. Validated with id rule. Setting id.
 
 ### On Success
 
@@ -364,7 +364,7 @@ HTTP code: 200
 
 ## Delete Device Setting
 
-`DELETE /my-devices/:linkage-id/settings/:setting-id`
+`DELETE /my-devices/:linkageId/settings/:settingId`
 
 **Protected**: true
 
@@ -374,8 +374,8 @@ Deletes a set of settings of a device.
 
 ### Expected
 
-- `:linkage-id` obligatory. Validated with id rule. Likage id.
-- `:setting-id` obligatory. Validated with id rule. Setting id.
+- `:linkageId` obligatory. Validated with id rule.
+- `:settingId` obligatory. Validated with id rule.
 
 ### On Success
 

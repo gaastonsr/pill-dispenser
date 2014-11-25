@@ -50,7 +50,7 @@ HTTP code: 201
 
 ## Delete a Device
 
-`DELETE /devices/:id `
+`DELETE /devices/:deviceId `
 
 **Protected**: true
 
@@ -60,7 +60,7 @@ Delete a device.
 
 ### Expected
 
-- `:id` obligatory. Validated with id rule. Device id.
+- `:deviceId` obligatory. Validated with id rule. Device id.
 
 ### On Success
 
