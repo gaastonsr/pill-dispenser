@@ -74,13 +74,27 @@ describe('MyDevicesModel', function() {
         });
 
         describe('and the data is fine', function() {
+            var data = {
+                name      : 'Grandpa',
+                identifier: '110ec58a-a0f2-4ac4-8393-1a2b3c4d5e6f',
+                password  : 'password',
+                userId    : 1
+            };
+
+            it('should return the created linkage', function() {
+                return myDevicesModel.link(data)
+                .then(function(linkage) {
+                    expect(linkage.id).to.equal(linkage.id);
+                    expect(linkage.userId).to.equal(1);
+                    expect(linkage.name).to.equal('Grandpa');
+                    expect(linkage.deviceId).to.equal(2);
+                    expect(linkage.updatedAt).to.instanceof(Date);
+                    expect(linkage.createdAt).to.instanceof(Date);
+                });
+            });
+
             it('it should save a row in the database', function() {
-                return myDevicesModel.link({
-                    name      : 'Grandpa',
-                    identifier: '110ec58a-a0f2-4ac4-8393-1a2b3c4d5e6f',
-                    password  : 'password',
-                    userId    : 1
-                })
+                return myDevicesModel.link(data)
                 .then(function(linkage) {
                     return new UserDeviceORM({
                         id: linkage.id
@@ -105,10 +119,26 @@ describe('MyDevicesModel', function() {
         });
 
         describe('and the data is fine', function() {
+            var data = {
+                userId: 1
+            };
+
+            it('should return each linkage with the correct information', function() {
+                return myDevicesModel.listLinkages(data)
+                .then(function(linkages) {
+                    expect(linkages.length).to.equal(2);
+
+                    expect(linkages[0].id).to.equal(1);
+                    expect(linkages[0].userId).to.equal(1);
+                    expect(linkages[0].name).to.equal('Grandpa');
+                    expect(linkages[0].deviceId).to.equal(1);
+                    expect(linkages[0].updatedAt).to.instanceof(Date);
+                    expect(linkages[0].createdAt).to.instanceof(Date);
+                });
+            });
+
             it('should return two linkages ordered by creation date', function() {
-                return myDevicesModel.listLinkages({
-                    userId: 1
-                })
+                return myDevicesModel.listLinkages(data)
                 .then(function(linkages) {
                     expect(linkages.length).to.equal(2);
                     expect(linkages[0].id).to.equal(1);

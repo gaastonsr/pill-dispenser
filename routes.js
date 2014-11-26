@@ -47,19 +47,19 @@ router.post('/profile/email-update-request', checkSession, profileController.req
 router.put( '/profile/email/:token'        , profileController.updateEmail);
 
 // Devices
-router.post(  '/devices'    , checkSession, devicesController.register);
-router.delete('/devices/:id', checkSession, devicesController.delete);
+router.post(  '/devices'          , checkSession, devicesController.register);
+router.delete('/devices/:deviceId', checkSession, devicesController.delete);
 
 // User Devices
-router.post(  '/my-devices'                                            , checkSession, myDevicesController.link);
-router.get(   '/my-devices'                                            , checkSession, myDevicesController.list);
-router.delete('/my-devices/:id'                                        , checkSession, myDevicesController.unlink);
-router.put(   '/my-devices/:id/password'                               , checkSession, myDevicesController.updatePassword);
-router.put(   '/my-devices/:id/name'                                   , checkSession, myDevicesController.updateName);
-router.post(  '/my-devices/:id/settings'                               , checkSession, myDevicesController.addSetting);
-router.get(   '/my-devices/:id/settings'                               , checkSession, myDevicesController.getSettings);
-router.put(   '/my-devices/:linkage-id/settings/:setting-id/activate'  , checkSession, myDevicesController.activateSetting);
-router.put(   '/my-devices/:linkage-id/settings/:setting-id/deactivate', checkSession, myDevicesController.deactivateSetting);
-router.delete('/my-devices/:linkage-id/settings/:setting-id'           , checkSession, myDevicesController.deleteSetting);
+router.post(  '/my-devices'                                          , checkSession, myDevicesController.link);
+router.get(   '/my-devices'                                          , checkSession, myDevicesController.list);
+router.delete('/my-devices/:linkageId'                               , checkSession, myDevicesController.unlink);
+router.put(   '/my-devices/:linkageId/password'                      , checkSession, myDevicesController.updatePassword);
+router.put(   '/my-devices/:linkageId/name'                          , checkSession, myDevicesController.updateName);
+router.post(  '/my-devices/:linkageId/settings'                      , checkSession, myDevicesController.addSetting);
+router.get(   '/my-devices/:linkageId/settings'                      , checkSession, myDevicesController.getSettings);
+router.put(   '/my-devices/:linkageId/settings/:settingId/activate'  , checkSession, myDevicesController.activateSetting);
+router.put(   '/my-devices/:linkageId/settings/:settingId/deactivate', checkSession, myDevicesController.deactivateSetting);
+router.delete('/my-devices/:linkageId/settings/:settingId'           , checkSession, myDevicesController.deleteSetting);
 
 module.exports = router;

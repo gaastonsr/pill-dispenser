@@ -64,7 +64,15 @@ MyDevicesModel.prototype = {
             .save();
         })
         .then(function(model) {
-            return model.toJSON();
+            var linkage = model.toJSON();
+
+            linkage.updatedAt = linkage.updated_at;
+            linkage.createdAt = linkage.created_at;
+
+            delete linkage.updated_at;
+            delete linkage.created_at;
+
+            return linkage;
         });
     },
 

@@ -18,7 +18,7 @@ module.exports = toolkit.Controller.extend({
         }, {
             name             : validations.user.name.required(),
             email            : validations.email.required(),
-            emailConfirmation: validations.emailConfirmation.required(),
+            emailConfirmation: validations.matches('email').required(),
             password         : validations.password.required()
         });
 

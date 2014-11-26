@@ -31,6 +31,7 @@ module.exports = {
                 user_id   : 1,
                 name      : 'Grandpa',
                 device_id : 1,
+                updated_at: '2014-10-08 12:00:00',
                 created_at: '2014-10-08 12:00:00'
             }
         ]
@@ -67,6 +68,7 @@ module.exports = {
                 user_id   : 1,
                 name      : 'Grandpa',
                 device_id : 1,
+                updated_at: '2014-10-08 12:00:00',
                 created_at: '2014-10-08 12:00:00'
             },
             {
@@ -74,6 +76,7 @@ module.exports = {
                 user_id   : 1,
                 name      : 'Uncle',
                 device_id : 2,
+                updated_at: '2014-10-08 12:00:00',
                 created_at: '2014-10-08 12:00:00'
             }
         ]

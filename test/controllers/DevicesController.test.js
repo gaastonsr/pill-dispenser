@@ -26,8 +26,8 @@ var checkSession = function(request, response, next) {
     next();
 };
 
-router.post(  '/devices'    , checkSession, devicesController.register);
-router.delete('/devices/:id', checkSession, devicesController.delete);
+router.post(  '/devices'          , checkSession, devicesController.register);
+router.delete('/devices/:deviceId', checkSession, devicesController.delete);
 
 app.use(bodyParser.json());
 app.use(toolkit.energizer());
@@ -70,6 +70,7 @@ describe('DevicesController', function() {
                     expect(body.error.message).to.be.a('string');
                     expect(body.error.errors).to.contain.a.thing.with.property('location', 'identifier');
                     expect(body.error.errors).to.contain.a.thing.with.property('location', 'password');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'passwordConfirmation');
 
                     done();
                 });
@@ -89,8 +90,9 @@ describe('DevicesController', function() {
                 request(app)
                 [route.verb](route.path)
                 .send({
-                    identifier: '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                    password  : 'password'
+                    identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
+                    password            : 'password',
+                    passwordConfirmation: 'password'
                 })
                 .end(function(error, response) {
                     expect(response.status).to.equal(500);
@@ -112,8 +114,9 @@ describe('DevicesController', function() {
                 request(app)
                 [route.verb](route.path)
                 .send({
-                    identifier: '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                    password  : 'password'
+                    identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
+                    password            : 'password',
+                    passwordConfirmation: 'password'
                 })
                 .end(function(error, response) {
                     var body = response.body;
@@ -136,8 +139,8 @@ describe('DevicesController', function() {
                     return Promise.resolve({
                         id        : 1000,
                         identifier: '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                        updatedAt: creationDate,
-                        createdAt: creationDate
+                        updatedAt : creationDate,
+                        createdAt : creationDate
                     });
                 });
             });
@@ -146,8 +149,9 @@ describe('DevicesController', function() {
                 request(app)
                 [route.verb](route.path)
                 .send({
-                    identifier: '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                    password  : 'password'
+                    identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
+                    password            : 'password',
+                    passwordConfirmation: 'password'
                 })
                 .end(function(error, response) {
                     expect(model[method].calledOnce).to.equal(true);
@@ -164,8 +168,9 @@ describe('DevicesController', function() {
                 request(app)
                 [route.verb](route.path)
                 .send({
-                    identifier: '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                    password  : 'password'
+                    identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
+                    password            : 'password',
+                    passwordConfirmation: 'password'
                 })
                 .end(function(error, response) {
                     var body = response.body;

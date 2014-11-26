@@ -11,11 +11,13 @@ module.exports = toolkit.Controller.extend({
 
     register: function(request, response, next) {
         var result = this.validate({
-            identifier: request.body.identifier,
-            password  : request.body.password
+            identifier          : request.body.identifier,
+            password            : request.body.password,
+            passwordConfirmation: request.body.passwordConfirmation
         }, {
-            identifier: validations.device.identifier.required(),
-            password  : validations.password.required()
+            identifier          : validations.device.identifier.required(),
+            password            : validations.password.required(),
+            passwordConfirmation: validations.matches('password').required()
         });
 
         if (result.error) {
@@ -46,7 +48,7 @@ module.exports = toolkit.Controller.extend({
 
     delete: function(request, response, next) {
         var result = this.validate({
-            deviceId: request.params.id
+            deviceId: request.params.deviceId
         }, {
             deviceId: validations.id.required().options({ convert: true })
         });

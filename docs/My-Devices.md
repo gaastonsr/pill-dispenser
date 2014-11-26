@@ -332,6 +332,7 @@ HTTP code: 200
 
 - 400 `ValidationError`
 - 404 `LinkageNotFound`
+- 404 `SettingNotFound`
 - 409 `SettingAlreadyActive`
 
 ---
@@ -363,6 +364,7 @@ HTTP code: 200
 
 - 400 `ValidationError`
 - 404 `LinkageNotFound`
+- 404 `SettingNotFound`
 - 409 `SettingAlreadyInactive`
 
 ---

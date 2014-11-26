@@ -55,7 +55,7 @@ module.exports = toolkit.Controller.extend({
         }, {
             currentPassword        : validations.password.required(),
             newPassword            : validations.password.required(),
-            newPasswordConfirmation: validations.password.required()
+            newPasswordConfirmation: validations.matches('newPassword').required()
         });
 
         if (result.error) {
@@ -87,7 +87,7 @@ module.exports = toolkit.Controller.extend({
         }, {
             password            : validations.password.required(),
             newEmail            : validations.email.required(),
-            newEmailConfirmation: validations.email.required()
+            newEmailConfirmation: validations.matches('newEmail').required()
         });
 
         if (result.error) {
