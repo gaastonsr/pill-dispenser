@@ -223,6 +223,8 @@ Add a a setting to the device.
 ```
 
 - `:linkageId` obligatory. Validated with id rule.
+- `medicineName` obligatory. Validated with medicineName rule.
+- `schedule` obligatory. Validated with schedule rule.
 
 ### On Success
 
