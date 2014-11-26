@@ -31,7 +31,7 @@ describe('validations', function() {
 
             it('should return "' + errorMessage + '"', function() {
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i];
+                    var value  = values[i];
                     var result = Joi.validate(value, schema);
                     expect(result.error.message).to.equal(errorMessage);
                 }
@@ -80,40 +80,6 @@ describe('validations', function() {
 
 
     // validation
-    describe('email confirmation', function() {
-        var schema = {
-            email            : validations.email.required(),
-            emailConfirmation: validations.emailConfirmation.required()
-        };
-
-        describe('when different', function() {
-            var errorMessage = 'emailConfirmation must match email';
-
-            it('should return "' + errorMessage + '"', function() {
-                var result = Joi.validate({
-                    email            : 'john@doe.com',
-                    emailConfirmation: 'notthesame'
-                }, schema);
-
-                expect(result.error.details).contain.a.thing.with
-                .property('message', errorMessage);
-            });
-        });
-
-        describe('when the same', function() {
-            it('should return no error', function() {
-                var result = Joi.validate({
-                    email            : 'john@doe.com',
-                    emailConfirmation: 'john@doe.com'
-                }, schema);
-
-                expect(result.error).to.equal(null);
-            });
-        });
-    });
-
-
-    // validation
     describe('password', function() {
         var schema    = validations.password.required();
         var minLength = 6;
@@ -134,7 +100,7 @@ describe('validations', function() {
 
             it('should return "' + errorMessage + '"', function() {
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i];
+                    var value  = values[i];
                     var result = Joi.validate(value, schema);
                     expect(result.error.message).to.equal(errorMessage);
                 }
@@ -183,40 +149,6 @@ describe('validations', function() {
 
 
     // validation
-    describe('password confirmation', function() {
-        var schema = {
-            password            : validations.password.required(),
-            passwordConfirmation: validations.passwordConfirmation.required()
-        };
-
-        describe('when different', function() {
-            var errorMessage = 'passwordConfirmation must match password';
-
-            it('should return "' + errorMessage + '"', function() {
-                var result = Joi.validate({
-                    password            : 'hashreallylong',
-                    passwordConfirmation: 'notthesame'
-                }, schema);
-
-                expect(result.error.details).contain.a.thing.with
-                .property('message', errorMessage);
-            });
-        });
-
-        describe('when the same', function() {
-            it('should return no error', function() {
-                var result = Joi.validate({
-                    password            : 'hashreallylong',
-                    passwordConfirmation: 'hashreallylong'
-                }, schema);
-
-                expect(result.error).to.equal(null);
-            });
-        });
-    });
-
-
-    // validation
     describe('user.name', function() {
         var schema    = validations.user.name.required();
         var maxLength = 20;
@@ -236,7 +168,7 @@ describe('validations', function() {
 
             it('should return "' + errorMessage + '"', function() {
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i];
+                    var value  = values[i];
                     var result = Joi.validate(value, schema);
                     expect(result.error.message).to.equal(errorMessage);
                 }
@@ -266,7 +198,7 @@ describe('validations', function() {
         describe('when good format', function() {
             var value = 'John';
 
-            it('It should return no error', function() {
+            it('should return no error', function() {
                 var result = Joi.validate(value, schema);
                 expect(result.error).to.equal(null);
             });
@@ -294,7 +226,7 @@ describe('validations', function() {
 
             it('should return "' + errorMessage + '"', function() {
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i];
+                    var value  = values[i];
                     var result = Joi.validate(value, schema);
                     expect(result.error.message).to.equal(errorMessage);
                 }
@@ -324,7 +256,7 @@ describe('validations', function() {
         describe('when good format', function() {
             var value = 'John';
 
-            it('It should return no error', function() {
+            it('should return no error', function() {
                 var result = Joi.validate(value, schema);
                 expect(result.error).to.equal(null);
             });
@@ -352,7 +284,7 @@ describe('validations', function() {
 
             it('should return "' + errorMessage + '"', function() {
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i];
+                    var value  = values[i];
                     var result = Joi.validate(value, schema);
                     expect(result.error.message).to.equal(errorMessage);
                 }
@@ -375,7 +307,7 @@ describe('validations', function() {
 
             it('should return "' + errorMessage + '"', function() {
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i];
+                    var value  = values[i];
                     var result = Joi.validate(value, schema);
                     expect(result.error.message).to.equal(errorMessage);
                 }
@@ -385,7 +317,7 @@ describe('validations', function() {
         describe('when exactly ' + length + ' characters long', function() {
             var value = _.str.repeat('a', length);
 
-            it('It should return no error', function() {
+            it('should return no error', function() {
                 var result = Joi.validate(value, schema);
                 expect(result.error).to.equal(null);
             });
@@ -412,7 +344,7 @@ describe('validations', function() {
 
             it('should return "' + errorMessage + '"', function() {
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i];
+                    var value  = values[i];
                     var result = Joi.validate(value, schema);
                     expect(result.error.message).to.equal(errorMessage);
                 }
@@ -459,7 +391,7 @@ describe('validations', function() {
 
             it('should return "' + errorMessage + '"', function() {
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i];
+                    var value  = values[i];
                     var result = Joi.validate(value, schema);
                     expect(result.error.message).to.equal(errorMessage);
                 }
@@ -515,4 +447,210 @@ describe('validations', function() {
             });
         });
     });
+
+
+    // validation
+    describe('medicineName', function() {
+        var schema    = validations.medicineName.required();
+        var maxLength = 20;
+
+        describe('when undefined', function() {
+            var errorMessage = 'value is required';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate(void 0, schema);
+                expect(result.error.message).to.equal(errorMessage);
+            });
+        });
+
+        describe('when not a string', function() {
+            var values = [1, null, true, {}, []];
+            var errorMessage = 'value must be a string';
+
+            it('should return "' + errorMessage + '"', function() {
+                for (var i = 0; i < values.length; i++) {
+                    var value  = values[i];
+                    var result = Joi.validate(value, schema);
+                    expect(result.error.message).to.equal(errorMessage);
+                }
+            });
+        });
+
+        describe('when empty', function() {
+            var value = '';
+            var errorMessage = 'value is not allowed to be empty';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate(value, schema);
+                expect(result.error.message).to.equal(errorMessage);
+            });
+        });
+
+        describe('when longer than ' + maxLength + ' characters', function() {
+            var value = _.str.repeat('a', maxLength + 1);
+            var errorMessage = 'value length must be less than or equal to ' + maxLength + ' characters long';
+
+            it('It should return "' + errorMessage + '"', function() {
+                var result = Joi.validate(value, schema);
+                expect(result.error.message).to.equal(errorMessage);
+            });
+        });
+
+        describe('when good format', function() {
+            var value = 'John';
+
+            it('should return no error', function() {
+                var result = Joi.validate(value, schema);
+                expect(result.error).to.equal(null);
+            });
+        });
+    });
+
+
+    // validation
+    describe('time', function() {
+        var schema = validations.time.required();
+
+        describe('when undefined', function() {
+            var errorMessage = 'value is required';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate(void 0, schema);
+                expect(result.error.message).to.equal(errorMessage);
+            });
+        });
+
+        describe('when not a string', function() {
+            var values = [1, null, true, {}, []];
+            var errorMessage = 'value must be a valid time string with HH:mm format';
+
+            it('should return "' + errorMessage + '"', function() {
+                for (var i = 0; i < values.length; i++) {
+                    var value  = values[i];
+                    var result = Joi.validate(value, schema);
+                    expect(result.error.message).to.equal(errorMessage);
+                }
+            });
+        });
+
+        describe('when empty', function() {
+            var value = '';
+            var errorMessage = 'value must be a valid time string with HH:mm format';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate(value, schema);
+                expect(result.error.message).to.equal(errorMessage);
+            });
+        });
+
+        describe('when not valid format', function() {
+            var value = '08:00:00';
+            var errorMessage = 'value must be a valid time string with HH:mm format';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate(value, schema);
+                expect(result.error.message).to.equal(errorMessage);
+            });
+        });
+
+        describe('when good format', function() {
+            var value = '08:00';
+
+            it('should return no error', function() {
+                var result = Joi.validate(value, schema);
+                expect(result.error).to.equal(null);
+            });
+        });
+    });
+
+
+    // validation
+    describe('schedule', function() {
+        var schema = validations.schedule.required();
+
+        describe('when undefined', function() {
+            var errorMessage = 'value is required';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate(void 0, schema);
+                expect(result.error.message).to.equal(errorMessage);
+            });
+        });
+
+        describe('when not an array', function() {
+            var values = [1, null, true, {}, 'string'];
+            var errorMessage = 'value must be an array';
+
+            it('should return "' + errorMessage + '"', function() {
+                for (var i = 0; i < values.length; i++) {
+                    var value  = values[i];
+                    var result = Joi.validate(value, schema);
+                    expect(result.error.message).to.equal(errorMessage);
+                }
+            });
+        });
+
+        // describe('when repeated values', function() {
+        //     var value = ['08:00', '08:00'];
+        //     var errorMessage = 'position 2 contains a duplicate value';
+
+        //     it('should return "' + errorMessage + '"', function() {
+        //         var result = Joi.validate(value, schema);
+        //         expect(result.error.message).to.equal(errorMessage);
+        //     });
+        // });
+
+        describe('when empty', function() {
+            var value = [];
+
+            it('should return no error', function() {
+                var result = Joi.validate(value, schema);
+                expect(result.error).to.equal(null);
+            });
+        });
+
+        describe('when contains valid values', function() {
+            var value = ['08:00', '16:00'];
+
+            it('should return no error', function() {
+                var result = Joi.validate(value, schema);
+                expect(result.error).to.equal(null);
+            });
+        });
+    });
+
+
+    // validation
+    describe('matches', function() {
+        var schema = {
+            email            : validations.email.required(),
+            emailConfirmation: validations.matches('email').required()
+        };
+
+        describe('when different', function() {
+            var errorMessage = 'emailConfirmation must match email';
+
+            it('should return "' + errorMessage + '"', function() {
+                var result = Joi.validate({
+                    email            : 'john@doe.com',
+                    emailConfirmation: 'notthesame'
+                }, schema);
+
+                expect(result.error.details).contain.a.thing.with
+                .property('message', errorMessage);
+            });
+        });
+
+        describe('when the same', function() {
+            it('should return no error', function() {
+                var result = Joi.validate({
+                    email            : 'john@doe.com',
+                    emailConfirmation: 'john@doe.com'
+                }, schema);
+
+                expect(result.error).to.equal(null);
+            });
+        });
+    });
+
 });

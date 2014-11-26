@@ -16,13 +16,15 @@ Registers a device.
 
 ```
 {
-    "identifier": "110ec58a-a0f2-4ac4-8393-c866d813b8d1",
-    "password"  : "password"
+    "identifier"          : "110ec58a-a0f2-4ac4-8393-c866d813b8d1",
+    "password"            : "password",
+    "passwordConfirmation": "password"
 }
 ```
 
 - `identifier` obligatory. Validated with device.identifier rule.
 - `password` obligatory. Validated with password rule.
+- `passwordConfirmation` obligatory. Must be equal to `password`.
 
 ### On Success
 

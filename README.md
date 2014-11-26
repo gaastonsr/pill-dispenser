@@ -60,6 +60,9 @@ All input fields are validated with one of the following rules:
 - **device.identifier**. String. Exactly 36 characters long.
 - **token**. String. No empty.
 - **id**. Integer. Bigger than 0.
+- **medicineName**. String. No empty and no longer than 20 characters.
+- **time**. String. HH:mm format. Zero padded 24 hours format. Examples: 08:00 and 23:00.
+- **schedule**. Array. List with **time** values. Values can't repeat. List can be empty.
 
 Each input will define which rule it is. When a field is optional it can undefined or set to null.
 

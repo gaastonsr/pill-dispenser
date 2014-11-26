@@ -95,7 +95,7 @@ Updates user password.
 
 - `currentPassword` obligatory. Validated with password rule.
 - `newPassword` obligatory. Validated with password rule.
-- `newPasswordConfirmation` obligatory. Validated with password rule.
+- `newPasswordConfirmation` obligatory. Must be equal to `newPassword`.
 
 ### On Success
 
@@ -134,7 +134,7 @@ Puts a request to update the user email. When a user wants to update his email i
 
 - `password` obligatory. Validated with password rule.
 - `newEmail` obligatory. Validated with email rule.
-- `newEmailConfirmation` obligatory. Validated with email rule.
+- `newEmailConfirmation` obligatory. Must be equal to `newEmail`.
 
 ### On Success
 

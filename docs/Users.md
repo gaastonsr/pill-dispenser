@@ -25,7 +25,7 @@ Signs up users.
 
 - `name` obligatory. Validated with user.name rule.
 - `email` obligatory. Validated with email rule.
-- `emailConfirmation` obligatory. Validated with email rule.
+- `emailConfirmation` obligatory. Must be equal to `email`.
 - `password` obligatory. Validated with password rule.
 
 ### On Success
