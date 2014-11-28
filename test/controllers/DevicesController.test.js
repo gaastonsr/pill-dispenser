@@ -2,52 +2,44 @@
 
 var Promise           = require('bluebird');
 var sinon             = require('sinon');
-var express           = require('express');
-var bodyParser        = require('body-parser');
 var request           = require('supertest');
 var chai              = require('chai');
-var toolkit           = require('./../../libs/api-toolkit');
+var TestsHelper       = require('./../support/TestsHelper');
+var fakeApp           = require('./../support/fake-app');
 var DevicesModel      = require('./../../models/DevicesModel');
 var DevicesController = require('./../../controllers/DevicesController');
 
-var expect          = chai.expect;
+chai.use(require('chai-things'));
+
+var expect            = chai.expect;
 var devicesModel      = new DevicesModel();
 var devicesController = new DevicesController(devicesModel);
 
-/* FAKE SERVER STUFF */
-var app    = express();
-var router = express.Router();
-
-var checkSession = function(request, response, next) {
-    request.user = {
-        id: 1
-    };
-
-    next();
+/* FAKE APP STUFF */
+var routes = {
+    register: {
+        verb: 'post',
+        path: '/devices'
+    },
+    delete: {
+        verb: 'delete',
+        path: '/devices/:deviceId'
+    }
 };
 
-router.post(  '/devices'          , checkSession, devicesController.register);
-router.delete('/devices/:deviceId', checkSession, devicesController.delete);
-
-app.use(bodyParser.json());
-app.use(toolkit.energizer());
-app.use(router);
-// app.use(function(error, request, response, next) {
-//     console.log(error.stack);
-//     response.status(500).send();
-// });
-/* FAKE SERVER STUFF */
-
-chai.use(require('chai-things'));
+var app = fakeApp(devicesController, routes);
+/* FAKE APP STUFF */
 
 describe('DevicesController', function() {
 
     describe('#register - when a device is registered', function() {
+        var route  = routes.register;
         var model  = devicesModel;
         var method = 'create';
-        var route = {
-            verb: 'post',
-            path: '/devices'
+        var payload = {
+            identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
+            password            : 'password',
+            passwordConfirmation: 'password'
         };
 
         afterEach(function() {
@@ -89,11 +81,7 @@ describe('DevicesController', function() {
             it('should return http status code 500', function(done) {
                 request(app)
                 [route.verb](route.path)
-                .send({
-                    identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                    password            : 'password',
-                    passwordConfirmation: 'password'
-                })
+                .send(payload)
                 .end(function(error, response) {
                     expect(response.status).to.equal(500);
                     done();
@@ -113,11 +101,7 @@ describe('DevicesController', function() {
             it('should return DuplicateIdentifier error', function(done) {
                 request(app)
                 [route.verb](route.path)
-                .send({
-                    identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                    password            : 'password',
-                    passwordConfirmation: 'password'
-                })
+                .send(payload)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -148,11 +132,7 @@ describe('DevicesController', function() {
             it('should call model.method method with the right arguments', function(done) {
                 request(app)
                 [route.verb](route.path)
-                .send({
-                    identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                    password            : 'password',
-                    passwordConfirmation: 'password'
-                })
+                .send(payload)
                 .end(function(error, response) {
                     expect(model[method].calledOnce).to.equal(true);
                     expect(model[method].calledWith({
@@ -167,11 +147,7 @@ describe('DevicesController', function() {
             it('should return the device created', function(done) {
                 request(app)
                 [route.verb](route.path)
-                .send({
-                    identifier          : '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-                    password            : 'password',
-                    passwordConfirmation: 'password'
-                })
+                .send(payload)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -189,11 +165,11 @@ describe('DevicesController', function() {
     });
 
     describe('#delete - when a device is deleted', function() {
+        var route  = routes.delete;
         var model  = devicesModel;
         var method = 'delete';
-        var route = {
-            verb: 'delete',
-            path: '/devices/1'
+        var params = {
+            deviceId: '1'
         };
 
         afterEach(function() {
@@ -204,8 +180,12 @@ describe('DevicesController', function() {
 
         describe('and the device id is not an integer', function() {
             it('should return ValidationError', function(done) {
+                var path = TestsHelper.replaceParams(route.path, {
+                    deviceId: 'aaa'
+                });
+
                 request(app)
-                [route.verb](route.path + 'aaa')
+                [route.verb](path)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -230,8 +210,10 @@ describe('DevicesController', function() {
             });
 
             it('should return http status code 500', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(500);
                     done();
@@ -249,8 +231,10 @@ describe('DevicesController', function() {
             });
 
             it('should return DeviceNotFound error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .send({
                     identifier: '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
                     password  : 'password'
@@ -276,8 +260,10 @@ describe('DevicesController', function() {
             });
 
             it('should call model.method method with the right arguments', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .end(function(error, response) {
                     expect(model[method].calledOnce).to.equal(true);
                     expect(model[method].calledWith({
@@ -289,8 +275,10 @@ describe('DevicesController', function() {
             });
 
             it('should return 200 http status code', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(200);
                     done();

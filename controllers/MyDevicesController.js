@@ -15,9 +15,9 @@ module.exports = toolkit.Controller.extend({
             identifier: request.body.identifier,
             password  : request.body.password
         }, {
-            name      : validations.name.required(),
+            name      : validations.device.name.required(),
             identifier: validations.device.identifier.required(),
-            password  : validations.device.identifier.required()
+            password  : validations.password.required()
         });
 
         if (result.error) {

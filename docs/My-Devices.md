@@ -16,7 +16,7 @@ Links user to device.
 
 ```
 {
-    "name"      : "Grandpa's",
+    "name"      : "Grandpa",
     "identifier": "110ec58a-a0f2-4ac4-8393-c866d813b8d1",
     "password"  : "password"
 }
@@ -35,7 +35,7 @@ HTTP code: 201
     "data": {
         "kind"     : "DeviceLinkage",
         "id"       : 1,
-        "name"     : "Grandpa's",
+        "name"     : "Grandpa",
         "updatedAt": "2014-09-29T19:10:15Z",
         "createdAt": "2014-09-29T19:10:15Z"
     }
@@ -77,7 +77,7 @@ HTTP code: 200
         "linkages": [
             {
                 "id"       : 1,
-                "name"     : "Grandpas",
+                "name"     : "Grandpa",
                 "updatedAt": "2014-09-29T19:10:15Z",
                 "createdAt": "2014-09-29T19:10:15Z"
             },
@@ -264,7 +264,7 @@ Returns a list of the device settings.
 
 ### Expected
 
-- `:linkageId` obligatory. Validated with id rule. 
+- `:linkageId` obligatory. Validated with id rule.
 
 ### On Success
 

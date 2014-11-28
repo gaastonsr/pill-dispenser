@@ -55,4 +55,16 @@ TestsHelper.prototype = {
     }
 };
 
+TestsHelper.replaceParams = function(path, params) {
+    var keys = Object.keys(params);
+
+    keys.forEach(function(key) {
+        var value = params[key];
+        var param = ':' + key;
+        path = path.replace(param, value);
+    });
+
+    return path;
+};
+
 module.exports = TestsHelper;

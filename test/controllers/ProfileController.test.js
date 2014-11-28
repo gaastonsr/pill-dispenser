@@ -2,54 +2,52 @@
 
 var Promise           = require('bluebird');
 var sinon             = require('sinon');
-var express           = require('express');
-var bodyParser        = require('body-parser');
 var request           = require('supertest');
 var chai              = require('chai');
-var toolkit           = require('./../../libs/api-toolkit');
+var TestsHelper       = require('./../support/TestsHelper');
+var fakeApp           = require('./../support/fake-app');
 var UsersModel        = require('./../../models/UsersModel');
 var ProfileController = require('./../../controllers/ProfileController');
+
+chai.use(require('chai-things'));
 
 var expect            = chai.expect;
 var usersModel        = new UsersModel();
 var profileController = new ProfileController(usersModel);
 
-/* FAKE SERVER STUFF */
-var app    = express();
-var router = express.Router();
-
-var checkSession = function(request, response, next) {
-    request.user = {
-        id: 1
-    };
-
-    next();
+/* FAKE APP STUFF */
+var routes = {
+    get: {
+        verb: 'get',
+        path: '/profile'
+    },
+    update: {
+        verb: 'put',
+        path: '/profile'
+    },
+    updatePassword: {
+        verb: 'put',
+        path: '/profile/password'
+    },
+    requestEmailUpdate: {
+        verb: 'post',
+        path: '/profile/email-update-request'
+    },
+    updateEmail: {
+        verb: 'put',
+        path: '/profile/email/:token'
+    }
 };
 
-router.get( '/profile'                     , checkSession, profileController.get);
-router.put( '/profile'                     , checkSession, profileController.update);
-router.put( '/profile/password'            , checkSession, profileController.updatePassword);
-router.post('/profile/email-update-request', checkSession, profileController.requestEmailUpdate);
-router.put( '/profile/email/:token'        , profileController.updateEmail);
-
-app.use(bodyParser.json());
-app.use(toolkit.energizer());
-app.use(router);
-// app.use(function(error, request, response, next) {
-//     console.log(error.stack);
-//     response.status(500).send();
-// });
-/* FAKE SERVER STUFF */
+var app = fakeApp(profileController, routes);
+/* FAKE APP STUFF */
 
 describe('ProfileController', function() {
 
     describe('#get - when a user profile is fetched', function() {
+        var route  = routes.get;
         var model  = usersModel;
         var method = 'getById';
-        var route  = {
-            verb: 'get',
-            path: '/profile'
-        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -127,12 +125,9 @@ describe('ProfileController', function() {
     });
 
     describe('#update - when a profile is updated', function() {
+        var route  = routes.update;
         var model  = usersModel;
         var method = 'update';
-        var route  = {
-            verb: 'put',
-            path: '/profile'
-        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -229,12 +224,9 @@ describe('ProfileController', function() {
     });
 
     describe('#updatePassword - when a password is updated', function() {
+        var route  = routes.updatePassword;
         var model  = usersModel;
         var method = 'updatePassword';
-        var route  = {
-            verb: 'put',
-            path: '/profile/password'
-        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -360,12 +352,9 @@ describe('ProfileController', function() {
     });
 
     describe('#requestEmailUpdate - when an email update is requested', function() {
+        var route  = routes.requestEmailUpdate;
         var model  = usersModel;
         var method = 'requestEmailUpdate';
-        var route  = {
-            verb: 'post',
-            path: '/profile/email-update-request'
-        };
 
         afterEach(function() {
             if (model[method].restore) {
@@ -549,11 +538,11 @@ describe('ProfileController', function() {
     });
 
     describe('#updateEmail - when an email is updated', function() {
+        var route  = routes.updateEmail;
         var model  = usersModel;
         var method = 'updateEmail';
-        var route  = {
-            verb: 'put',
-            path: '/profile/email/randomtoken'
+        var params = {
+            token: 'randomtoken'
         };
 
         afterEach(function() {
@@ -572,8 +561,10 @@ describe('ProfileController', function() {
             });
 
             it('should return 500 http code', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(500);
                     done();
@@ -591,8 +582,10 @@ describe('ProfileController', function() {
             });
 
             it('should return InvalidToken error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -615,8 +608,10 @@ describe('ProfileController', function() {
             });
 
             it('should return ExpiredEmailUpdateRequest error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .end(function(error, response) {
                     var body = response.body;
 
@@ -637,8 +632,10 @@ describe('ProfileController', function() {
             });
 
             it('should call model.method with the right arguments', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .end(function(error, response) {
                     expect(model[method].calledOnce).to.equal(true);
                     expect(model[method].calledWith({
@@ -650,8 +647,10 @@ describe('ProfileController', function() {
             });
 
             it('should return 200 http code', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
                 request(app)
-                [route.verb](route.path)
+                [route.verb](path)
                 .end(function(error, response) {
                     expect(response.status).to.equal(200);
                     done();
