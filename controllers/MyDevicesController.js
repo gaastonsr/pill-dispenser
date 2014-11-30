@@ -171,12 +171,10 @@ module.exports = toolkit.Controller.extend({
     },
 
     addSetting: function(request, response, next) {
-        var schedule      = request.body.schedule;
-        var scheduleClone = Array.isArray(schedule) ? schedule.slice(0): [];
         var result = this.validate({
             linkageId   : request.params.linkageId,
             medicineName: request.body.medicineName,
-            schedule    : schedule
+            schedule    : request.body.schedule
         }, {
             linkageId   : validations.id.required().options({ convert: true }),
             medicineName: validations.medicineName.required(),
@@ -187,7 +185,7 @@ module.exports = toolkit.Controller.extend({
             return response.sendError(result.error);
         }
 
-        var formattedSchedule = scheduleClone.map(function(time) {
+        var formattedSchedule = request.body.schedule.map(function(time) {
             return time + ':00';
         });
 
@@ -283,7 +281,7 @@ module.exports = toolkit.Controller.extend({
             response.status(200).send({});
         })
         .catch(function(error) {
-            if (error.name === 'LinkageNotFound') {
+            if (error.name === 'LinkageNotFound' || error.name === 'SettingNotFound') {
                 return response.sendError(404, error);
             }
 
@@ -317,7 +315,7 @@ module.exports = toolkit.Controller.extend({
             response.status(200).send({});
         })
         .catch(function(error) {
-            if (error.name === 'LinkageNotFound') {
+            if (error.name === 'LinkageNotFound' || error.name === 'SettingNotFound') {
                 return response.sendError(404, error);
             }
 

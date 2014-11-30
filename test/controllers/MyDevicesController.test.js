@@ -1171,36 +1171,579 @@ describe('MyDevicesController', function() {
     describe('#activateSetting - when a device setting is activated', function() {
         var route  = routes.activateSetting;
         var model  = myDevicesModel;
-        var method = 'create';
+        var method = 'activateSetting';
+        var params = {
+            linkageId: '1',
+            settingId: '2'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
                 model[method].restore();
             }
+        });
+
+        describe('and the linkage and setting id are not an integer', function() {
+            var errorName = 'ValidationError';
+            var errorCode = 400;
+
+            it('should return ' + errorName, function(done) {
+                var path = TestsHelper.replaceParams(route.path, {
+                    linkageId: 'aaa',
+                    settingId: 'bbb'
+                });
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'linkageId');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'settingId');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and an unknown error happens', function() {
+            var errorName = 'UnknownError';
+            var errorCode = 500;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return http status code 500', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(response.status).to.equal(errorCode);
+                    done();
+                });
+            });
+        });
+
+        describe('and the linkage doesn\'t exist', function() {
+            var errorName = 'LinkageNotFound';
+            var errorCode = 404;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the setting doesn\'t exist', function() {
+            var errorName = 'SettingNotFound';
+            var errorCode = 404;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the setting is already active', function() {
+            var errorName = 'SettingAlreadyActive';
+            var errorCode = 409;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    return Promise.resolve();
+                });
+            });
+
+            it('should call model.method method with the right arguments', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
+                        userId   : 1,
+                        linkageId: 1,
+                        settingId: 2
+                    })).to.equal(true);
+
+                    done();
+                });
+            });
+
+            it('should return 200 http status code', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(response.status).to.equal(200);
+                    done();
+                });
+            });
         });
     });
 
     describe('#deactivateSetting - when a device setting is deactivated', function() {
         var route  = routes.deactivateSetting;
         var model  = myDevicesModel;
-        var method = 'create';
+        var method = 'deactivateSetting';
+        var params = {
+            linkageId: '1',
+            settingId: '2'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
                 model[method].restore();
             }
         });
+
+        describe('and the linkage and setting id are not an integer', function() {
+            var errorName = 'ValidationError';
+            var errorCode = 400;
+
+            it('should return ' + errorName, function(done) {
+                var path = TestsHelper.replaceParams(route.path, {
+                    linkageId: 'aaa',
+                    settingId: 'bbb'
+                });
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'linkageId');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'settingId');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and an unknown error happens', function() {
+            var errorName = 'UnknownError';
+            var errorCode = 500;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return http status code 500', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(response.status).to.equal(errorCode);
+                    done();
+                });
+            });
+        });
+
+        describe('and the linkage doesn\'t exist', function() {
+            var errorName = 'LinkageNotFound';
+            var errorCode = 404;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the setting doesn\'t exist', function() {
+            var errorName = 'SettingNotFound';
+            var errorCode = 404;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the setting is already inactive', function() {
+            var errorName = 'SettingAlreadyInactive';
+            var errorCode = 409;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    return Promise.resolve();
+                });
+            });
+
+            it('should call model.method method with the right arguments', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
+                        userId   : 1,
+                        linkageId: 1,
+                        settingId: 2
+                    })).to.equal(true);
+
+                    done();
+                });
+            });
+
+            it('should return 200 http status code', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(response.status).to.equal(200);
+                    done();
+                });
+            });
+        });
     });
 
     describe('#deleteSetting - when device setting is deleted', function() {
         var route  = routes.deleteSetting;
         var model  = myDevicesModel;
-        var method = 'create';
+        var method = 'deleteSetting';
+        var params = {
+            linkageId: '1',
+            settingId: '2'
+        };
 
         afterEach(function() {
             if (model[method].restore) {
                 model[method].restore();
             }
+        });
+
+        describe('and the linkage and setting id are not an integer', function() {
+            var errorName = 'ValidationError';
+            var errorCode = 400;
+
+            it('should return ' + errorName, function(done) {
+                var path = TestsHelper.replaceParams(route.path, {
+                    linkageId: 'aaa',
+                    settingId: 'bbb'
+                });
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'linkageId');
+                    expect(body.error.errors).to.contain.a.thing.with.property('location', 'settingId');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and an unknown error happens', function() {
+            var errorName = 'UnknownError';
+            var errorCode = 500;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return http status code 500', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(response.status).to.equal(errorCode);
+                    done();
+                });
+            });
+        });
+
+        describe('and the linkage doesn\'t exist', function() {
+            var errorName = 'LinkageNotFound';
+            var errorCode = 404;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the setting doesn\'t exist', function() {
+            var errorName = 'SettingNotFound';
+            var errorCode = 404;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the setting is active', function() {
+            var errorName = 'DeleteActiveSetting';
+            var errorCode = 409;
+
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    var error  = new Error();
+                    error.name = errorName;
+                    return Promise.reject(error);
+                });
+            });
+
+            it('should return ' + errorName + ' error', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    var body = response.body;
+
+                    expect(response.status).to.equal(errorCode);
+                    expect(body.error.code).to.equal(response.status);
+                    expect(body.error.name).to.equal(errorName);
+                    expect(body.error.message).to.be.a('string');
+
+                    done();
+                });
+            });
+        });
+
+        describe('and the data is fine', function() {
+            beforeEach(function() {
+                model[method] = sinon.spy(function() {
+                    return Promise.resolve();
+                });
+            });
+
+            it('should call model.method method with the right arguments', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(model[method].calledOnce).to.equal(true);
+                    expect(model[method].calledWith({
+                        userId   : 1,
+                        linkageId: 1,
+                        settingId: 2
+                    })).to.equal(true);
+
+                    done();
+                });
+            });
+
+            it('should return 200 http status code', function(done) {
+                var path = TestsHelper.replaceParams(route.path, params);
+
+                request(app)
+                [route.verb](path)
+                .end(function(error, response) {
+                    expect(response.status).to.equal(200);
+                    done();
+                });
+            });
         });
     });
 
