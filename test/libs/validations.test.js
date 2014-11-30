@@ -430,7 +430,7 @@ describe('validations', function() {
 
         describe('when Infinity', function() {
             var value = Infinity;
-            var errorMessage = 'value must be an integer';
+            var errorMessage = 'value contains an invalid value';
 
             it('should return "' + errorMessage + '"', function() {
                 var result = Joi.validate(value, schema);

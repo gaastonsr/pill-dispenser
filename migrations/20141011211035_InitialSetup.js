@@ -43,7 +43,6 @@ module.exports = {
                 table.string('medicine_name', 20).notNullable();
                 table.json('schedule').notNullable();
                 table.string('status', 1).notNullable();
-                table.timestamp('updated_at', true);
                 table.timestamp('created_at', true).notNullable();
             })
             .table('sessions', function(table) {

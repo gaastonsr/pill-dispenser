@@ -357,8 +357,7 @@ describe('MyDevicesModel', function() {
                     medicineName: 'Naproxeno',
                     schedule    : [
                         '08:00:00',
-                        '16:00:00',
-                        '24:00:00'
+                        '16:00:00'
                     ]
                 })
                 .then(function() {
@@ -378,8 +377,7 @@ describe('MyDevicesModel', function() {
                     medicineName: 'Naproxeno',
                     schedule    : [
                         '08:00:00',
-                        '16:00:00',
-                        '24:00:00'
+                        '16:00:00'
                     ]
                 })
                 .then(function() {
@@ -399,8 +397,7 @@ describe('MyDevicesModel', function() {
                     medicineName: 'Naproxeno',
                     schedule    : [
                         '08:00:00',
-                        '16:00:00',
-                        '24:00:00'
+                        '16:00:00'
                     ]
                 })
                 .then(function(setting) {
@@ -415,9 +412,7 @@ describe('MyDevicesModel', function() {
                         expect(model.get('medicineName')).to.equal('Naproxeno');
                         expect(schedule[0]).to.equal('08:00:00');
                         expect(schedule[1]).to.equal('16:00:00');
-                        expect(schedule[2]).to.equal('24:00:00');
                         expect(model.get('status')).to.equal('0');
-                        expect(model.get('updatedAt')).to.instanceof(Date);
                         expect(model.get('createdAt')).to.instanceof(Date);
                     });
                 });
@@ -430,19 +425,16 @@ describe('MyDevicesModel', function() {
                     medicineName: 'Naproxeno',
                     schedule    : [
                         '08:00:00',
-                        '16:00:00',
-                        '24:00:00'
+                        '16:00:00'
                     ]
                 })
                 .then(function(setting) {
                     expect(setting.id).to.equal(setting.id);
                     expect(setting.medicineName).to.equal('Naproxeno');
                     expect(setting.status).to.equal('0');
-                    expect(setting.updatedAt).to.instanceof(Date);
                     expect(setting.createdAt).to.instanceof(Date);
                     expect(setting.schedule[0]).to.equal('08:00:00');
                     expect(setting.schedule[1]).to.equal('16:00:00');
-                    expect(setting.schedule[2]).to.equal('24:00:00');
                 });
             });
         });
@@ -497,9 +489,7 @@ describe('MyDevicesModel', function() {
                     expect(settings[0].medicineName).to.equal('Naproxeno');
                     expect(settings[0].schedule[0]).to.equal('08:00:00');
                     expect(settings[0].schedule[1]).to.equal('16:00:00');
-                    expect(settings[0].schedule[2]).to.equal('24:00:00');
                     expect(settings[0].status).to.equal('0');
-                    expect(settings[0].updatedAt).to.instanceof(Date);
                     expect(settings[0].createdAt).to.instanceof(Date);
 
                     expect(settings[1].id).to.equal(2);
@@ -507,9 +497,7 @@ describe('MyDevicesModel', function() {
                     expect(settings[1].medicineName).to.equal('Pepto');
                     expect(settings[1].schedule[0]).to.equal('08:00:00');
                     expect(settings[1].schedule[1]).to.equal('16:00:00');
-                    expect(settings[1].schedule[2]).to.equal('24:00:00');
                     expect(settings[1].status).to.equal('0');
-                    expect(settings[1].updatedAt).to.instanceof(Date);
                     expect(settings[1].createdAt).to.instanceof(Date);
                 });
             });

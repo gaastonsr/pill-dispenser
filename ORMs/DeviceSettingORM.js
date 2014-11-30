@@ -7,7 +7,7 @@ var bookshelf = require('./../bookshelf');
 var DeviceSettingORM = bookshelf.Model.extend({
 
     tableName    : 'devices_settings',
-    hasTimestamps: ['created_at', 'updated_at'],
+    hasTimestamps: ['created_at', null],
 
     format: function(attributes) {
         return _.reduce(attributes, function(memory, value, key) {

@@ -49,16 +49,19 @@ describe('DevicesController', function() {
         });
 
         describe('and the required fields are not sent', function() {
-            it('should return ValidationError', function(done) {
+            var errorName = 'ValidationError';
+            var errorCode = 400;
+
+            it('should return ' + errorName, function(done) {
                 request(app)
                 [route.verb](route.path)
                 .send({})
                 .end(function(error, response) {
                     var body = response.body;
 
-                    expect(response.status).to.equal(400);
+                    expect(response.status).to.equal(errorCode);
                     expect(body.error.code).to.equal(response.status);
-                    expect(body.error.name).to.equal('ValidationError');
+                    expect(body.error.name).to.equal(errorName);
                     expect(body.error.message).to.be.a('string');
                     expect(body.error.errors).to.contain.a.thing.with.property('location', 'identifier');
                     expect(body.error.errors).to.contain.a.thing.with.property('location', 'password');
@@ -179,7 +182,10 @@ describe('DevicesController', function() {
         });
 
         describe('and the device id is not an integer', function() {
-            it('should return ValidationError', function(done) {
+            var errorName = 'ValidationError';
+            var errorCode = 400;
+
+            it('should return ' + errorName, function(done) {
                 var path = TestsHelper.replaceParams(route.path, {
                     deviceId: 'aaa'
                 });
@@ -189,9 +195,9 @@ describe('DevicesController', function() {
                 .end(function(error, response) {
                     var body = response.body;
 
-                    expect(response.status).to.equal(400);
+                    expect(response.status).to.equal(errorCode);
                     expect(body.error.code).to.equal(response.status);
-                    expect(body.error.name).to.equal('ValidationError');
+                    expect(body.error.name).to.equal(errorName);
                     expect(body.error.message).to.be.a('string');
                     expect(body.error.errors).to.contain.a.thing.with.property('location', 'deviceId');
 
@@ -222,15 +228,18 @@ describe('DevicesController', function() {
         });
 
         describe('and the device doesn\'t exist', function() {
+            var errorName = 'DeviceNotFound';
+            var errorCode = 404;
+
             beforeEach(function() {
                 model[method] = sinon.spy(function() {
                     var error  = new Error();
-                    error.name = 'DeviceNotFound';
+                    error.name = errorName;
                     return Promise.reject(error);
                 });
             });
 
-            it('should return DeviceNotFound error', function(done) {
+            it('should return ' + errorName + ' error', function(done) {
                 var path = TestsHelper.replaceParams(route.path, params);
 
                 request(app)
@@ -244,7 +253,7 @@ describe('DevicesController', function() {
 
                     expect(response.status).to.equal(404);
                     expect(body.error.code).to.equal(response.status);
-                    expect(body.error.name).to.equal('DeviceNotFound');
+                    expect(body.error.name).to.equal(errorName);
                     expect(body.error.message).to.be.a('string');
 
                     done();

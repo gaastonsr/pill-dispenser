@@ -39,7 +39,7 @@ module.exports = toolkit.Controller.extend({
                 createdAt: linkage.createdAt
             });
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'InvalidCredentials') {
                 return response.sendError(401, error);
             }
@@ -71,7 +71,7 @@ module.exports = toolkit.Controller.extend({
                 linkages: formattedLinkages
             });
         })
-        .error(next);
+        .catch(next);
     },
 
     unlink: function(request, response, next) {
@@ -92,7 +92,7 @@ module.exports = toolkit.Controller.extend({
         .then(function(linkage) {
             response.status(200).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'LinkageNotFound') {
                 return response.sendError(404, error);
             }
@@ -127,7 +127,7 @@ module.exports = toolkit.Controller.extend({
         .then(function(linkage) {
             response.status(200).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'LinkageNotFound') {
                 return response.sendError(404, error);
             }
@@ -146,7 +146,7 @@ module.exports = toolkit.Controller.extend({
             name     : request.body.name
         }, {
             linkageId: validations.id.required().options({ convert: true }),
-            name     : validations.password.required()
+            name     : validations.device.name.required()
         });
 
         if (result.error) {
@@ -161,7 +161,7 @@ module.exports = toolkit.Controller.extend({
         .then(function(linkage) {
             response.status(200).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'LinkageNotFound') {
                 return response.sendError(404, error);
             }
@@ -171,10 +171,12 @@ module.exports = toolkit.Controller.extend({
     },
 
     addSetting: function(request, response, next) {
+        var schedule      = request.body.schedule;
+        var scheduleClone = Array.isArray(schedule) ? schedule.slice(0): [];
         var result = this.validate({
             linkageId   : request.params.linkageId,
             medicineName: request.body.medicineName,
-            schedule    : request.body.schedule
+            schedule    : schedule
         }, {
             linkageId   : validations.id.required().options({ convert: true }),
             medicineName: validations.medicineName.required(),
@@ -185,7 +187,7 @@ module.exports = toolkit.Controller.extend({
             return response.sendError(result.error);
         }
 
-        var schedule = result.value.schedule.map(function(time) {
+        var formattedSchedule = scheduleClone.map(function(time) {
             return time + ':00';
         });
 
@@ -193,10 +195,10 @@ module.exports = toolkit.Controller.extend({
             userId      : request.user.id,
             linkageId   : result.value.linkageId,
             medicineName: result.value.medicineName,
-            schedule    : result.value.schedule
+            schedule    : formattedSchedule
         })
         .then(function(setting) {
-            var schedule = setting.schedule.map(function(time) {
+            var formattedSchedule = setting.schedule.map(function(time) {
                 return time.substr(0, 5);
             });
 
@@ -204,10 +206,12 @@ module.exports = toolkit.Controller.extend({
                 kind        : 'DeviceSetting',
                 id          : setting.id,
                 medicineName: setting.medicineName,
-                schedule    : setting.schedule
+                status      : setting.status,
+                createdAt   : setting.createdAt,
+                schedule    : formattedSchedule
             });
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'LinkageNotFound') {
                 return response.sendError(404, error);
             }
@@ -248,7 +252,7 @@ module.exports = toolkit.Controller.extend({
                 settings: settings
             });
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'LinkageNotFound') {
                 return response.sendError(404, error);
             }
@@ -278,7 +282,7 @@ module.exports = toolkit.Controller.extend({
         .then(function(settings) {
             response.status(200).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'LinkageNotFound') {
                 return response.sendError(404, error);
             }
@@ -312,7 +316,7 @@ module.exports = toolkit.Controller.extend({
         .then(function(settings) {
             response.status(200).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'LinkageNotFound') {
                 return response.sendError(404, error);
             }
@@ -346,7 +350,7 @@ module.exports = toolkit.Controller.extend({
         .then(function(settings) {
             response.status(200).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'LinkageNotFound' || error.name === 'SettingNotFound') {
                 return response.sendError(404, error);
             }

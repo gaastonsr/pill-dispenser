@@ -233,9 +233,11 @@ HTTP code: 201
 ````
 {
     "data": {
-        "kind": "DeviceSetting",
-        "id"  : 1,
+        "kind"        : "DeviceSetting",
+        "id"          : 1,
+        "status"      : "0",
         "medicineName": "Naproxeno",
+        "createdAt"   : "2014-09-29T19:10:15Z",
         "schedule": [
             "08:00",
             "16:00",
@@ -284,7 +286,6 @@ HTTP code: 200
 			          "24:00"
 			      ],
 			      "status": "0",
-			      "updatedAt": "2014-09-29T19:10:15Z",
 			      "createdAt": "2014-09-29T19:10:15Z"
             },
             {

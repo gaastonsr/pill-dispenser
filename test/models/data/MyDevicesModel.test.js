@@ -275,18 +275,16 @@ module.exports = {
                 id           : 1,
                 device_id    : 1,
                 medicine_name: 'Naproxeno',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '0',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             },
             {
                 id           : 2,
                 device_id    : 1,
                 medicine_name: 'Pepto',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '0',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             }
         ]
@@ -339,27 +337,24 @@ module.exports = {
                 id           : 1,
                 device_id    : 1,
                 medicine_name: 'Naproxeno',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '1',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             },
             {
                 id           : 2,
                 device_id    : 1,
                 medicine_name: 'Pepto',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '0',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             },
             {
                 id           : 3,
                 device_id    : 2,
                 medicine_name: 'Dulcolax',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '0',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             }
         ]
@@ -412,27 +407,24 @@ module.exports = {
                 id           : 1,
                 device_id    : 1,
                 medicine_name: 'Naproxeno',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '1',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             },
             {
                 id           : 2,
                 device_id    : 1,
                 medicine_name: 'Pepto',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '0',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             },
             {
                 id           : 3,
                 device_id    : 2,
                 medicine_name: 'Dulcolax',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '0',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             }
         ]
@@ -485,27 +477,24 @@ module.exports = {
                 id           : 1,
                 device_id    : 1,
                 medicine_name: 'Naproxeno',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '1',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             },
             {
                 id           : 2,
                 device_id    : 1,
                 medicine_name: 'Pepto',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '0',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             },
             {
                 id           : 3,
                 device_id    : 2,
                 medicine_name: 'Dulcolax',
-                schedule     : '["08:00:00","16:00:00","24:00:00"]',
+                schedule     : '["08:00:00","16:00:00"]',
                 status       : '0',
-                updated_at   : '2014-10-08 12:00:00',
                 created_at   : '2014-10-08 12:00:00'
             }
         ]

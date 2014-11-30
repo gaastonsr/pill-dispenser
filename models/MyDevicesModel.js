@@ -216,10 +216,8 @@ MyDevicesModel.prototype = {
         .then(function(model) {
             var setting       = model.toJSON();
             setting.schedule  = JSON.parse(setting.schedule);
-            setting.updatedAt = setting.updated_at;
             setting.createdAt = setting.created_at;
 
-            delete setting.updated_at;
             delete setting.created_at;
 
             return setting;
