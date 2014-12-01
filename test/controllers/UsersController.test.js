@@ -4,16 +4,19 @@ var Promise         = require('bluebird');
 var sinon           = require('sinon');
 var request         = require('supertest');
 var chai            = require('chai');
+var config          = require('config');
 var TestsHelper     = require('./../support/TestsHelper');
 var fakeApp         = require('./../support/fake-app');
+var Mailer          = require('./../../libs/Mailer');
 var UsersModel      = require('./../../models/UsersModel');
 var UsersController = require('./../../controllers/UsersController');
 
 chai.use(require('chai-things'));
 
 var expect          = chai.expect;
+var mailer          = sinon.createStubInstance(Mailer);
 var usersModel      = new UsersModel();
-var usersController = new UsersController(usersModel);
+var usersController = new UsersController(mailer, usersModel);
 
 /* FAKE APP STUFF */
 var routes = {
@@ -41,6 +44,8 @@ describe('UsersController', function() {
             if (model[method].restore) {
                 model[method].restore();
             }
+
+            mailer.sendMail.reset();
         });
 
         describe('and the required fields are not sent', function() {
@@ -135,6 +140,28 @@ describe('UsersController', function() {
                         createdAt      : creationDate,
                         activationToken: 'somerandomtoken'
                     });
+                });
+            });
+
+            it('should call mailer.sendMail with the right arguments', function(done) {
+                request(app)
+                [route.verb](route.path)
+                .send({
+                    name             : 'John Doe',
+                    email            : 'john@doe.com',
+                    emailConfirmation: 'john@doe.com',
+                    password         : 'password'
+                })
+                .end(function(error, response) {
+                    expect(mailer.sendMail.calledOnce).to.equal(true);
+                    expect(mailer.sendMail.calledWith('account-activation', {
+                        emailConfirmationURL: config.get('websiteURL') + '/activar-cuenta/somerandomtoken'
+                    }, {
+                        to     : 'john@doe.com',
+                        subject: 'Activación de Cuenta'
+                    })).to.equal(true);
+
+                    done();
                 });
             });
 

@@ -1,15 +1,18 @@
 'use strict';
 
+var config      = require('config');
 var toolkit     = require('./../libs/api-toolkit');
 var validations = require('./../libs/validations');
 
 module.exports = toolkit.Controller.extend({
 
-    initialize: function(usersModel) {
+    initialize: function(mailer, usersModel) {
+        this.mailer     = mailer;
         this.usersModel = usersModel;
     },
 
     create: function(request, response, next) {
+        var self = this;
         var result = this.validate({
             name             : request.body.name,
             email            : request.body.email,
@@ -32,6 +35,13 @@ module.exports = toolkit.Controller.extend({
             name    : result.value.name
         })
         .then(function(user) {
+            self.mailer.sendMail('account-activation', {
+                emailConfirmationURL: config.get('websiteURL') + '/activar-cuenta/' + user.activationToken
+            }, {
+                to     : user.email,
+                subject: 'Activación de Cuenta'
+            });
+
             response.sendData(201, {
                 kind     : 'UserProfile',
                 id       : user.id,

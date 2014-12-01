@@ -1,11 +1,13 @@
 'use strict';
 
+var config      = require('config');
 var toolkit     = require('./../libs/api-toolkit');
 var validations = require('./../libs/validations');
 
 module.exports = toolkit.Controller.extend({
 
-    initialize: function(usersModel) {
+    initialize: function(mailer, usersModel) {
+        this.mailer     = mailer;
         this.usersModel = usersModel;
     },
 
@@ -44,7 +46,7 @@ module.exports = toolkit.Controller.extend({
         .then(function() {
             response.status(200).send({});
         })
-        .error(next);
+        .catch(next);
     },
 
     updatePassword: function(request, response, next) {
@@ -70,7 +72,7 @@ module.exports = toolkit.Controller.extend({
         .then(function() {
             response.status(200).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'IncorrectPassword') {
                 return response.sendError(401, error);
             }
@@ -80,6 +82,7 @@ module.exports = toolkit.Controller.extend({
     },
 
     requestEmailUpdate: function(request, response, next) {
+        var self = this;
         var result = this.validate({
             password            : request.body.password,
             newEmail            : request.body.newEmail,
@@ -99,10 +102,17 @@ module.exports = toolkit.Controller.extend({
             newEmail: result.value.newEmail,
             password: result.value.password
         })
-        .then(function() {
+        .then(function(user) {
+            self.mailer.sendMail('email-update-request', {
+                emailConfirmationURL: config.get('websiteURL') + '/confirmar-correo/' + user.emailUpdateToken
+            }, {
+                to     : user.email,
+                subject: 'Confirmación de Dirección de Correo'
+            });
+
             response.status(201).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'IncorrectPassword') {
                 return response.sendError(401, error);
             }
@@ -122,7 +132,7 @@ module.exports = toolkit.Controller.extend({
         .then(function() {
             response.status(200).send({});
         })
-        .error(function(error) {
+        .catch(function(error) {
             if (error.name === 'InvalidToken') {
                 return response.sendError(error);
             }

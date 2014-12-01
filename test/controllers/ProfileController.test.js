@@ -4,16 +4,19 @@ var Promise           = require('bluebird');
 var sinon             = require('sinon');
 var request           = require('supertest');
 var chai              = require('chai');
+var config            = require('config');
 var TestsHelper       = require('./../support/TestsHelper');
 var fakeApp           = require('./../support/fake-app');
+var Mailer            = require('./../../libs/Mailer');
 var UsersModel        = require('./../../models/UsersModel');
 var ProfileController = require('./../../controllers/ProfileController');
 
 chai.use(require('chai-things'));
 
 var expect            = chai.expect;
+var mailer            = sinon.createStubInstance(Mailer);
 var usersModel        = new UsersModel();
-var profileController = new ProfileController(usersModel);
+var profileController = new ProfileController(mailer, usersModel);
 
 /* FAKE APP STUFF */
 var routes = {
@@ -82,11 +85,11 @@ describe('ProfileController', function() {
             beforeEach(function() {
                 model[method] = sinon.spy(function() {
                     return Promise.resolve({
-                        id       : 1,
-                        name     : 'John Doe',
-                        email    : 'john@doe.com',
-                        updatedAt: creationDate,
-                        createdAt: creationDate
+                        id              : 1,
+                        name            : 'John Doe',
+                        email           : 'john@doe.com',
+                        updatedAt       : creationDate,
+                        createdAt       : creationDate
                     });
                 });
             });
@@ -360,6 +363,8 @@ describe('ProfileController', function() {
             if (model[method].restore) {
                 model[method].restore();
             }
+
+            mailer.sendMail.reset();
         });
 
         describe('and the required fields are not sent', function() {
@@ -497,7 +502,31 @@ describe('ProfileController', function() {
         describe('and everything is fine', function() {
             beforeEach(function() {
                 sinon.stub(model, 'requestEmailUpdate', function() {
-                    return Promise.resolve();
+                    return Promise.resolve({
+                        email           : 'john@doe.com',
+                        emailUpdateToken: 'somerandomtoken'
+                    });
+                });
+            });
+
+            it('should call mailer.sendMail with the right arguments', function(done) {
+                request(app)
+                [route.verb](route.path)
+                .send({
+                    password            : 'password',
+                    newEmail            : 'jdoe@gmail.com',
+                    newEmailConfirmation: 'jdoe@gmail.com'
+                })
+                .end(function(error, response) {
+                    expect(mailer.sendMail.calledOnce).to.equal(true);
+                    expect(mailer.sendMail.calledWith('email-update-request', {
+                        emailConfirmationURL: config.get('websiteURL') + '/confirmar-correo/somerandomtoken'
+                    }, {
+                        to     : 'john@doe.com',
+                        subject: 'Confirmación de Dirección de Correo'
+                    })).to.equal(true);
+
+                    done();
                 });
             });
 

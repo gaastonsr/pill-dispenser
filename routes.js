@@ -1,6 +1,10 @@
 'use strict';
 
 var express = require('express');
+var config  = require('config');
+var Mailer  = require('./libs/Mailer');
+
+var mailer = new Mailer(config.get('mail'));
 
 var UsersModel     = require('./models/UsersModel');
 var SessionsModel  = require('./models/SessionsModel');
@@ -18,9 +22,9 @@ var ProfileController   = require('./controllers/ProfileController');
 var DevicesController   = require('./controllers/DevicesController');
 var MyDevicesController = require('./controllers/MyDevicesController');
 
-var usersController     = new UsersController(usersModel);
+var usersController     = new UsersController(mailer, usersModel);
 var oauth2Controller    = new Oauth2Controller(sessionsModel);
-var profileController   = new ProfileController(usersModel);
+var profileController   = new ProfileController(mailer, usersModel);
 var devicesController   = new DevicesController(devicesModel);
 var myDevicesController = new MyDevicesController(myDevicesModel);
 
