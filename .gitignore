@@ -29,3 +29,8 @@ node_modules
 
 # Vagrant files
 .vagrant
+
+# Config files
+config/*
+!config/default.js
+!config/test.js

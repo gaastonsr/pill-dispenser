@@ -1,10 +1,10 @@
 'use strict';
 
-var config = require('./config');
+var config = require('config');
 
 exports.anyEnv = exports.test = exports.development = exports.staging = exports.production = {
     client    : 'pg',
-    connection: config.database,
+    connection: config.get('database'),
     pool: {
         min: 2,
         max: 10

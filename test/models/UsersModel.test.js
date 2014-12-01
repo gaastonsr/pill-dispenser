@@ -6,7 +6,7 @@ var jwt         = require('jwt-simple');
 var bcrypt      = require('bcrypt');
 var testData    = require('./data/UsersModel.test');
 var TestsHelper = require('./../support/TestsHelper');
-var config      = require('./../../config');
+var config      = require('config');
 var UsersModel  = require('./../../models/UsersModel');
 var UserORM     = require('./../../ORMs/UserORM');
 
@@ -108,7 +108,7 @@ describe('UsersModel', function() {
 
                 return usersModel.create(data)
                 .then(function(user) {
-                    var decoded = jwt.decode(user.activationToken, config.secret);
+                    var decoded = jwt.decode(user.activationToken, config.get('secret'));
                     expect(decoded.type).to.equal('activation');
                     expect(decoded.userId).to.equal(user.id);
                 });
@@ -140,7 +140,7 @@ describe('UsersModel', function() {
                 var activationToken = jwt.encode({
                     userId: 2,
                     type  : 'auth'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.activate({
                     activationToken: activationToken
@@ -159,7 +159,7 @@ describe('UsersModel', function() {
                 var activationToken = jwt.encode({
                     userId: 10000000,
                     type  : 'activation'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.activate({
                     activationToken: activationToken
@@ -178,7 +178,7 @@ describe('UsersModel', function() {
                 var activationToken = jwt.encode({
                     userId: 1,
                     type  : 'activation'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.activate({
                     activationToken: activationToken
@@ -197,7 +197,7 @@ describe('UsersModel', function() {
                 var activationToken = jwt.encode({
                     userId: 2,
                     type  : 'activation'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.activate({
                     activationToken: activationToken
@@ -442,7 +442,7 @@ describe('UsersModel', function() {
             it('should return an email update token', function() {
                 return usersModel.requestEmailUpdate(data)
                 .then(function(user) {
-                    var decoded = jwt.decode(user.emailUpdateToken, config.secret);
+                    var decoded = jwt.decode(user.emailUpdateToken, config.get('secret'));
                     expect(decoded.type).to.equal('emailUpdate');
                     expect(decoded.userId).to.equal(1);
                     expect(decoded.newEmail).to.equal('jdoe@gmail.com');
@@ -476,7 +476,7 @@ describe('UsersModel', function() {
                     userId  : 1,
                     newEmail: 'jdoe@gmail.com',
                     type    : 'invalidtype'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.updateEmail({
                     emailUpdateToken: emailUpdateToken
@@ -496,7 +496,7 @@ describe('UsersModel', function() {
                     userId  : 10000000,
                     newEmail: 'jdoe@gmail.com',
                     type    : 'emailUpdate'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.updateEmail({
                     emailUpdateToken: emailUpdateToken
@@ -516,7 +516,7 @@ describe('UsersModel', function() {
                     userId  : 1,
                     newEmail: 'jdoe@gmail.com',
                     type    : 'emailUpdate'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.updateEmail({
                     emailUpdateToken: emailUpdateToken
@@ -536,7 +536,7 @@ describe('UsersModel', function() {
                     userId  : 2,
                     newEmail: 'weird@adresss.com',
                     type    : 'emailUpdate'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.updateEmail({
                     emailUpdateToken: emailUpdateToken
@@ -556,7 +556,7 @@ describe('UsersModel', function() {
                     userId  : 3,
                     newEmail: 'me@alice.com',
                     type    : 'emailUpdate'
-                }, config.secret);
+                }, config.get('secret'));
 
                 return usersModel.updateEmail({
                     emailUpdateToken: emailUpdateToken

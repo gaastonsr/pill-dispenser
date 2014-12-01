@@ -48,7 +48,7 @@ var filesToCover = [
     '!./node_modules/**/*',
     '!./coverage/**/*',
     '!./test/**/*',
-    '!./config.js'
+    '!./config/**/*'
 ];
 
 var reportsOptions = {

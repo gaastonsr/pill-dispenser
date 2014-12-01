@@ -34,5 +34,3 @@ su postgres -c 'createdb pill-dispenser-testing' || true
 cd /vagrant
 NODE_ENV=development knex migrate:latest
 NODE_ENV=test knex migrate:latest
-
-cp /vagrant/provision/env-vars.sh /etc/profile.d/env-vars.sh

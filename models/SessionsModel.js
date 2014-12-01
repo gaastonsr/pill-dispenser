@@ -3,7 +3,7 @@
 var Promise    = require('bluebird');
 var bcrypt     = require('bcrypt');
 var jwt        = require('jwt-simple');
-var config     = require('./../config');
+var config     = require('config');
 var UserORM    = require('./../ORMs/UserORM');
 var SessionORM = require('./../ORMs/SessionORM');
 var UserORM    = require('./../ORMs/UserORM');
@@ -61,7 +61,7 @@ SessionsModel.prototype = {
             session.authToken = jwt.encode({
                 sessionId: model.get('id'),
                 type     : 'auth'
-            }, config.secret);
+            }, config.get('secret'));
 
             return session;
         });
@@ -72,7 +72,7 @@ SessionsModel.prototype = {
         var error   = null;
 
         try {
-            decoded = jwt.decode(data.authToken, config.secret);
+            decoded = jwt.decode(data.authToken, config.get('secret'));
         } catch (caughtError) {
             error      = new Error('Invalid token');
             error.name = 'InvalidToken';

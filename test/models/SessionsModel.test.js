@@ -3,9 +3,9 @@
 var Promise       = require('bluebird');
 var chai          = require('chai');
 var jwt           = require('jwt-simple');
+var config        = require('config');
 var testData      = require('./data/SessionsModel.test');
 var TestsHelper   = require('./../support/TestsHelper');
-var config        = require('./../../config');
 var SessionsModel = require('./../../models/SessionsModel');
 var SessionORM    = require('./../../ORMs/SessionORM');
 
@@ -128,7 +128,7 @@ describe('SessionsModel', function() {
                 var authToken = jwt.encode({
                     sessionId: 1,
                     type     : 'invalid',
-                }, config.secret);
+                }, config.get('secret'));
 
                 return sessionsModel.getByAuthToken({
                     authToken: authToken
@@ -147,7 +147,7 @@ describe('SessionsModel', function() {
                 var authToken = jwt.encode({
                     sessionId: 1000000,
                     type     : 'auth',
-                }, config.secret);
+                }, config.get('secret'));
 
                 return sessionsModel.getByAuthToken({
                     authToken: authToken
@@ -166,7 +166,7 @@ describe('SessionsModel', function() {
                 var authToken = jwt.encode({
                     sessionId: 1,
                     type     : 'auth',
-                }, config.secret);
+                }, config.get('secret'));
 
                 return sessionsModel.getByAuthToken({
                     authToken: authToken

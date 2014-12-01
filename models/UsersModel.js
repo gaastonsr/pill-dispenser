@@ -3,8 +3,8 @@
 var Promise   = require('bluebird');
 var bcrypt    = require('bcrypt');
 var jwt       = require('jwt-simple');
+var config    = require('config');
 var bookshelf = require('./../bookshelf');
-var config    = require('./../config');
 var UserORM   = require('./../ORMs/UserORM');
 
 bcrypt = Promise.promisifyAll(bcrypt);
@@ -54,7 +54,7 @@ UsersModel.prototype = {
             user.activationToken = jwt.encode({
                 userId: user.id,
                 type  : 'activation'
-            }, config.secret);
+            }, config.get('secret'));
 
             return user;
         });
@@ -65,7 +65,7 @@ UsersModel.prototype = {
         var error   = null;
 
         try {
-            decoded = jwt.decode(data.activationToken, config.secret);
+            decoded = jwt.decode(data.activationToken, config.get('secret'));
         } catch (caughtError) {
             error      = new Error('Invalid token');
             error.name = 'InvalidToken';
@@ -254,7 +254,7 @@ UsersModel.prototype = {
                 userId  : user.id,
                 newEmail: data.newEmail,
                 type    : 'emailUpdate'
-            }, config.secret);
+            }, config.get('secret'));
 
             return user;
         });
@@ -265,7 +265,7 @@ UsersModel.prototype = {
         var error   = null;
 
         try {
-            decoded = jwt.decode(data.emailUpdateToken, config.secret);
+            decoded = jwt.decode(data.emailUpdateToken, config.get('secret'));
         } catch (caughtError) {
             error      = new Error('Invalid token');
             error.name = 'InvalidToken';
