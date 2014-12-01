@@ -359,6 +359,16 @@ module.exports = toolkit.Controller.extend({
 
             next(error);
         });
+    },
+
+    config: function(request, response, next) {
+        response.status(200).send({
+            medicineName: 'Naproxeno',
+            schedule: [
+                '10:21',
+                '10:22'
+            ]
+        });
     }
 
 });

@@ -66,4 +66,7 @@ router.put(   '/my-devices/:linkageId/settings/:settingId/activate'  , checkSess
 router.put(   '/my-devices/:linkageId/settings/:settingId/deactivate', checkSession, myDevicesController.deactivateSetting);
 router.delete('/my-devices/:linkageId/settings/:settingId'           , checkSession, myDevicesController.deleteSetting);
 
+// Prototype
+router.get('/config', myDevicesController.config);
+
 module.exports = router;
