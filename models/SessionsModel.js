@@ -6,7 +6,6 @@ var jwt        = require('jwt-simple');
 var config     = require('config');
 var UserORM    = require('./../ORMs/UserORM');
 var SessionORM = require('./../ORMs/SessionORM');
-var UserORM    = require('./../ORMs/UserORM');
 
 bcrypt = Promise.promisifyAll(bcrypt);
 
